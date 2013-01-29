@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <element name="x-pagina-contas" extends="div" construtor="PaginaContas" apply-author-styles>
+      <template>
+        <img src="{{graficoSaldo}}" />
+        <img src="{{graficoBalanco}}" />
+        <img src="{{graficoCustos}}" />
+        <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js"> {"dataSourceUrl":"{{teste}}","options":{"vAxes":[{"useFormatFromData":true,"title":null,"minValue":null,"logScale":false,"viewWindow":{"min":null,"max":null},"maxValue":null},{"useFormatFromData":true,"minValue":null,"logScale":false,"viewWindow":{"min":null,"max":null},"maxValue":null}],"titleTextStyle":{"bold":true,"color":"#000","fontSize":16},"booleanRole":"certainty","title":"Custos","animation":{"duration":0},"legend":"right","hAxis":{"useFormatFromData":true,"minValue":null,"viewWindowMode":null,"viewWindow":null,"maxValue":null},"isStacked":true,"tooltip":{},"width":1440,"height":609},"state":{},"view":{},"chartType":"ColumnChart","chartName":"Gr\u00e1fico1"} </script>-->
+      </template>
+      <script type="application/dart" src="x-pagina-contas.dart"></script> 
+    </element> 
+  </body>
+</html>

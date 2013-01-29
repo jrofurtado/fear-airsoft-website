@@ -1,0 +1,6 @@
+name: fear_airsoft
+description: Site do clube de praticantes FEAR
+dependencies:
+  js: any
+  browser: any
+  web_ui: any

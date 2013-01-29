@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html>
+  <head>    
+    <link rel="components" href="x-buttonnav.html">
+  </head>
+  <body>
+    <element name="x-sitenavigation" constructor="SiteNavigation" extends="div" apply-author-styles>
+      <template>
+        <ul class="sitenavigation">
+        <template iterate="navlink in navlinks">
+          <x-buttonnav bind-navlink="navlink"></x-buttonnav> 
+        </template>
+        </ul>
+      </template>
+      <script type="application/dart" src="x-sitenavigation.dart"></script>
+    </element>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+.body{
+  max-width:940px;
+  margin-left:auto;
+  margin-right:auto;
+  background-color: #302010;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.2em;
+ }
+.main{
+  box-shadow: 10px 10px 5px #181008;
+  background-color: #fdfdf0;
+}
+.siteheader{
+  background-image:url('banner.png');
+  background-repeat:no-repeat;
+  height:180px;
+}
+.sitelogo{
+  background-image:url('logo_fear_150x150.png');
+  background-repeat:no-repeat;
+  height:150px;
+  width:150px;
+  position:relative;
+  left:15px;
+  top:15px;
+}
+.sitenavigation{
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  background-color: #000000;
+}
+.navlink{
+  float:left;
+  margin-left:3px;
+  margin-right:3px;
+  margin-top:3px;
+  margin-bottom:3px;
+  display:block;
+  width:80px;
+  font-weight:bold;
+  color:#604030;
+  background-color:#e0e090;
+  text-align:center;
+  padding:4px;
+  text-decoration:none;
+  text-transform:uppercase;
+  border-radius:4px;
+  font-size: 11px;
+  cursor:pointer;
+}
+.navlink:hover,.navlink:active{
+  background-color:#c0c070;
+}
+.sitefooter{
+  height:20px;
+  background-color: #000000;
+}
