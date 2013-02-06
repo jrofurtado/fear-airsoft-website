@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="components" href="x-member-item.html">
+    <link rel="components" href="x-member.html">
+    <link rel="components" href="x-loading.html">
+    <link rel="components" href="x-legenda-emblemas.html">
+  </head>
   <body>
-    <element name="x-pagina-membros" extends="div" apply-author-styles>
+    <element name="x-pagina-membros" extends="div" constructor="PaginaMembros" apply-author-styles>
       <template>
-        <p>akakak</p>
+        <div class="pesquisa">
+          <input type="text" bind-value="pesquisa" placeholder="Pesquisar" />
+        </div>
+        <div class="membro-link">
+            <a on-click="clickLegenda()" href="{{model.href}}">legenda</a>
+        </div>
+        <p>{{model.legenda}}</p>
+        <template instantiate="if model.membros.length==0">
+          <x-loading></x-loading>
+        </template>
+        <template instantiate="if membroEscolhido!=null">
+          <x-member membro="{{membroEscolhido}}"></x-member>
+        </template>
+        <template iterate="membro in resultados">
+          <x-member-item membro="{{membro}}"></x-member-item>
+        </template>
+        <template instantiate="if model.legenda">
+          <x-legenda-emblemas></x-legenda-emblemas>
+        </template>
       </template>
+      <script type="application/dart" src="x-pagina-membros.dart"></script>
     </element>
   </body>
 </html>

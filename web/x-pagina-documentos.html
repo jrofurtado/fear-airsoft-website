@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 
 <html>
+ <head>
+    <meta charset="utf-8">
+    <link rel="components" href="x-widget.html">
+  </head>
   <body>
     <element name="x-pagina-documentos" extends="div" apply-author-styles>
       <template>
-        <p>akakak</p>
+        <x-widget tamanho="small" titulo="Documentos">
+        <ul>
+          <li><a href="https://docs.google.com/open?id=0BxxTdggo329CSUVYNHdsTlFpTG8" target="_blank">Estatutos do Clube de Praticantes F.E.A.R.</a></li>
+          <li><a href="https://docs.google.com/folder/d/0B4Nj2G61OMg-S1dSanBYNzh3MUE/edit" target="_blank">Outros Documentos Públicos</a></li>
+        </ul>
+        </x-widget>
+        <x-widget tamanho="small" titulo="Links">
+          <ul>
+            <li><a href="https://www.facebook.com/pages/Clube-de-Praticantes-FEAR/110185829075405" target="_blank">Clube de Praticantes FEAR no Facebook</a></li>
+            <li><a href="http://www.ala-airsoft.com/" target="_blank">ALA - Associação Lusitana de Airsoft APD</a></li>
+            <li><a href="https://www.facebook.com/groups/193407150703462/" target="_blank">Airsoft Made in Azores</a></li>
+            <li><a href="http://smairsoft.myfreeforum.org" target="_blank">Clube de Airsoft de S. Miguel</a></li>
+          </ul>
+        </x-widget>
       </template>
     </element>
   </body>

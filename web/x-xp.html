@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <element name="x-xp" constructor="Xp" extends="div" apply-author-styles>
+      <template>
+        <div class="xp-container">
+          <div class="xp-number"><p>{{membro['previousLevelXp']}}</p></div>
+          <div class="xp-bar-left"></div>
+          <div class="xp-bar">
+            <div style="width:{{larguraXp}}%;" class="xp"></div>
+          </div>
+          <div class="xp-bar-right"></div>
+          <div class="xp-number"><p>{{membro['nextLevelXp']}}</p></div>
+        </div>
+      </template>
+      <script type="application/dart" src="x-xp.dart"></script>
+    </element>
+  </body>
+</html>

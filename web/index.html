@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta property="og:title" content="Clube de praticantes FEAR" />
+    <meta property="og:description" content="Clube de praticantes dedicado ao airsoft na ilha de São Miguel, Açores" />
+    <meta property="og:image" content="../logo_fear_150x150.png" />
+    <title>Clube de praticantes FEAR</title>    
+    <link rel="stylesheet" href="default.css" media="screen, handheld, print, projection">
+    <link rel="stylesheet" href="desktop.css" media="screen and (min-device-width:1024px) and (min-width:1024px), print, projection">
+    <link rel="stylesheet" href="animacao.css" media="screen, handheld, projection">
+    <link rel="components" href="x-siteheader.html">
+    <link rel="components" href="x-sitenavigation.html">
+    <link rel="components" href="x-sitefooter.html">
+    <link rel="components" href="x-pagina-clube.html">
+    <link rel="components" href="x-pagina-anuncios.html">
+    <link rel="components" href="x-pagina-jogos.html">
+    <link rel="components" href="x-pagina-membros.html">
+    <link rel="components" href="x-pagina-equipas.html">
+    <link rel="components" href="x-pagina-galeria.html">
+    <link rel="components" href="x-pagina-forum.html">
+    <link rel="components" href="x-pagina-inscricoes.html">
+    <link rel="components" href="x-pagina-documentos.html">
+    <link rel="components" href="x-pagina-contas.html">
+  </head>
+  <body class="body">
+    <div class="main">
+      <x-siteheader></x-siteheader>
+      <x-sitenavigation></x-sitenavigation>
+      <a name="pagina"></a>
+      <div class="pagina">
+        <template instantiate="if model.hash==''||model.hash.startsWith(NavLink.Clube.link)"><x-pagina-clube></x-pagina-clube></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Anuncios.link)"><x-pagina-anuncios></x-pagina-anuncios></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Jogos.link)"><x-pagina-jogos></x-pagina-jogos></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Membros.link)"><x-pagina-membros></x-pagina-membros></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Equipas.link)"><x-pagina-equipas></x-pagina-equipas></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Galeria.link)"><x-pagina-galeria></x-pagina-galeria></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Forum.link)"><x-pagina-forum></x-pagina-forum></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Inscricoes.link)"><x-pagina-inscricoes></x-pagina-inscricoes></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Documentos.link)"><x-pagina-documentos></x-pagina-documentos></template>
+        <template instantiate="if model.hash.startsWith(NavLink.Contas.link)"><x-pagina-contas></x-pagina-contas></template>
+      </div>
+      <x-sitefooter></x-sitefooter>
+    </div>
+    <script type="application/dart" src="model.dart"></script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+::-webkit-scrollbar{
+    width:12px;
+}
+::-webkit-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius:10px;
+    border-radius:10px;
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius:10px;
+    background:rgba(224,224,144,0.8); 
+    -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background:rgba(224,224,144,0.4); 
+}
+.body{
+  max-width:940px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.2em;
+ }
+.main{
+}
+.siteheader{
+  background-image:url('banner.png');
+  background-repeat:no-repeat;
+  height:180px;
+}
+.sitefooter{
+}
+.sitelogo{
+  position:relative;
+  left:765px;
+  top:15px;
+  margin-left:0px;
+  margin-right:0px;
+}
+.sitenavigation{
+}
+.navlink{
+  float:left;
+  width:inherit;
+  margin-left:2px;
+  margin-right:2px;
+  margin-top:3px;
+  margin-bottom:3px;
+  text-align:center;
+  padding:4px;
+  font-size: 16px;  
+}
+.loading{
+}
+.loading div{
+}
+.item{
+  box-shadow:5px 5px 5px #3c331a;
+  width:926px;
+}
+.item-foto{
+  height:100px;
+  width:100px;
+}
+.item-emblemas{
+  float:left;
+  width:430px;
+}
+.item-equipa{
+  height:100px;
+  width:100px;
+}
+.item-emblema{
+  position:relative;
+  top:29px;
+  height:43px;
+  width:70px;
+}
+.item-patente{
+  height:100px;
+  width:70px;
+}
+.item-memberActive{
+  position:relative;
+  top:30px;
+  left:0px;
+}
+.item-nome{
+  position:relative;
+  top:36px;
+  left:6px;
+  width:480px;
+}
+.item-nome a{
+  font-size:20px;
+}
+.widget{
+  border-radius:5px;
+  box-shadow:5px 5px 5px #3c331a;
+  margin-left:5px;
+  margin-right:5px;
+  margin-top:5px;
+  margin-bottom:15px;
+}
+.widget-small{
+  float:left;
+  width:458px;
+}
+.widget-large{
+  width:916px;
+}

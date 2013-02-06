@@ -1,6 +1,11 @@
-name: fear_airsoft
-description: Site do clube de praticantes FEAR
+name: fear_airsoft_website
+version: 0.1.0
+author: Joao Furtado
+description: FEAR Airsoft Website frontend
 dependencies:
-  js: any
   browser: any
   web_ui: any
+
+#dependencies:
+#  js: any
+#  unittest: any

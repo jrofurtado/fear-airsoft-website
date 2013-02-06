@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+    <meta charset="utf-8">
+  </head>
   <body>
     <element name="x-sitefooter" constructor="SiteFooter" extends="div" apply-author-styles>
       <template>
-        <p class="sitefooter">Footer</p>
+        <div class="sitefooter">
+          <div class="share">
+            <a href="https://plus.google.com/share?url={{model.encoded_href}}" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+              <img src="../share-google.png" alt="Partilhar no Google+"/>
+            </a>
+            <a href="https://www.facebook.com/dialog/feed?app_id=150298198459974&link={{model.encoded_href}}&picture={{model.encoded_imagem}}&name={{model.encoded_titulo}}&caption={{model.encoded_titulo}}&description={{model.encoded_descricao}}&redirect_uri={{model.encoded_href}}">
+              <img src="../share-facebook.png" alt="Partilhar no Facebook"/>
+            </a>
+            <a href="mailto:?to=&subject={{model.encoded_titulo}}&body={{model.encoded_href}}">
+              <img src="../share-email.png" alt="Partilhar por email"/>
+            </a>
+          </div>
+        </div>
       </template>
       <script type="application/dart" src="x-sitefooter.dart"></script>
     </element>

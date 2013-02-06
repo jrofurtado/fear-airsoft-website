@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <element name="x-member-item" constructor="MemberItem" extends="div" apply-author-styles>
+      <template>
+        <div class="item">
+          <div class="item-emblemas">
+            <a on-click="click()" href="#/membros/{{membro['socio']}}"><img class="item-foto" src="{{Model.endpoint_imagens}}/Fotos/100x100/{{membro['socio']}}.jpg" /></a>
+            <img class="item-patente" title="{{membro['rank']}}" src="../patentes/{{membro['level']}}.png" />
+            <img class="item-equipa" title="{{membro['teamName']}}" src="{{Model.endpoint_imagens}}/Equipas/150x150/{{membro['teamName']}}.png" />
+            <template instantiate="if membro['achievementsGun'][0]['stars'] > 0">
+              <img class="item-emblema" title="Arma preferida: {{membro['achievementsGun'][0]['name']}}" src="../emblemas/{{membro['achievementsGun'][0]['imageName']}}.png" />
+            </template>
+            <template instantiate="if membro['achievementsRole'][0]['stars'] > 0">
+              <img class="item-emblema" title="Papel preferido: {{membro['achievementsRole'][0]['name']}}" src="../emblemas/{{membro['achievementsRole'][0]['imageName']}}.png" />
+            </template>         
+          </div>
+          <img class="item-memberActive" title="{{activoStr}}" src="../{{activoImg}}" />
+          <div class="item-nome">
+            <a on-click="click()" href="#/membros/{{membro['socio']}}">{{membro['rank']}} {{membro['name']}}</a>
+          </div>
+        </div>
+      </template>
+      <script type="application/dart" src="x-member-item.dart"></script>
+    </element>
+  </body>
+</html>

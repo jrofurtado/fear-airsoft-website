@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="components" href="x-widget.html">
+  </head>
   <body>
     <element name="x-pagina-inscricoes" extends="div" apply-author-styles>
       <template>
-        <p>akakak</p>
+        <x-widget tamanho="small" titulo="Procedimento de Inscrição">
+          <ul class="ordered">
+            <li>Enviar os seguintes documentos digitalizados para <a href="mailto:contacto@fear-airsoft.com" target="_blank">contacto@fear-airsoft.com</a>:
+              <ul>
+                <li><a href="http://www.ala-airsoft.com/imagens/ficha_individual.pdf" target="_blank">Formulário de inscrição na ALA</a> devidamente preenchido e assinado</li>
+                <li>Frente e Verso do Cartão de cidadão ou Bilhete de Identidade da pessoa inscrita e do encarregado de educação no caso da pessoa inscrita ter a idade compreendia entre 16 e 18 anos</li>
+                <li>Fotografia a cores tipo passe</li>
+                <li>(Opcional) Fotografia relacionada com o Airsoft para colocar no site (tamanho minimo 300x300)</li>
+                <li>No caso de pertencer a uma equipe, enviar o nome da equipa</li>
+                <li>Enviar também o logotipo e site da equipa se esta ainda não existir no clube</li>
+              </ul>
+            </li>
+            <li>Ao receber um email a indicar que a sua inscrição foi aceite provisoriamente deverá proceder ao pagamento da inscrição nesta página</li>
+            <li>Após a recepção do pagamento, num prazo de aproximadamente 15 dias será entregue o cartão identificativo e personalizado</li>
+          </ul>
+        </x-widget>
+        <x-widget tamanho="small" titulo="Preços">
+          <ul>
+            <li>22€ para novas inscrições (12€ para as quotas da <a href="http://www.ala-airsoft.com/" target="_blank">ALA</a>)</li>
+            <li>Entre 10 a 22€ para a renovação de quota efectuada no ano seguinte à inscrição (10€ para o clube e o restante para a <a href="http://www.ala-airsoft.com/" target="_blank">ALA</a> - o montante dependente do mês da inscrição)</li>
+            <li>22€ para as quotas dos anos seguintes (12€ para as quotas da <a href="http://www.ala-airsoft.com/" target="_blank">ALA</a>)</li>
+          </ul>
+        </x-widget>
+        <x-widget tamanho="small" titulo="Pagamento">
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="29AXF4L75R8BS">
+            <table>
+              <tr><td><input type="hidden" name="on0" value="Nome da pessoa a inscrever">Nome da pessoa a inscrever</td></tr><tr><td><input type="text" name="os0" maxlength="200"></td></tr>
+            </table>
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+          </form>          
+        </x-widget>
       </template>
     </element>
   </body>

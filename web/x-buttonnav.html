@@ -4,7 +4,7 @@
   <body>
     <element name="x-buttonnav" constructor="ButtonNav" extends="li" apply-author-styles>
       <template>
-        <a class="navlink" href="{{navlink.link}}">{{navlink.name}}</a>
+        <a class="navlink" href="{{navlink.link}}" on-click="click()">{{navlink.name}}</a>
       </template>
       <script type="application/dart" src="x-buttonnav.dart"></script>
     </element>

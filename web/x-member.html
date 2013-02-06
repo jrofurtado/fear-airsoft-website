@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="components" href="x-xp.html">
+  </head>
+  <body>
+    <element name="x-member" constructor="Member" extends="div" apply-author-styles>
+      <template>
+        <div class="disabled">
+        <div class="membro fadeInRightBig animated">
+          <a class="closeWindow" on-click="clickClose()" href="{{NavLink.Membros.link}}">X</a>
+          <img class="membro-foto" src="{{Model.endpoint_imagens}}/Fotos/384x418/{{membro['socio']}}.jpg" />
+          <img class="membro-memberActive" title="{{activoStr}}" src="../{{activoImg}}" />
+          <img class="membro-patente" title="{{membro['rank']}}" src="../patentes/{{membro['level']}}.png" />
+          <img class="membro-equipa" title="{{membro['teamName']}}" src="{{Model.endpoint_imagens}}/Equipas/150x150/{{membro['teamName']}}.png" />
+          <x-xp membro="{{membro}}"></x-xp>
+          <div class="membro-nome"><p>{{membro['rank']}} {{membro['name']}}</p></div>
+          <div class="membro-emblemas">
+            <template iterate="achievement in membro['achievementsGun']">
+              <div class="membro-divEmblema">
+                <img class="membro-emblema" title="{{achievement['name']}}" src="../emblemas/{{achievement['imageName']}}.png" />
+                <img class="membro-estrela" title="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
+              </div>
+            </template>
+          </div>
+          <div class="membro-emblemas">
+            <template iterate="achievement in membro['achievementsRole']">
+              <div class="membro-divEmblema">
+                <img class="membro-emblema" title="{{achievement['name']}}" src="../emblemas/{{achievement['imageName']}}.png" />
+                <img class="membro-estrela" title="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
+              </div>
+            </template>
+          </div>
+          <div class="membro-emblemas">
+            <template iterate="achievement in membro['achievementsSpecial']">
+              <div class="membro-divEmblema">
+                <img class="membro-emblema" title="{{achievement['name']}}" src="../emblemas/{{achievement['imageName']}}.png" />
+                <img class="membro-estrela" title="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
+              </div>
+            </template>
+          </div>
+          <div class="membro-link">
+            <a on-click="clickLegenda()" href="{{model.href}}">legenda</a>
+          </div>
+          <div class="divClearBoth"></div>
+        </div>
+        </div>
+      </template>
+      <script type="application/dart" src="x-member.dart"></script>
+    </element>
+  </body>
+</html>
