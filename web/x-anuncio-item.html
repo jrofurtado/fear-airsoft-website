@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <element name="x-anuncio-item" constructor="AnuncioItem" extends="div" apply-author-styles>
+      <template>
+        <div class="anuncio-item">
+          <div class="anuncio-item-data">{{anuncio['dia']}}/{{anuncio['mes']}}/{{anuncio['ano']}}</div>
+          <template instantiate="if relativeUrl">
+            <a class="anuncio-item-title" href="{{anuncio['url']}}" on-click="clickUrl()">{{anuncio['titulo']}}</a>
+          </template>
+          <template instantiate="if absoluteUrl">
+            <a class="anuncio-item-title" href="{{anuncio['url']}}" target="_blank">{{anuncio['titulo']}}</a>
+          </template>
+          <template instantiate="if emptyUrl">
+            <p class="anuncio-item-title">{{anuncio['titulo']}}</p>
+          </template>
+          <img class="anuncio-item-imagem" src="{{imagemUrl}}" />
+          <p class="anuncio-item-texto">{{anuncio['texto']}}</p>
+        </div>
+        <div class="divClearBoth"></div>
+      </template>
+      <script type="application/dart" src="x-anuncio-item.dart"></script>
+    </element>
+  </body>
+</html>

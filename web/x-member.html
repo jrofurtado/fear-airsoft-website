@@ -4,6 +4,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="components" href="x-xp.html">
+    <link rel="components" href="x-membro-emblema.html">
   </head>
   <body>
     <element name="x-member" constructor="Member" extends="div" apply-author-styles>
@@ -20,29 +21,26 @@
           <div class="membro-emblemas">
             <template iterate="achievement in membro['achievementsGun']">
               <div class="membro-divEmblema">
-                <img class="membro-emblema" title="{{achievement['name']}}" src="../emblemas/{{achievement['imageName']}}.png" />
-                <img class="membro-estrela" title="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
+                <x-membro-emblema classe="membro-emblema" achievement="{{achievement}}"></x-membro-emblema>
+                <img class="membro-estrela" titulo="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
               </div>
             </template>
           </div>
           <div class="membro-emblemas">
             <template iterate="achievement in membro['achievementsRole']">
               <div class="membro-divEmblema">
-                <img class="membro-emblema" title="{{achievement['name']}}" src="../emblemas/{{achievement['imageName']}}.png" />
-                <img class="membro-estrela" title="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
+                <x-membro-emblema classe="membro-emblema" achievement="{{achievement}}"></x-membro-emblema>
+                <img class="membro-estrela" titulo="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
               </div>
             </template>
           </div>
           <div class="membro-emblemas">
             <template iterate="achievement in membro['achievementsSpecial']">
               <div class="membro-divEmblema">
-                <img class="membro-emblema" title="{{achievement['name']}}" src="../emblemas/{{achievement['imageName']}}.png" />
-                <img class="membro-estrela" title="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
+                <x-membro-emblema classe="membro-emblema" achievement="{{achievement}}"></x-membro-emblema>
+                <img class="membro-estrela" titulo="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
               </div>
             </template>
-          </div>
-          <div class="membro-link">
-            <a on-click="clickLegenda()" href="{{model.href}}">legenda</a>
           </div>
           <div class="divClearBoth"></div>
         </div>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <element name="x-galeria-folder" extends="div" constructor="GaleriaFolder" apply-author-styles>
+      <template>
+        <div class="galeriaFolder">
+          <div class="relative">
+            <div class="galeriaData"><p>{{galeria['dia']}}/{{galeria['mes']}}/{{galeria['ano']}}</p></div>
+            <div class="galeriaNomeEvento"><p>{{galeria["nomeEvento"]}}</p></div>                
+            <template instantiate="if galeria['itens'].length>=3">
+              <div class="galeriaFolderFrame3"><div></div></div>
+            </template>
+            <template instantiate="if galeria['itens'].length>=2">
+              <div class="galeriaFolderFrame2"><div></div></div>
+            </template>
+            <template instantiate="if galeria['itens'].length>=1">
+              <div class="galeriaFolderFrame1"><div><img class="galeriaFolderThumbnail" src="{{thumbnailUrl}}" /></div></div>
+            </template>
+          </div>        
+        </div>
+      </template>
+      <script type="application/dart" src="x-galeria-folder.dart"></script>
+    </element>
+  </body>
+</html>

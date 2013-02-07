@@ -11,9 +11,6 @@ class Member extends WebComponent {
   String get activoImg{
     return membro['quota']?"member_active.png":"member_inactive.png";
   }
-  void clickLegenda(){
-    model.legenda = true;
-  }
   void clickClose(){
     model.changePage("${NavLink.Membros.link}");
   }

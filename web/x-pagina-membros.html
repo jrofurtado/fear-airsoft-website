@@ -6,7 +6,7 @@
     <link rel="components" href="x-member-item.html">
     <link rel="components" href="x-member.html">
     <link rel="components" href="x-loading.html">
-    <link rel="components" href="x-legenda-emblemas.html">
+    <link rel="components" href="x-legenda-emblema.html">
   </head>
   <body>
     <element name="x-pagina-membros" extends="div" constructor="PaginaMembros" apply-author-styles>
@@ -14,10 +14,7 @@
         <div class="pesquisa">
           <input type="text" bind-value="pesquisa" placeholder="Pesquisar" />
         </div>
-        <div class="membro-link">
-            <a on-click="clickLegenda()" href="{{model.href}}">legenda</a>
-        </div>
-        <p>{{model.legenda}}</p>
+        <div class="divClearBoth"></div>
         <template instantiate="if model.membros.length==0">
           <x-loading></x-loading>
         </template>
@@ -27,8 +24,8 @@
         <template iterate="membro in resultados">
           <x-member-item membro="{{membro}}"></x-member-item>
         </template>
-        <template instantiate="if model.legenda">
-          <x-legenda-emblemas></x-legenda-emblemas>
+        <template instantiate="if model.emblemaSeleccionado!=null">
+          <x-legenda-emblema nome="{{model.emblemaSeleccionado}}"></x-legenda-emblema>
         </template>
       </template>
       <script type="application/dart" src="x-pagina-membros.dart"></script>

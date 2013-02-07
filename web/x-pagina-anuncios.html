@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="components" href="x-loading.html">
+    <link rel="components" href="x-anuncio-item.html">
+    <link rel="components" href="x-anuncio.html">
+  </head>
   <body>
-    <element name="x-pagina-anuncios" extends="div" apply-author-styles>
+    <element name="x-pagina-anuncios" extends="div" constructor="PaginaAnuncios" apply-author-styles>
       <template>
-        <p>sskk</p>
-        <content></content>
+        <div class="pesquisa">
+          <input type="text" bind-value="pesquisa" placeholder="Pesquisar" />
+        </div>
+        <div class="divClearBoth"></div>
+        <template instantiate="if model.anuncios.length==0">
+          <x-loading></x-loading>
+        </template>
+        <template instantiate="if anuncioEscolhido!=null">
+          <x-anuncio anuncio="{{anuncioEscolhido}}"></x-anuncio>
+        </template>
+        <template iterate="anuncio in resultados">
+          <x-anuncio-item anuncio="{{anuncio}}"></x-anuncio-item>
+        </template>
       </template>
+      <script type="application/dart" src="x-pagina-anuncios.dart"></script>
     </element>
   </body>
 </html>
