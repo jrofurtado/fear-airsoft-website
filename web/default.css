@@ -340,6 +340,87 @@
 .membro-link{
   clear:both;
  }
+ .galeriaFolder{
+  margin-left:15px;
+  margin-top:15px;
+  height:350px;
+}
+.galeriaData{
+  position:absolute;
+  left:20px;
+  top:250px;
+}
+.galeriaNomeEvento{
+  position:absolute;
+  left:20px;
+  top:275px;
+}
+.galeriaData p,.galeriaNomeEvento p{
+  text-decoration:none;
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#604030;
+}
+.galeriaData p{
+  font-size:20px;
+}
+.galeriaNomeEvento p{  
+  font-size:13px;
+}
+.galeriaFolderFrame3,.galeriaFolderFrame2,.galeriaFolderFrame1{
+  position:absolute;
+  width:200px;
+  height:200px;
+  padding:16px;
+  background:#fff;
+  border-style:solid;
+  border-width:1px;
+  border-color:#eee;
+  box-shadow: 5px 5px 10px #000;
+  -ms-box-shadow: 5px 5px 10px #000;
+  -moz-box-shadow: 5px 5px 10px #000;
+  -webkit-box-shadow: 5px 5px 10px #000;
+  -o-box-shadow: 5px 5px 10px #000;
+}
+.galeriaFolderFrame1{
+  top:0px;
+  left:0px;
+  transform:rotate(-3deg);
+  -ms-transform:rotate(-3deg); /* Internet Explorer */
+  -moz-transform:rotate(-3deg); /* Firefox */
+  -webkit-transform:rotate(-3deg); /* Safari and Chrome */
+  -o-transform:rotate(-3deg); /* Opera */
+}
+.galeriaFolderFrame2{
+  top:10px;
+  left:10px;
+  transform:rotate(7deg);
+  -ms-transform:rotate(7deg); /* Internet Explorer */
+  -moz-transform:rotate(7deg); /* Firefox */
+  -webkit-transform:rotate(7deg); /* Safari and Chrome */
+  -o-transform:rotate(7deg); /* Opera */
+}
+.galeriaFolderFrame3{
+  top:20px;
+  left:20px;
+  transform:rotate(17deg);
+  -ms-transform:rotate(17deg); /* Internet Explorer */
+  -moz-transform:rotate(17deg); /* Firefox */
+  -webkit-transform:rotate(17deg); /* Safari and Chrome */
+  -o-transform:rotate(17deg); /* Opera */
+}
+.galeriaFolderFrame3 div,.galeriaFolderFrame2 div,.galeriaFolderFrame1 div{
+  overflow: hidden;
+  background-color:black;
+  width:100%;
+  height:100%;
+}
+.galeriaFolderFrame1 div{
+  background-color:#fff;
+}
+.galeriaFolderThumbnail{
+  max-width:200px;
+}
 .widget{
   margin:3px;
 }
@@ -387,16 +468,16 @@
   margin-top: 0.5em;
 }
 .pesquisa{
-  width:200px;
+  max-width:190px;
+  float:left;
+  background-color:#000000;
   padding:5px;
   padding-left:10px;
   padding-left:10px;
-  background-color:#000000;
   border-bottom-left-radius:5px;
   border-bottom-right-radius:5px;
 }
-.pesquisa input{
-  width:180px;
+.pesquisa input, .pesquisa span{
   text-decoration:none;
   text-transform:uppercase;
   font-size:15px;
@@ -405,4 +486,7 @@
 }
 .divClearBoth{
   clear:both;
+}
+.relative{
+  position:relative;
 }

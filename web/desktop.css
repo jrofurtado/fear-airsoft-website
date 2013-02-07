@@ -95,6 +95,36 @@
 .item-nome a{
   font-size:20px;
 }
+.galeriaFolder{
+  margin-left:50px;
+  margin-top:20px;
+  width:100%;
+  height:400px;
+}
+.galeriaData{
+  position:absolute;
+  left:350px;
+  top:130px;
+}
+.galeriaNomeEvento{
+  position:absolute;
+  left:350px;
+  top:180px;
+}
+.galeriaData p{
+  font-size:30px;
+}
+.galeriaNomeEvento p{  
+  font-size:20px;
+}
+.galeriaFolderFrame3,.galeriaFolderFrame2,.galeriaFolderFrame1{
+  width:256px;
+  height:256px;
+  padding:20px;
+}
+.galeriaFolderThumbnail{
+  max-width:256px;
+}
 .widget{
   border-radius:5px;
   box-shadow:5px 5px 5px #3c331a;
@@ -109,4 +139,7 @@
 }
 .widget-large{
   width:916px;
+}
+.pesquisa{
+  max-width:100%;
 }

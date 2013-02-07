@@ -34,7 +34,7 @@ class Model{
   String encoded_titulo = "";
   String encoded_descricao = "";
   String encoded_imagem = "";
-  bool legenda = false;
+  String emblemaSeleccionado;
   List<Map> _membros;
   List<Map> get membros {
     if(_membros==null){
@@ -66,6 +66,14 @@ class Model{
       new JsonpCallback("galeriaFunction").doCallback("${endpoint_json}galeria?callback=galeriaFunction").then((var data){model._galeria=data;watchers.dispatch();});
     }
     return _galeria;
+  }
+  List<Map> _anuncios;
+  List<Map> get anuncios {
+    if(_anuncios==null){
+      _anuncios=[];
+      new JsonpCallback("anunciosFunction").doCallback("${endpoint_json}anuncios?callback=anunciosFunction").then((var data){model._anuncios=data;watchers.dispatch();});
+    }
+    return _anuncios;
   }
   
   Model(){
