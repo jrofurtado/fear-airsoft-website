@@ -117,8 +117,8 @@
   margin-left:auto;
 }
 .item{
+  position:relative;
   margin:3px;
-  width:302px;
   height:100px;
   background-color:#fdfdf0;
   border-style:solid;
@@ -127,44 +127,49 @@
   border-color:#604030;
 }
 .item-foto{
+  border-style:none;
+  position:absolute;
   height:100px;
   width:100px;
 }
-.item-emblemas{
-  float:left;
-  width:304px;
-  height:50px;
-}
 .item-equipa{
-  vertical-align:top;
+  position:absolute;
+  top:0px;
+  left:145px;
   height:50px;
   width:50px;
 }
-.item-emblema{
-  vertical-align:top;
+.item-emblema1,.item-emblema2{  
+  border-style:none;
+  position:absolute;
+  top:0px;
   height:31px;
   width:50px;
 }
+.item-emblema1{
+  left:200px;
+}
+.item-emblema2{
+  left:250px;
+}
 .item-patente{
-  vertical-align:top;
+  position:absolute;
+  top:0px;
+  left:105px;
   height:50px;
   width:35px;
 }
 .item-memberActive{
-  float:left;
-  position:relative;
-  top:5px;
+  position:absolute;
+  top:55px;
   left:105px;
-  vertical-align:top;
   height:40px;
   width:6px;
 }
 .item-nome{
-  float:left;
-  position:relative;
-  top:5px;
-  left:111px;
-  width:183px;
+  position:absolute;
+  top:55px;
+  left:116px;
 }
 .item-nome a{
   text-decoration:none;
@@ -193,10 +198,7 @@
   margin:25px auto;
   padding:5px 5px 5px 5px;
   border-radius:10px;
-  background:#fff;
-  background:-moz-linear-gradient(#fff, #999);
-  background:-webkit-linear-gradient(#fff, #999);
-  background:-o-linear-gradient(#fff, #999);
+  background-color:#fdfdf0;
 }
 .membro{
   width:260px;
@@ -204,10 +206,7 @@
   margin:25px auto;
   padding:5px 5px 5px 5px;
   border-radius:10px;
-  background:#fff;
-  background:-moz-linear-gradient(#fff, #999);
-  background:-webkit-linear-gradient(#fff, #999);
-  background:-o-linear-gradient(#fff, #999);
+  background-color:#fdfdf0;
 }
 .membro-foto{
   float:left;
@@ -275,10 +274,12 @@
 }
 .xp-bar{
   float:left;
-  background-color:red;
+  background-color:#c00;
   background: -moz-linear-gradient(#c00, #400);
   background: -webkit-linear-gradient(#c00, #400);
   background: -o-linear-gradient(#c00, #400);
+  background: -ms-linear-gradient(#c00, #400);
+  background: linear-gradient(#c00, #400);
   width:190px;
   height:10px;
   -moz-box-shadow: 1px 1px 3px #000;
@@ -287,39 +288,53 @@
 }
 .xp-bar-left{
   float:left;
-  background-color:green;
+  background-color:#0c0;
   background: -moz-linear-gradient(#0c0, #040);
   background: -webkit-linear-gradient(#0c0, #040);
   background: -o-linear-gradient(#0c0, #040);
+  background: -ms-linear-gradient(#0c0, #040);
+  background: linear-gradient(#0c0, #040);
   width:5px;
   height:10px;
   -webkit-border-top-left-radius: 5px;
   -moz-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
   border-top-left-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-bottom-left-radius: 5px;
+  -p-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 .xp-bar-right{
   float:left;
-  background-color:red;
+  background-color:#c00;
   background: -moz-linear-gradient(#c00, #400);
   background: -webkit-linear-gradient(#c00, #400);
   background: -o-linear-gradient(#c00, #400);
+  background: -ms-linear-gradient(#c00, #400);
+  background: linear-gradient(#c00, #400);
   width:5px;
   height:10px;
   -webkit-border-top-right-radius: 5px;
   -moz-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
   -webkit-border-bottom-right-radius: 5px;
   -moz-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 .xp{  
-  background-color:green;
+  background-color:#0c0;
   background: -moz-linear-gradient(#0c0, #040);
   background: -webkit-linear-gradient(#0c0, #040);
   background: -o-linear-gradient(#0c0, #040);
+  background: -ms-linear-gradient(#0c0, #040);
+  background: linear-gradient(#0c0, #040);
   height:10px;
 }
 .membro-emblemas{
@@ -330,6 +345,7 @@
   width:52px;
 }
 .membro-emblema{
+  border-style:none;
   height:32px;
   width:52px;
 }
@@ -340,7 +356,7 @@
 .membro-link{
   clear:both;
  }
- .galeriaFolder{
+.galeriaFolder{
   margin-left:15px;
   margin-top:15px;
   height:350px;
@@ -421,14 +437,44 @@
 .galeriaFolderThumbnail{
   max-width:200px;
 }
+.anuncio-item{
+  position:relative;
+  margin:3px;
+  padding:3px;
+  background-color:#fdfdf0;
+  border-style:solid;
+  border-width:1px;
+  border-radius:5px;
+  border-color:#604030;
+}
+.anuncio-item-data{
+  float:left;
+  font-size:20px;
+  margin-right:10px;
+}
+.anuncio-item-data,.anuncio-item-title,.anuncio-item-title a{
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#604030;
+}
+.anuncio-item-title{
+  font-size:13px;
+}
+.anuncio-item-imagem{
+  
+  max-width:250px;
+}
+.anuncio-item-texto{
+  clear:both;
+  font-size:13px;
+}
 .widget{
+  border-radius:5px;
   margin:3px;
 }
 .widget-small{
-  width:304px;
 }
 .widget-large{
-  width:304px;
 }
 .widget-title{
   background-color:#604030;
@@ -483,6 +529,9 @@
   font-size:15px;
   font-weight:bold;
   color:#604030;
+}
+.floatRight{
+  float:right;
 }
 .divClearBoth{
   clear:both;

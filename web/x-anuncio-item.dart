@@ -19,10 +19,6 @@ class AnuncioItem extends WebComponent {
   bool get emptyUrl{
     return anuncio["url"].length==0;
   }
-  
-  void clickSelect(){
-    model.changePage("${NavLink.Anuncios.link}/${anuncio["titulo"]}");
-  }
   void clickUrl(){
     model.changePage(anuncio["url"]);
   }

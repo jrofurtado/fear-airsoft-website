@@ -1,4 +1,6 @@
 .buildlog
+.gitignore~
 pubspec.lock
 packages/
+*/packages
 out/

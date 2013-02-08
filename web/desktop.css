@@ -51,46 +51,42 @@
   padding:4px;
   font-size: 16px;  
 }
-.loading{
-}
-.loading div{
-}
 .item{
   box-shadow:5px 5px 5px #3c331a;
-  width:926px;
+  margin-right:6px;
+  margin-bottom:6px;
 }
 .item-foto{
   height:100px;
   width:100px;
 }
-.item-emblemas{
-  float:left;
-  width:430px;
-}
 .item-equipa{
+  left:175px;
   height:100px;
   width:100px;
 }
-.item-emblema{
-  position:relative;
+.item-emblema1,.item-emblema2{
   top:29px;
   height:43px;
   width:70px;
+}
+.item-emblema1{
+  left:290px;
+}
+.item-emblema2{
+  left:365px;
 }
 .item-patente{
   height:100px;
   width:70px;
 }
 .item-memberActive{
-  position:relative;
-  top:30px;
-  left:0px;
+  top:29px;
+  left:275px;
 }
 .item-nome{
-  position:relative;
   top:36px;
-  left:6px;
-  width:480px;
+  left:440px;
 }
 .item-nome a{
   font-size:20px;
@@ -126,19 +122,17 @@
   max-width:256px;
 }
 .widget{
-  border-radius:5px;
   box-shadow:5px 5px 5px #3c331a;
-  margin-left:5px;
-  margin-right:5px;
-  margin-top:5px;
-  margin-bottom:15px;
+  margin-left:3px;
+  margin-top:3px;
+  margin-right:6px;
+  margin-bottom:6px;
 }
 .widget-small{
   float:left;
   width:458px;
 }
 .widget-large{
-  width:916px;
 }
 .pesquisa{
   max-width:100%;

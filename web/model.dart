@@ -1,7 +1,6 @@
 library model;
 
 import 'dart:html';
-import 'dart:uri';
 import 'dart:json';
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
@@ -27,13 +26,7 @@ class Model{
                          ];
   String hash = window.location.hash;
   String href = window.location.href;
-  String titulo = "";
-  String descricao = "";
-  String imagem = "";
-  String encoded_href = "";
-  String encoded_titulo = "";
-  String encoded_descricao = "";
-  String encoded_imagem = "";
+  String mainPage = window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
   String emblemaSeleccionado;
   List<Map> _membros;
   List<Map> get membros {
@@ -75,22 +68,11 @@ class Model{
     }
     return _anuncios;
   }
-  
-  Model(){
-    encode();
-  }
-  
-  void encode(){
-    encoded_href = encodeUri(href);
-    encoded_titulo = encodeUri(titulo);
-    encoded_descricao = encodeUri(descricao);
-    encoded_imagem = encodeUri(imagem);
-  }
 
-  changePage(String link) {
-    model.href=window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname).concat(link);
+  changePage(String link) {    
+    model.mainPage=window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
+    model.href=mainPage.concat(link);
     model.hash=link;
-    model.encode();
   }
 }
 
@@ -116,9 +98,9 @@ class NavLink {
 void main() {
 //  useShadowDom = true; // to enable use of experimental Shadow DOM in the browser
   updateFilters(e) {
+    model.mainPage=window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);    
     model.hash=window.location.hash;
     model.href=window.location.href;
-    model.encode();
     watchers.dispatch();
   }
   window.onHashChange.listen(updateFilters);

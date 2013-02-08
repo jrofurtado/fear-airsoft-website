@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <link rel="components" href="x-xp.html">
     <link rel="components" href="x-membro-emblema.html">
+    <link rel="components" href="x-share.html">
   </head>
   <body>
     <element name="x-member" constructor="Member" extends="div" apply-author-styles>
@@ -43,6 +44,7 @@
             </template>
           </div>
           <div class="divClearBoth"></div>
+          <x-share url="{{model.hash}}" imagem="{{Model.endpoint_imagens}}/Fotos/384x418/{{membro['socio']}}.jpg" titulo="{{membro['rank']}} {{membro['name']}}" descricao=""></x-share>          
         </div>
         </div>
       </template>
