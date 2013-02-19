@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <link rel="components" href="x-loading.html">
     <link rel="components" href="x-anuncio-item.html">
-    <link rel="components" href="x-anuncio.html">
   </head>
   <body>
     <element name="x-pagina-anuncios" extends="div" constructor="PaginaAnuncios" apply-author-styles>
@@ -16,9 +15,6 @@
         <div class="divClearBoth"></div>
         <template instantiate="if model.anuncios.length==0">
           <x-loading></x-loading>
-        </template>
-        <template instantiate="if anuncioEscolhido!=null">
-          <x-anuncio anuncio="{{anuncioEscolhido}}"></x-anuncio>
         </template>
         <template iterate="anuncio in resultados">
           <x-anuncio-item anuncio="{{anuncio}}"></x-anuncio-item>

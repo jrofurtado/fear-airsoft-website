@@ -1,3 +1,9 @@
+.red{
+  background-color: red;
+}
+.yellow{
+  background-color: yellow;
+}
 .body{
   max-width:310px;
   margin-left:auto;
@@ -47,17 +53,11 @@
   font-size: 15px;
   color:#dddddd;
 }
-.sitefooter .share{
+.shareImg{
+  border-style:none;
   padding:0px;
-  width:110px;
-  position:relative;
-  top:-12px;
-  margin-left:auto;
-  margin-right:auto;
-}
-.sitefooter .share a:hover{
-  position:relative;
-  top:-4px;
+  width:32px;
+  height:32px;
 }
 .navlink{
   display:block;
@@ -74,8 +74,8 @@
   color:#a0a050;
 }
 .pagina{
+  padding-bottom:10px;
   font-size:15px;
-  overflow:hidden;
   background-color:#dacea9;
   border-width:10px;
   border-bottom-left-radius:10px;
@@ -93,9 +93,13 @@
   width: 24px;
   text-decoration: none;
   font-weight: bold;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   border-radius: 12px;
+  -ms-box-shadow: 1px 1px 3px #000;
+  -o-box-shadow: 1px 1px 3px #000;
   -moz-box-shadow: 1px 1px 3px #000;
   -webkit-box-shadow: 1px 1px 3px #000;
   box-shadow: 1px 1px 3px #000;
@@ -172,7 +176,6 @@
   left:116px;
 }
 .item-nome a{
-  text-decoration:none;
   text-transform:uppercase;
   font-size:10px;
   font-weight:bold;
@@ -193,9 +196,10 @@
 .disabled:target {
 }
 .legenda{
-  width:260px;
+  width:240px;
   position:relative;
-  margin:25px auto;
+  margin:10px auto;
+  margin-top:30px;
   padding:5px 5px 5px 5px;
   border-radius:10px;
   background-color:#fdfdf0;
@@ -203,7 +207,7 @@
 .membro{
   width:260px;
   position:relative;
-  margin:25px auto;
+  margin:10px auto;
   padding:5px 5px 5px 5px;
   border-radius:10px;
   background-color:#fdfdf0;
@@ -245,7 +249,6 @@
   height:50px;
 }
 .membro-nome p{
-  text-decoration:none;
   text-transform:uppercase;
   font-size:10px;
   font-weight:bold;
@@ -357,85 +360,197 @@
   clear:both;
  }
 .galeriaFolder{
-  margin-left:15px;
-  margin-top:15px;
-  height:350px;
+  float:left;
+  position:relative;
+  margin:40px;
+  width:200px;
+  height:220px;
 }
-.galeriaData{
-  position:absolute;
-  left:20px;
-  top:250px;
-}
-.galeriaNomeEvento{
-  position:absolute;
-  left:20px;
-  top:275px;
-}
-.galeriaData p,.galeriaNomeEvento p{
-  text-decoration:none;
-  text-transform:uppercase;
-  font-weight:bold;
-  color:#604030;
-}
-.galeriaData p{
-  font-size:20px;
-}
-.galeriaNomeEvento p{  
-  font-size:13px;
-}
-.galeriaFolderFrame3,.galeriaFolderFrame2,.galeriaFolderFrame1{
+.galeriaFolderFrameBack, .galeriaFolderFrameTop{
   position:absolute;
   width:200px;
-  height:200px;
+  min-height:200px;
   padding:16px;
   background:#fff;
   border-style:solid;
   border-width:1px;
   border-color:#eee;
+}
+.galeriaFolderFrameRot0{
+  transform:rotate(-10deg);
+  -ms-transform:rotate(-10deg); 
+  -moz-transform:rotate(-10deg); 
+  -webkit-transform:rotate(-10deg); 
+  -o-transform:rotate(-10deg);
+/*  transform:rotate3d(0,0.1,1,-10deg);
+  -ms-transform:rotate3d(0,0.1,1,-10deg); 
+  -moz-transform:rotate3d(0,0.1,1,-10deg); 
+  -webkit-transform:rotate3d(0,0.1,1,-10deg); 
+  -o-transform:rotate3d(0,0.1,1,-10deg); */
+}
+.galeriaFolderFrameRot1{
+  transform:rotate(-5deg);
+  -ms-transform:rotate(-5deg);
+  -moz-transform:rotate(-5deg);
+  -webkit-transform:rotate(-5deg);
+  -o-transform:rotate(-5deg);
+ /* transform:rotate3d(0,0.1,1,-5deg);
+  -ms-transform:rotate3d(0,0.1,1,-5deg);
+  -moz-transform:rotate3d(0,0.1,1,-5deg);
+  -webkit-transform:rotate3d(0,0.1,1,-5deg);
+  -o-transform:rotate3d(0,0.1,1,-5deg);*/
+}
+.galeriaFolderFrameRot2{
+  transform:rotate(0deg);
+  -ms-transform:rotate(0deg);
+  -moz-transform:rotate(0deg);
+  -webkit-transform:rotate(0deg);
+  -o-transform:rotate(0deg);
+/*  transform:rotate3d(0,0.1,1,0deg);
+  -ms-transform:rotate3d(0,0.1,1,0deg);
+  -moz-transform:rotate3d(0,0.1,1,0deg);
+  -webkit-transform:rotate3d(0,0.1,1,0deg);
+  -o-transform:rotate3d(0,0.1,1,0deg);*/
+}
+.galeriaFolderFrameRot3{
+  transform:rotate(5deg);
+  -ms-transform:rotate(5deg);
+  -moz-transform:rotate(5deg);
+  -webkit-transform:rotate(5deg);
+  -o-transform:rotate(5deg);
+/*  transform:rotate3d(0,0.1,1,5deg);
+  -ms-transform:rotate3d(0,0.1,1,5deg);
+  -moz-transform:rotate3d(0,0.1,1,5deg);
+  -webkit-transform:rotate3d(0,0.1,1,5deg);
+  -o-transform:rotate3d(0,0.1,1,5deg);*/
+}
+.galeriaFolderFrameRot4{
+  transform:rotate(10deg);
+  -ms-transform:rotate(10deg);
+  -moz-transform:rotate(10deg);
+  -webkit-transform:rotate(10deg);
+  -o-transform:rotate(10deg);
+/*  transform:rotate3d(0,0.1,1,10deg);
+  -ms-transform:rotate3d(0,0.1,1,10deg);
+  -moz-transform:rotate3d(0,0.1,1,10deg);
+  -webkit-transform:rotate3d(0,0.1,1,10deg);
+  -o-transform:rotate3d(0,0.1,1,10deg);*/
+}
+.galeriaFolderFramePos0{
+  left:-3px;
+  top:-3px;
+}
+.galeriaFolderFramePos1{
+  left:-4px;
+  top:0px;
+}
+.galeriaFolderFramePos2{
+  left:0px;
+  top:0px;
+}
+.galeriaFolderFramePos3{
+  left:4px;
+  top:0px;
+}
+.galeriaFolderFramePos4{
+  left:3px;
+  top:3px;
+}
+.galeriaFolderFrameBack div, .galeriaFolderFrameTop{
+  overflow: hidden;
+  background-color:#000;
+  width:100%;
+  height:100%;
+}
+.galeriaFolderFrameBack{
+  box-shadow: 2px 2px 10px #000;
+  -ms-box-shadow: 2px 2px 10px #000;
+  -moz-box-shadow: 2px 2px 10px #000;
+  -webkit-box-shadow: 2px 2px 10px #000;
+  -o-box-shadow: 2px 2px 10px #000;
+}
+.galeriaFolderFrameTop{
+  z-index: 4;
+  background-color:#fff;
+  text-decoration:none;
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#604030;
   box-shadow: 5px 5px 10px #000;
   -ms-box-shadow: 5px 5px 10px #000;
   -moz-box-shadow: 5px 5px 10px #000;
   -webkit-box-shadow: 5px 5px 10px #000;
   -o-box-shadow: 5px 5px 10px #000;
 }
-.galeriaFolderFrame1{
-  top:0px;
-  left:0px;
-  transform:rotate(-3deg);
-  -ms-transform:rotate(-3deg); /* Internet Explorer */
-  -moz-transform:rotate(-3deg); /* Firefox */
-  -webkit-transform:rotate(-3deg); /* Safari and Chrome */
-  -o-transform:rotate(-3deg); /* Opera */
-}
-.galeriaFolderFrame2{
-  top:10px;
-  left:10px;
-  transform:rotate(7deg);
-  -ms-transform:rotate(7deg); /* Internet Explorer */
-  -moz-transform:rotate(7deg); /* Firefox */
-  -webkit-transform:rotate(7deg); /* Safari and Chrome */
-  -o-transform:rotate(7deg); /* Opera */
-}
-.galeriaFolderFrame3{
-  top:20px;
-  left:20px;
-  transform:rotate(17deg);
-  -ms-transform:rotate(17deg); /* Internet Explorer */
-  -moz-transform:rotate(17deg); /* Firefox */
-  -webkit-transform:rotate(17deg); /* Safari and Chrome */
-  -o-transform:rotate(17deg); /* Opera */
-}
-.galeriaFolderFrame3 div,.galeriaFolderFrame2 div,.galeriaFolderFrame1 div{
-  overflow: hidden;
-  background-color:black;
-  width:100%;
-  height:100%;
-}
-.galeriaFolderFrame1 div{
-  background-color:#fff;
-}
+/*.galeriaFolderFrameTop:hover {
+  -transform: scale(1.25);
+  -ms-transform: scale(1.25);
+  -moz-transform: scale(1.25);
+  -webkit-transform: scale(1.25);
+  -o-transform: scale(1.25);
+  position: relative;
+  z-index: 5;
+}*/
 .galeriaFolderThumbnail{
-  max-width:200px;
+  border-style:none;
+  max-width:200px;  
+  max-height:200px;
+}
+.galeriaFotoFrame{
+  display: table;
+  position:relative;
+  margin:0px auto;
+  background-color:#fff;
+  padding:0px;
+}
+.galeriaFotoImagem{
+  max-width:320px;
+  max-height:500px;
+}
+.galeriaFotoPrevious,.galeriaFotoNext{
+  position:absolute;
+  top:50%;
+  background-repeat:no-repeat;
+  width:32px;
+  height:32px;
+}
+.galeriaFotoPrevious{
+  left:0px;
+  background-image:url('nav-previous.png');
+}
+.galeriaFotoNext{
+  right:0px;
+  background-image:url('nav-next.png');
+}
+.galeriaFotoShare{
+  position:absolute;
+  left:3px;
+  top:3px;
+}
+.proximoJogo{
+  height:300px;
+}
+.mapSmall{
+  position:absolute;
+  left:5px;
+  top:5px;
+  width:200px;
+  height:200px;
+}
+.weatherSmall{
+  position:absolute;
+  left:210px;
+  top:5px;
+  height:200px;
+}
+.weatherSmallText{
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#604030;
+}
+.copyrightReference{
+  color:#604030;
+  font-size:10px;
 }
 .anuncio-item{
   position:relative;
@@ -461,7 +576,7 @@
   font-size:13px;
 }
 .anuncio-item-imagem{
-  
+  border-style:none;
   max-width:250px;
 }
 .anuncio-item-texto{
@@ -489,7 +604,8 @@
   border-top-right-radius:5px;
   border-color:#604030;
 }
-.widget-content{
+.widget-content{  
+  position:relative;
   margin:0px;
   padding:5px;
   background-color:#fdfdf0;

@@ -22,7 +22,7 @@
           <div class="membro-emblemas">
             <template iterate="achievement in membro['achievementsGun']">
               <div class="membro-divEmblema">
-                <x-membro-emblema classe="membro-emblema" achievement="{{achievement}}"></x-membro-emblema>
+                <x-membro-emblema classe="membro-emblema" titulo="{{achievement['name']}}" achievement="{{achievement}}"></x-membro-emblema>
                 <img class="membro-estrela" titulo="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
               </div>
             </template>
@@ -30,7 +30,7 @@
           <div class="membro-emblemas">
             <template iterate="achievement in membro['achievementsRole']">
               <div class="membro-divEmblema">
-                <x-membro-emblema classe="membro-emblema" achievement="{{achievement}}"></x-membro-emblema>
+                <x-membro-emblema classe="membro-emblema" titulo="{{achievement['name']}}" achievement="{{achievement}}"></x-membro-emblema>
                 <img class="membro-estrela" titulo="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
               </div>
             </template>
@@ -38,13 +38,13 @@
           <div class="membro-emblemas">
             <template iterate="achievement in membro['achievementsSpecial']">
               <div class="membro-divEmblema">
-                <x-membro-emblema classe="membro-emblema" achievement="{{achievement}}"></x-membro-emblema>
+                <x-membro-emblema classe="membro-emblema" titulo="{{achievement['name']}}" achievement="{{achievement}}"></x-membro-emblema>
                 <img class="membro-estrela" titulo="{{achievement['name']}}" src="../estrelas/{{achievement['stars'].toInt()}}s.png" />
               </div>
             </template>
           </div>
           <div class="divClearBoth"></div>
-          <x-share url="{{model.hash}}" imagem="{{Model.endpoint_imagens}}/Fotos/384x418/{{membro['socio']}}.jpg" titulo="{{membro['rank']}} {{membro['name']}}" descricao=""></x-share>          
+          <x-share url="{{model.hash}}" imagem="{{Model.endpoint_imagens}}/Fotos/384x418/{{membro['socio']}}.jpg" titulo="{{membro['rank']}} {{membro['name']}}" descricao="{{descricaoShare}}"></x-share>          
         </div>
         </div>
       </template>

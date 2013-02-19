@@ -4,12 +4,29 @@
   <head>
     <meta charset="utf-8">
     <link rel="components" href="x-widget.html">
+    <link rel="components" href="x-loading.html">
+    <link rel="components" href="x-anuncio-item.html">
   </head>
   <body>
-    <element name="x-pagina-clube" extends="div" apply-author-styles>
+    <element name="x-pagina-clube" extends="div" constructor="PaginaClube" apply-author-styles>
       <template>
         <x-widget tamanho="small" titulo="Próximo Jogo">
-          
+          <div class="proximoJogo">
+            <div id="map_canvas" class="mapSmall"></div>
+            <div class="weatherSmall">
+              <template instantiate="if weatherProximoJogo!=null">
+                <img src="{{weatherProximoJogo['weatherIconUrl'][0]['value']}}"/>
+                <br>
+                <span class="weatherSmallText {{temperaturaClass}}">{{weatherProximoJogo['tempMinC']}}º C - {{weatherProximoJogo['tempMaxC']}}º C</span>
+                <br>
+                <span class="weatherSmallText {{precipitacaoClass}}">Precipitação: {{weatherProximoJogo['precipMM']}} mm</span>
+                <br>
+                <span class="weatherSmallText {{ventoClass}}">Vento (Km/h): {{weatherProximoJogo['windspeedKmph']}} Km/h</span>
+                <br>
+                <span class="copyrightReference">Powered by <a href="http://www.worldweatheronline.com/" title="Free local weather content provider" target="_blank">World Weather Online</a></span>        
+              </template> 
+            </div>
+          </div>
         </x-widget>
         <x-widget tamanho="small" titulo="Contacto">
           <a href="mailto:contacto@fear-airsoft.com">contacto@fear-airsoft.com</a>
@@ -20,7 +37,12 @@
           <br/>
         </x-widget>
         <x-widget tamanho="small" titulo="Anúncios Recentes">
-          
+          <template instantiate="if anunciosRecentes.length==0">
+            <x-loading></x-loading>
+          </template>
+          <template iterate="anuncio in anunciosRecentes">
+            <x-anuncio-item anuncio="{{anuncio}}"></x-anuncio-item>
+          </template>
         </x-widget>
         <x-widget tamanho="small" titulo="História">
           <p>
@@ -45,6 +67,7 @@ O clube de praticantes FEAR tem como principal objetivo a promoção do airsoft 
           </p>
         </x-widget>    
       </template>
+      <script type="application/dart" src="x-pagina-clube.dart"></script>
     </element>
   </body>
 </html>

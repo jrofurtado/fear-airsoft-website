@@ -1,4 +1,5 @@
 .buildlog
+.settings
 .gitignore~
 pubspec.lock
 packages/

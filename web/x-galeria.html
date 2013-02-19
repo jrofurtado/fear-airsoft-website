@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="components" href="x-share.html">
+  </head>
+  <body>
+    <element name="x-galeria" extends="div" constructor="Galeria" apply-author-styles>
+      <template>
+        <div class="disabled">
+          <div class="galeriaFotoFrame">
+            <a class="closeWindow" on-click="clickClose()" href="{{NavLink.Galeria.link}}">X</a>
+            <x-share class="galeriaFotoShare" url="{{model.hash}}" imagem="{{imagemUrl}}" titulo="Galeria {{galeria['nomeCompleto']}}" descricao="Galeria do Clube de Praticantes FEAR"></x-share>
+            <template instantiate="if item['imagem']">
+              <img class="galeriaFotoImagem" src="{{imagemUrl}}">
+            </template>
+            <template instantiate="if item['video']">
+              <template instantiate="if item['youtubeId']!=''">
+              
+              </template>
+              <template instantiate="if item['youtubeId']==''">
+              
+              </template>
+            </template>
+             <a class="galeriaFotoPrevious" on-click="clickPrevious()" href="{{NavLink.Galeria.link}}"></a>
+             <a class="galeriaFotoNext" on-click="clickNext()" href="{{NavLink.Galeria.link}}"></a>
+          </div>          
+        </div>
+      </template>
+      <script type="application/dart" src="x-galeria.dart"></script>
+    </element>
+  </body>
+</html>

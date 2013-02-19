@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <link rel="components" href="x-loading.html">
     <link rel="components" href="x-galeria-folder.html">
-    <link rel="components" href="x-galeria-foto.html">
+    <link rel="components" href="x-galeria.html">
   </head>
   <body>
     <element name="x-pagina-galeria" extends="div" apply-author-styles>
@@ -22,9 +22,12 @@
         <template instantiate="if galeriaEscolhido!=null">
           <x-galeria galeria="{{galeriaEscolhido}}"></x-galeria>
         </template>
-        <template iterate="galeria in resultados">
-          <x-galeria-folder galeria="{{galeria}}"></x-galeria-folder>
-        </template>
+        <div class="galeriaFolders"> 
+          <template iterate="galeria in resultados">
+            <x-galeria-folder galeria="{{galeria}}"></x-galeria-folder>
+          </template>
+          <div class="divClearBoth"></div>
+        </div>
       </template>
       <script type="application/dart" src="x-pagina-galeria.dart"></script>
     </element>

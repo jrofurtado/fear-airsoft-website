@@ -15,7 +15,11 @@
             <x-loading></x-loading>
           </template>
           <template instantiate="if emblema!=null">
-            <p>{{emblema['nome']}}</p>
+            <div><img class="membro-emblema" titulo="{{emblema['nome']}}" src="../emblemas/{{emblema['imageName']}}.png" /></div>
+            <div><strong>Nome:</strong> {{emblema['nome']}}</div>
+            <div><strong>Tipo:</strong> {{emblema['tipo']}}</div>
+            <div><strong>Custo por estela:</strong> {{emblema['custoEstrela']}}</div>
+            <div><strong>Descrição:</strong> {{emblema['descricao']}}</div>
           </template>
           <div class="divClearBoth"></div>
         </div>

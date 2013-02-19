@@ -3,6 +3,7 @@ version: 0.1.0
 author: Joao Furtado
 description: FEAR Airsoft Website frontend
 dependencies:
+  google_maps: any
   browser: any
   web_ui: any
 
