@@ -5,7 +5,7 @@ description: FEAR Airsoft Website frontend
 dependencies:
   google_maps: any
   browser: any
-  web_ui: any
+  web_ui: <3.3.0
 
 #dependencies:
 #  js: any
