@@ -2,6 +2,3 @@
 .settings
 .gitignore~
 pubspec.lock
-packages/
-*/packages
-out/
