@@ -27,11 +27,11 @@ class Model{
   String href = window.location.href;
   String mainPage = window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
   String emblemaSeleccionado;
-  Map _tempo;
-  Map get tempo {
+  List<Map> _tempo;
+  List<Map> get tempo {
     if(_tempo==null){
       _tempo=[];
-      HttpRequest.request("${endpoint_weather_json}tempo").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}tempo").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
     }
     return _tempo;
   }
