@@ -49,20 +49,20 @@ class PaginaClube extends WebComponent {
     js.scoped(() {
       final mapOptions = new MapOptions()
         ..zoom = 12
-        ..center = new LatLng(37.766163,-25.580971)
+        ..center = new LatLng(model.jogo[0]['campo']['lat'],model.jogo[0]['campo']['lng'])
         ..mapTypeId = MapTypeId.ROADMAP;
       var canvas= query("#map_canvas");
       final map = new GMap(canvas, mapOptions);
       final estacionamentoMarker = new Marker(new MarkerOptions()
       ..title = "Estacionamento"
       ..zIndex = 1
-      ..position = new LatLng(37.766143,-25.580941)
+      ..position = new LatLng(model.jogo[0]['campo']['estacionamentoLat'],model.jogo[0]['campo']['estacionamentoLng'])
       ..map = map
       ..icon = '../estacionamento.png');
       final flagMarker = new Marker(new MarkerOptions()
       ..title = "Campo"
       ..zIndex = 2
-      ..position = new LatLng(37.766163,-25.580971)
+      ..position = new LatLng(model.jogo[0]['campo']['lat'],model.jogo[0]['campo']['lng'])
       ..map = map
       ..icon = '../flag.png');    
     });
