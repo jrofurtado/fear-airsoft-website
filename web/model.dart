@@ -27,13 +27,17 @@ class Model{
   String href = window.location.href;
   String mainPage = window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
   String emblemaSeleccionado;
-  Map _tempo;
-  Map get tempo {
-    if(_tempo==null){
-      _tempo=[];
-      HttpRequest.request("${endpoint_weather_json}tempo").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
+  List<Map> _tempo;
+  List<Map> get tempo {
+    if(jogo.length==0){
+      return [];
+    } else {
+      if(_tempo==null){
+        _tempo=[];
+        HttpRequest.request("${endpoint_json}tempo?lat=${jogo[0]['lat']}&lng=${jogo[0]['lng']}&data=${jogo[0]['ano']}-${jogo[0]['mes']}-${jogo[0]['dia']}").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
+      }
+      return _tempo;
     }
-    return _tempo;
   }
   List<Map> _membros;
   List<Map> get membros {
@@ -74,6 +78,32 @@ class Model{
       HttpRequest.request("${endpoint_json}publishedData/anuncios").then((req){model._anuncios=parse(req.responseText);watchers.dispatch();});
     }
     return _anuncios;
+  }
+  List<Map> _campos;
+  List<Map> get campos {
+    if(_campos==null){
+      _campos=[];
+      HttpRequest.request("${endpoint_json}publishedData/campos").then((req){model._campos=parse(req.responseText);watchers.dispatch();});
+    }
+    return _campos;
+  }
+  List<Map> _jogo;
+  List<Map> get jogo {
+    if(_jogo==null){
+      _jogo=[];
+      HttpRequest.request("${endpoint_json}publishedData/jogo").then((req){
+        List<Map> tmpJogo =parse(req.responseText);
+        if(tmpJogo.length>0 && !dataFimJogo(tmpJogo[0]).isBefore(new DateTime.now())){
+          model._jogo = tmpJogo;
+          watchers.dispatch();
+        }
+      });
+    }
+    return _jogo;
+  }
+
+  DateTime dataFimJogo(Map jogo) {
+    return new DateTime(jogo['ano'],jogo['mes'],jogo['dia'],jogo['horaFim'],jogo['minutosFim'],0);
   }
 
   changePage(String link) {    

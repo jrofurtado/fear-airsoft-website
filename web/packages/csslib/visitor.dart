@@ -219,7 +219,7 @@ class Visitor implements VisitorBase {
     }
   }
 
-  void visitSimpleSelector(SimpleSelector node) => visitIdentifier(node._name);
+  void visitSimpleSelector(SimpleSelector node) => node._name.visit(this);
 
   void visitNamespaceSelector(NamespaceSelector node) {
     var namespace = node._namespace;

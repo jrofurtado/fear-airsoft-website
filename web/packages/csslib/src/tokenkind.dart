@@ -487,8 +487,8 @@ class TokenKind {
       if (length == ident.length) {
         int idx = offset;
         bool match = true;
-        for (int identIdx = 0; identIdx < ident.length; identIdx++) {
-          int identChar = ident.codeUnitAt(identIdx);
+        for (int i = 0; i < ident.length; i++) {
+          int identChar = ident.codeUnitAt(i);
           int char = text.codeUnitAt(idx++);
           // Compare lowercase to lowercase then check if char is uppercase.
           match = match && (char == identChar ||
@@ -567,8 +567,8 @@ class TokenKind {
       if (length == ident.length) {
         int idx = 0;
         bool match = true;
-        for (int identIdx = 0; identIdx < ident.length; identIdx++) {
-          int identChar = ident.codeUnitAt(identIdx);
+        for (int i = 0; i < ident.length; i++) {
+          int identChar = ident.codeUnitAt(i);
           int char = text.codeUnitAt(idx++);
           // Compare lowercase to lowercase then check if char is uppercase.
           match = match && (char == identChar ||
@@ -619,8 +619,8 @@ class TokenKind {
     while (paddings-- > 0) {
       invertResult.write('0');
     }
-    for (int idx = result.length - 1; idx >= 0; idx--) {
-      invertResult.write(result[idx]);
+    for (int i = result.length - 1; i >= 0; i--) {
+      invertResult.write(result[i]);
     }
 
     return invertResult.toString();

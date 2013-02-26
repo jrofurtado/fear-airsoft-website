@@ -62,10 +62,10 @@ class CssPrinter extends Visitor {
 
   void emitMediaQueries(queries, [forceSpace = false]) {
     var queriesLen = queries.length;
-    for (var idx = 0; idx < queriesLen; idx++) {
-      if (!forceSpace && idx == 0) emit(' ');
-      if (idx > 0) emit(',');
-      var query = queries[idx];
+    for (var i = 0; i < queriesLen; i++) {
+      if (!forceSpace && i == 0) emit(' ');
+      if (i > 0) emit(',');
+      var query = queries[i];
       visitMediaQuery(query);
     }
   }
@@ -94,10 +94,10 @@ class CssPrinter extends Visitor {
 
     var declsMargin = node._declsMargin;
     int declsMarginLength = declsMargin.length;
-    for (var idx = 0; idx < declsMarginLength; idx++) {
-      if (idx > 0) emit(_newLine);
+    for (var i = 0; i < declsMarginLength; i++) {
+      if (i > 0) emit(_newLine);
       emit('{$_newLine');
-      declsMargin[idx].visit(this);
+      declsMargin[i].visit(this);
       emit('}');
     }
   }
@@ -181,10 +181,10 @@ class CssPrinter extends Visitor {
   void visitDeclarationGroup(DeclarationGroup node) {
     var declarations = node._declarations;
     var declarationsLength = declarations.length;
-    for (var idx = 0; idx < declarationsLength; idx++) {
-      if (idx > 0) emit(_newLine);
+    for (var i = 0; i < declarationsLength; i++) {
+      if (i > 0) emit(_newLine);
       emit("$_sp$_sp");
-      declarations[idx].visit(this);
+      declarations[i].visit(this);
       emit(";");
     }
     if (declarationsLength > 0) emit(_newLine);
@@ -213,9 +213,9 @@ class CssPrinter extends Visitor {
   void visitSelectorGroup(SelectorGroup node) {
     var selectors = node._selectors;
     var selectorsLength = selectors.length;
-    for (var idx = 0; idx < selectorsLength; idx++) {
-      if (idx > 0) emit(',$_sp');
-      selectors[idx].visit(this);
+    for (var i = 0; i < selectorsLength; i++) {
+      if (i > 0) emit(',$_sp');
+      selectors[i].visit(this);
     }
   }
 
@@ -339,9 +339,9 @@ class CssPrinter extends Visitor {
     emit('(');
     var terms = node._terms;
     var termsLength = terms.length;
-    for (var idx = 0; idx < termsLength; idx++) {
-      if (idx > 0) emit('$_sp');
-      terms[idx].visit(this);
+    for (var i = 0; i < termsLength; i++) {
+      if (i > 0) emit('$_sp');
+      terms[i].visit(this);
     }
     emit(')');
   }
@@ -361,11 +361,11 @@ class CssPrinter extends Visitor {
   void visitExpressions(Expressions node) {
     var expressions = node._expressions;
     var expressionsLength = expressions.length;
-    for (var idx = 0; idx < expressionsLength; idx++) {
+    for (var i = 0; i < expressionsLength; i++) {
       // Add space seperator between terms without an operator.
       // TODO(terry): Should have a BinaryExpression to solve this problem.
-      var expression = expressions[idx];
-      if (idx > 0 &&
+      var expression = expressions[i];
+      if (i > 0 &&
           !(expression is OperatorComma || expression is OperatorSlash)) {
         emit(' ');
       }

@@ -20,27 +20,27 @@ class PaginaClube extends WebComponent {
     return result;
   }
   String get temperaturaClass{
-    if(double.parse(tempo[0]["tempMinC"])<5)
+    if(double.parse(model.tempo[0]["tempMinC"])<5)
       return "red";
-    if(double.parse(tempo[0]["tempMaxC"])>=35)
+    if(double.parse(model.tempo[0]["tempMaxC"])>=35)
       return "red";
-    if(double.parse(tempo[0]["tempMinC"])<10)
+    if(double.parse(model.tempo[0]["tempMinC"])<10)
       return "yellow";
-    if(double.parse(tempo[0]["tempMaxC"])>=30)
+    if(double.parse(model.tempo[0]["tempMaxC"])>=30)
       return "yellow";
     return "";
   }
   String get precipitacaoClass{
-    if(double.parse(tempo[0]["precipMM"])>=4) //Chuva intensa (http://wiki.sandaysoft.com/a/Rain_measurement#Standard_.28graduated_cylinder.29Rain_Gauge)
+    if(double.parse(model.tempo[0]["precipMM"])>=4) //Chuva intensa (http://wiki.sandaysoft.com/a/Rain_measurement#Standard_.28graduated_cylinder.29Rain_Gauge)
         return "red";
-    if(double.parse(tempo[0]["precipMM"])>=1) //Chuva moderada
+    if(double.parse(model.tempo[0]["precipMM"])>=1) //Chuva moderada
       return "yellow";
     return "";
   }
   String get ventoClass{
-    if(double.parse(tempo[0]["windspeedKmph"])>=45) //Vento intenso (http://library.thinkquest.org/C003603/english/hurricanes/hurricanewind.shtml)
+    if(double.parse(model.tempo[0]["windspeedKmph"])>=45) //Vento intenso (http://library.thinkquest.org/C003603/english/hurricanes/hurricanewind.shtml)
         return "red";
-    if(double.parse(tempo[0]["windspeedKmph"])>=25) //Vento moderado
+    if(double.parse(model.tempo[0]["windspeedKmph"])>=25) //Vento moderado
       return "yellow";
     return "";
   }
@@ -49,20 +49,20 @@ class PaginaClube extends WebComponent {
     js.scoped(() {
       final mapOptions = new MapOptions()
         ..zoom = 12
-        ..center = new LatLng(37.766163,-25.580971)
+        ..center = new LatLng(model.jogo[0]['campo']['lat'],model.jogo[0]['campo']['lng'])
         ..mapTypeId = MapTypeId.ROADMAP;
       var canvas= query("#map_canvas");
       final map = new GMap(canvas, mapOptions);
       final estacionamentoMarker = new Marker(new MarkerOptions()
       ..title = "Estacionamento"
       ..zIndex = 1
-      ..position = new LatLng(37.766143,-25.580941)
+      ..position = new LatLng(model.jogo[0]['campo']['estacionamentoLat'],model.jogo[0]['campo']['estacionamentoLng'])
       ..map = map
       ..icon = '../estacionamento.png');
       final flagMarker = new Marker(new MarkerOptions()
       ..title = "Campo"
       ..zIndex = 2
-      ..position = new LatLng(37.766163,-25.580971)
+      ..position = new LatLng(model.jogo[0]['campo']['lat'],model.jogo[0]['campo']['lng'])
       ..map = map
       ..icon = '../flag.png');    
     });

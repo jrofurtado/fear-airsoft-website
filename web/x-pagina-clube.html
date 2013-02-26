@@ -14,14 +14,14 @@
           <div class="proximoJogo">
             <div id="map_canvas" class="mapSmall"></div>
             <div class="weatherSmall">
-              <template instantiate="if weatherProximoJogo!=null">
-                <img src="{{weatherProximoJogo['weatherIconUrl'][0]['value']}}"/>
+              <template instantiate="if model.tempo.length>0">
+                <img src="{{model.tempo[0]['weatherIconUrl'][0]['value']}}"/>
                 <br>
-                <span class="weatherSmallText {{temperaturaClass}}">{{weatherProximoJogo['tempMinC']}}º C - {{weatherProximoJogo['tempMaxC']}}º C</span>
+                <span class="weatherSmallText {{temperaturaClass}}">{{model.tempo[0]['tempMinC']}}º C - {{model.tempo[0]['tempMaxC']}}º C</span>
                 <br>
-                <span class="weatherSmallText {{precipitacaoClass}}">Precipitação: {{weatherProximoJogo['precipMM']}} mm</span>
+                <span class="weatherSmallText {{precipitacaoClass}}">Precipitação: {{model.tempo[0]['precipMM']}} mm</span>
                 <br>
-                <span class="weatherSmallText {{ventoClass}}">Vento (Km/h): {{weatherProximoJogo['windspeedKmph']}} Km/h</span>
+                <span class="weatherSmallText {{ventoClass}}">Vento (Km/h): {{model.tempo[0]['windspeedKmph']}} Km/h</span>
                 <br>
                 <span class="copyrightReference">Powered by <a href="http://www.worldweatheronline.com/" title="Free local weather content provider" target="_blank">World Weather Online</a></span>        
               </template> 
