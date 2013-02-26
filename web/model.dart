@@ -31,7 +31,8 @@ class Model{
   Map get tempo {
     if(_tempo==null){
       _tempo=[];
-    HttpRequest.request("${endpoint_weather_json}tempo").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_weather_json}tempo").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
+    }
     return _tempo;
   }
   List<Map> _membros;
