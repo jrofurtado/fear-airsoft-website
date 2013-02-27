@@ -57,7 +57,12 @@ class Model{
     } else {
       if(_tempo==null){
         _tempo=[];
-        HttpRequest.request("${endpoint_json}tempo?lat=${jogo[0]['lat']}&lng=${jogo[0]['lng']}&data=${jogo[0]['ano']}-${jogo[0]['mes']}-${jogo[0]['dia']}").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
+        String mes = "0${jogo[0]['mes']}";
+        mes = mes.substring(mes.length-2, mes.length);
+        String dia = "0${jogo[0]['dia']}";
+        dia = dia.substring(dia.length-2, dia.length);
+        String data = "${jogo[0]['ano']}-${mes}-${dia}";
+        HttpRequest.request("${endpoint_json}tempo?lat=${jogo[0]['campo']['lat']}&lng=${jogo[0]['campo']['lng']}&data=${data}").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
       }
       return _tempo;
     }
