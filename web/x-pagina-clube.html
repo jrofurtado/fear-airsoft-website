@@ -6,28 +6,16 @@
     <link rel="components" href="x-widget.html">
     <link rel="components" href="x-loading.html">
     <link rel="components" href="x-anuncio-item.html">
+    <link rel="components" href="x-jogo.html">
   </head>
   <body>
     <element name="x-pagina-clube" extends="div" constructor="PaginaClube" apply-author-styles>
       <template>
-        <x-widget tamanho="small" titulo="Próximo Jogo">
-          <div class="proximoJogo">
-            <div id="map_canvas" class="mapSmall"></div>
-            <div class="weatherSmall">
-              <template instantiate="if model.tempo.length>0">
-                <img src="{{model.tempo[0]['weatherIconUrl'][0]['value']}}"/>
-                <br>
-                <span class="weatherSmallText {{temperaturaClass}}">{{model.tempo[0]['tempMinC']}}º C - {{model.tempo[0]['tempMaxC']}}º C</span>
-                <br>
-                <span class="weatherSmallText {{precipitacaoClass}}">Precipitação: {{model.tempo[0]['precipMM']}} mm</span>
-                <br>
-                <span class="weatherSmallText {{ventoClass}}">Vento (Km/h): {{model.tempo[0]['windspeedKmph']}} Km/h</span>
-                <br>
-                <span class="copyrightReference">Powered by <a href="http://www.worldweatheronline.com/" title="Free local weather content provider" target="_blank">World Weather Online</a></span>        
-              </template> 
-            </div>
-          </div>
-        </x-widget>
+        <template instantiate="if model.jogo.length>0">
+          <x-widget tamanho="small" titulo="{{model.jogo[0]['nome']}} {{model.jogo[0]['dia']}}/{{model.jogo[0]['mes']}}/{{model.jogo[0]['ano']}}">
+            <x-jogo></x-jogo>       
+          </x-widget>
+        </template>
         <x-widget tamanho="small" titulo="Contacto">
           <a href="mailto:contacto@fear-airsoft.com">contacto@fear-airsoft.com</a>
           <br/>
