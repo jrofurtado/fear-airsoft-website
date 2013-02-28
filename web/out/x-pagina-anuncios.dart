@@ -98,8 +98,9 @@ class PaginaAnuncios extends WebComponent {
     List<String> params = model.hash.split("/");
     if(params.length>=3){
       var res = model.anuncios.where((anuncio) => anuncio["titulo"].toString() == params.elementAt(2));
-      if(res.isEmpty)
+      if(res.isEmpty) {
         return null;
+      }
       return res.first;
     }
     return null;

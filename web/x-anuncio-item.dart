@@ -5,10 +5,11 @@ import 'model.dart';
 class AnuncioItem extends WebComponent {
   Map anuncio;
   String get imagemUrl{
-    if(anuncio["imagemExterna"])
+    if(anuncio["imagemExterna"]) {
       return anuncio["imagemUrl"];
-    else
+    } else {
       return Model.endpoint_imagens.concat(anuncio["imagemUrl"]);
+    }
   }
   bool get relativeUrl{
     return anuncio["url"].startsWith("#/");

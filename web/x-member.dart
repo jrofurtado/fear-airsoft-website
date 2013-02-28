@@ -4,7 +4,7 @@ import 'model.dart';
 
 class Member extends WebComponent {
   Map membro;
-  
+
   String get activoStr{
     return membro['quota']?"No activo":"Inactivo";
   }

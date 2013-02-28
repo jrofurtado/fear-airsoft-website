@@ -166,7 +166,7 @@ class Member extends WebComponent {
   /** Original code from the component. */
 
   Map membro;
-  
+
   String get activoStr{
     return membro['quota']?"No activo":"Inactivo";
   }

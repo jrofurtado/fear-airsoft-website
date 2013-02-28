@@ -12,14 +12,14 @@ gF1:function(){var z,y,x,w,v,u
 if(this.glT()===!0)return
 z=[]
 y=this.Yn
-if(typeof y!=="string"&&(typeof y!=="object"||y===null||y.constructor!==Array&&!y.$isXj()))return this.VV(1,y,z)
+if(typeof y!=="string"&&(typeof y!=="object"||y===null||y.constructor!==Array&&!y.$isXj()))return this.EZ(1,y,z)
 x=y.length
 w=$.Lu(this.x6)
 if(typeof w!=="number")throw $.s(w)
 v=x-w
 for(u=0;u<v;++u){if(u>=y.length)throw $.e(u)
 z.push(y[u])}return z},
-VV:function(a,b,c,d,e){switch(a){case 0:if(this.glT()===!0)return
+EZ:function(a,b,c,d,e){switch(a){case 0:if(this.glT()===!0)return
 c=[]
 b=this.Yn
 case 1:a=0
@@ -113,7 +113,7 @@ gvA:function(){return this.D7},
 grz:function(){return this.bt},
 $isVR:true,
 $iswL:true}
-$$.EK={"":"a;zO>,An,M,eX,cP",
+$$.EK={"":"a;zO>,CG,M,eX,cP",
 Fk:function(a){return $.lU(this.cP,a)},
 t:function(a){var z=this.cP
 if(typeof z!=="string"&&(typeof z!=="object"||z===null||z.constructor!==Array&&!z.$isXj()))return this.Nr(1,a,z)
@@ -128,7 +128,7 @@ $$.Pb={"":"a;kJ,v4,Oe",
 gl:function(){return this.Oe},
 G:function(){this.Oe=this.kJ.ej(this.v4)
 return this.Oe!=null}}
-$$.tQ={"":"a;M,An,zO>",
+$$.tQ={"":"a;M,CG,zO>",
 t:function(a){return this.Fk(a)},
 Fk:function(a){if($.OP(a,0)!==!0)throw $.b($.N(a))
 return this.zO}}
@@ -538,7 +538,7 @@ La:function(a){return this.e7($.Hk("$dom_removeChild","La",0,[a],[]))},
 fM:function(a){return this.e7($.Hk("setMapTypeId","fM",0,[a],[]))},
 tY:function(a){return this.e7($.Hk("setCenter","tY",0,[a],[]))},
 T9:function(){return this.e7($.Hk("toInt","T9",0,[],[]))},
-Lt:function(){return this.e7($.Hk("toJson","Lt",0,[],[]))},
+Bu:function(){return this.e7($.Hk("toJson","Bu",0,[],[]))},
 nN:function(a){return this.e7($.Hk("_sendData","nN",0,[a],[]))},
 Zc:function(a){return this.e7($.Hk("_put","Zc",0,[a],[]))},
 Tk:function(a){return this.e7($.Hk("replaceWith","Tk",0,[a],[]))},
@@ -563,7 +563,7 @@ er:function(){return this.e7($.Hk("createShadowRoot","er",0,[],[]))},
 SH:function(a){return this.e7($.Hk("_prev","SH",0,[a],[]))},
 jz:function(){return this.e7($.Hk("inserted","jz",0,[],[]))},
 Kw:function(a){return this.e7($.Hk("execute","Kw",0,[a],[]))},
-Zt:function(a){return this.e7($.Hk("lookup","Zt",0,[a],[]))},
+iQ:function(a){return this.e7($.Hk("lookup","iQ",0,[a],[]))},
 ox:function(a,b,c){return this.e7($.Hk("$dom_removeEventListener","ox",0,[a,b,c],[]))},
 F4:function(){return this.e7($.Hk("cleanup","F4",0,[],[]))},
 Fr:function(a){return this.e7($.Hk("split","Fr",0,[a],[]))},
@@ -649,7 +649,6 @@ gGI:function(){return this.e7($.Hk("_set","gGI",1,[],[]))},
 gXY:function(){return this.e7($.Hk("userAgent","gXY",1,[],[]))},
 gH:function(){return this.e7($.Hk("node","gH",1,[],[]))},
 gOU:function(){return this.e7($.Hk("__e61","gOU",1,[],[]))},
-gYp:function(){return this.e7($.Hk("__e50","gYp",1,[],[]))},
 gA7:function(){return this.e7($.Hk("cells","gA7",1,[],[]))},
 gFZ:function(){return this.e7($.Hk("isUrl","gFZ",1,[],[]))},
 gjH:function(){return this.e7($.Hk("galeriaFolderFramePosRandom3","gjH",1,[],[]))},
@@ -674,7 +673,7 @@ gTB:function(){return this.e7($.Hk("contains","gTB",1,[],[]))},
 gad:function(){return this.e7($.Hk("descricaoShare","gad",1,[],[]))},
 giJ:function(){return this.e7($.Hk("participantesTalvez","giJ",1,[],[]))},
 gDm:function(){return this.e7($.Hk("__e26","gDm",1,[],[]))},
-gCG:function(){return this.e7($.Hk("__e127","gCG",1,[],[]))},
+grJ:function(){return this.e7($.Hk("type","grJ",1,[],[]))},
 gIk:function(){return this.e7($.Hk("isMethod","gIk",1,[],[]))},
 gpf:function(){return this.e7($.Hk("status","gpf",1,[],[]))},
 gvH:function(){return this.e7($.Hk("maps","gvH",1,[],[]))},
@@ -685,7 +684,6 @@ gO6:function(){return this.e7($.Hk("remaining","gO6",1,[],[]))},
 ge0:function(){return this.e7($.Hk("__e136","ge0",1,[],[]))},
 gAM:function(){return this.e7($.Hk("MapTypeId","gAM",1,[],[]))},
 gF1:function(){return this.e7($.Hk("positionalArguments","gF1",1,[],[]))},
-grJ:function(){return this.e7($.Hk("type","grJ",1,[],[]))},
 gvj:function(){return this.e7($.Hk("gapi","gvj",1,[],[]))},
 glT:function(){return this.e7($.Hk("isGetter","glT",1,[],[]))},
 gLm:function(){return this.e7($.Hk("onInput","gLm",1,[],[]))},
@@ -700,26 +698,26 @@ gwd:function(){return this.e7($.Hk("children","gwd",1,[],[]))},
 gqB:function(){return this.e7($.Hk("caption","gqB",1,[],[]))},
 gcI:function(){return this.e7($.Hk("galeriaFolderFramePosRandom1","gcI",1,[],[]))},
 gY4:function(){return this.e7($.Hk("__e185","gY4",1,[],[]))},
+gVb:function(){return this.e7($.Hk("__e60","gVb",1,[],[]))},
 gKm:function(){return this.e7($.Hk("video","gKm",1,[],[]))},
-gJG:function(){return this.e7($.Hk("__e146","gJG",1,[],[]))},
 gS7:function(){return this.e7($.Hk("imagens","gS7",1,[],[]))},
 gz9:function(){return this.e7($.Hk("__e148","gz9",1,[],[]))},
 gCX:function(){return this.e7($.Hk("Date","gCX",1,[],[]))},
 gI0:function(){return this.e7($.Hk("recurrence","gI0",1,[],[]))},
 gTJ:function(){return this.e7($.Hk("__e184","gTJ",1,[],[]))},
+gJG:function(){return this.e7($.Hk("__e146","gJG",1,[],[]))},
 gFF:function(){return this.e7($.Hk("source","gFF",1,[],[]))},
 ghN:function(){return this.e7($.Hk("topEventLoop","ghN",1,[],[]))},
 guD:function(){return this.e7($.Hk("nextNode","guD",1,[],[]))},
 gkc:function(){return this.e7($.Hk("error","gkc",1,[],[]))},
 gUA:function(){return this.e7($.Hk("pesquisa","gUA",1,[],[]))},
-gUq:function(){return this.e7($.Hk("__e49","gUq",1,[],[]))},
 gKU:function(){return this.e7($.Hk("emblema","gKU",1,[],[]))},
+gNy:function(){return this.e7($.Hk("__e49","gNy",1,[],[]))},
 gZx:function(){return this.e7($.Hk("_scopeIndices","gZx",1,[],[]))},
 gyP:function(){return this.e7($.Hk("__e149","gyP",1,[],[]))},
 gi9:function(){return this.e7($.Hk("onChange","gi9",1,[],[]))},
 gns:function(){return this.e7($.Hk("tagName","gns",1,[],[]))},
 gnj:function(){return this.e7($.Hk("$dom_childNodes","gnj",1,[],[]))},
-ghm:function(){return this.e7($.Hk("__e51","ghm",1,[],[]))},
 gix:function(){return this.e7($.Hk("nextIsolateId","gix",1,[],[]))},
 gy3:function(){return this.e7($.Hk("millisecondsSinceEpoch","gy3",1,[],[]))},
 gRV:function(){return this.e7($.Hk("_state","gRV",1,[],[]))},
@@ -729,14 +727,17 @@ gDo:function(){return this.e7($.Hk("item","gDo",1,[],[]))},
 geG:function(){return this.e7($.Hk("membros","geG",1,[],[]))},
 gKV:function(){return this.e7($.Hk("parentNode","gKV",1,[],[]))},
 gZr:function(){return this.e7($.Hk("document","gZr",1,[],[]))},
+gLE:function(){return this.e7($.Hk("__e123","gLE",1,[],[]))},
 ghQ:function(){return this.e7($.Hk("__e168","ghQ",1,[],[]))},
-gji:function(){return this.e7($.Hk("Marker","gji",1,[],[]))},
 gYJ:function(){return this.e7($.Hk("jogo","gYJ",1,[],[]))},
 gwO:function(){return this.e7($.Hk("tHead","gwO",1,[],[]))},
 gQn:function(){return this.e7($.Hk("galeriaFolderFramePosRandom2","gQn",1,[],[]))},
+gji:function(){return this.e7($.Hk("Marker","gji",1,[],[]))},
+gZL:function(){return this.e7($.Hk("__e59","gZL",1,[],[]))},
 geM:function(){return this.e7($.Hk("statusText","geM",1,[],[]))},
 gEf:function(){return this.e7($.Hk("$dom_body","gEf",1,[],[]))},
 gkw:function(){return this.e7($.Hk("__e42","gkw",1,[],[]))},
+gqj:function(){return this.e7($.Hk("__e116","gqj",1,[],[]))},
 gBq:function(){return this.e7($.Hk("_tag","gBq",1,[],[]))},
 gni:function(){return this.e7($.Hk("nodes","gni",1,[],[]))},
 gSA:function(){return this.e7($.Hk("temperaturaClass","gSA",1,[],[]))},
@@ -746,9 +747,9 @@ gI4:function(){return this.e7($.Hk("stackTrace","gI4",1,[],[]))},
 gaY:function(){return this.e7($.Hk("overrides","gaY",1,[],[]))},
 gDD:function(){return this.e7($.Hk("classes","gDD",1,[],[]))},
 gxZ:function(){return this.e7($.Hk("tBodies","gxZ",1,[],[]))},
+gTp:function(){return this.e7($.Hk("__e122","gTp",1,[],[]))},
 gdS:function(){return this.e7($.Hk("_workerId","gdS",1,[],[]))},
 gik:function(){return this.e7($.Hk("listener","gik",1,[],[]))},
-gvK:function(){return this.e7($.Hk("__e126","gvK",1,[],[]))},
 gCp:function(){return this.e7($.Hk("google","gCp",1,[],[]))},
 gPp:function(){return this.e7($.Hk("__e152","gPp",1,[],[]))},
 gHh:function(){return this.e7($.Hk("achievement","gHh",1,[],[]))},
@@ -767,7 +768,6 @@ gPS:function(){return this.e7($.Hk("participantesNao","gPS",1,[],[]))},
 glI:function(){return this.e7($.Hk("titulo","glI",1,[],[]))},
 grz:function(){return this.e7($.Hk("isCaseSensitive","grz",1,[],[]))},
 grh:function(){return this.e7($.Hk("last","grh",1,[],[]))},
-gUv:function(){return this.e7($.Hk("__e52","gUv",1,[],[]))},
 gA4:function(){return this.e7($.Hk("sb","gA4",1,[],[]))},
 gB:function(){return this.e7($.Hk("length","gB",1,[],[]))},
 gpF:function(){return this.e7($.Hk("_list","gpF",1,[],[]))},
@@ -777,6 +777,7 @@ gy6:function(){return this.e7($.Hk("precipitacaoClass","gy6",1,[],[]))},
 gLU:function(){return this.e7($.Hk("href","gLU",1,[],[]))},
 gA:function(){return this.e7($.Hk("iterator","gA",1,[],[]))},
 gP:function(){return this.e7($.Hk("value","gP",1,[],[]))},
+grD:function(){return this.e7($.Hk("__e115","grD",1,[],[]))},
 gqP:function(){return this.e7($.Hk("basePath","gqP",1,[],[]))},
 gBm:function(){return this.e7($.Hk("emptyUrl","gBm",1,[],[]))},
 gnA:function(){return this.e7($.Hk("activoStr","gnA",1,[],[]))},
@@ -793,7 +794,6 @@ gT5:function(){return this.e7($.Hk("__e114","gT5",1,[],[]))},
 gv9:function(){return this.e7($.Hk("galeriaFolderFrameRotRandom3","gv9",1,[],[]))},
 gjL:function(){return this.e7($.Hk("oldValue","gjL",1,[],[]))},
 gVZ:function(){return this.e7($.Hk("sendPort","gVZ",1,[],[]))},
-gU4:function(){return this.e7($.Hk("__e88","gU4",1,[],[]))},
 giy:function(){return this.e7($.Hk("_portId","giy",1,[],[]))},
 gjQ:function(){return this.e7($.Hk("__e41","gjQ",1,[],[]))},
 gCa:function(){return this.e7($.Hk("__e62","gCa",1,[],[]))},
@@ -803,9 +803,7 @@ gdz:function(){return this.e7($.Hk("newValue","gdz",1,[],[]))},
 gY5:function(){return this.e7($.Hk("participantes","gY5",1,[],[]))},
 gjD:function(){return this.e7($.Hk("_modificationCount","gjD",1,[],[]))},
 gil:function(){return this.e7($.Hk("responseText","gil",1,[],[]))},
-gun:function(){return this.e7($.Hk("__e133","gun",1,[],[]))},
 gQK:function(){return this.e7($.Hk("_registry","gQK",1,[],[]))},
-gLl:function(){return this.e7($.Hk("__e134","gLl",1,[],[]))},
 gnS:function(){return this.e7($.Hk("emblemaSeleccionado","gnS",1,[],[]))},
 gQg:function(){return this.e7($.Hk("attributes","gQg",1,[],[]))},
 gr4:function(){return this.e7($.Hk("result","gr4",1,[],[]))},
@@ -842,16 +840,18 @@ gvp:function(){return this.e7($.Hk("rows","gvp",1,[],[]))},
 gUK:function(){return this.e7($.Hk("activoImg","gUK",1,[],[]))},
 glr:function(){return this.e7($.Hk("cssClass","glr",1,[],[]))},
 gl:function(){return this.e7($.Hk("current","gl",1,[],[]))},
+gQP:function(){return this.e7($.Hk("__e58","gQP",1,[],[]))},
 got:function(){return this.e7($.Hk("token","got",1,[],[]))},
 guu:function(){return this.e7($.Hk("participantesSim","guu",1,[],[]))},
 gPj:function(){return this.e7($.Hk("link","gPj",1,[],[]))},
 giY:function(){return this.e7($.Hk("navigator","giY",1,[],[]))},
 gtH:function(){return this.e7($.Hk("first","gtH",1,[],[]))},
-gMc:function(){return this.e7($.Hk("__e147","gMc",1,[],[]))},
-ged:function(){return this.e7($.Hk("isSetter","ged",1,[],[]))},
 gcd:function(){return this.e7($.Hk("isVisible","gcd",1,[],[]))},
-gxv:function(){return this.e7($.Hk("membro","gxv",1,[],[]))},
+gMc:function(){return this.e7($.Hk("__e147","gMc",1,[],[]))},
+gMk:function(){return this.e7($.Hk("__e91","gMk",1,[],[]))},
 gly:function(){return this.e7($.Hk("nome","gly",1,[],[]))},
+ged:function(){return this.e7($.Hk("isSetter","ged",1,[],[]))},
+gxv:function(){return this.e7($.Hk("membro","gxv",1,[],[]))},
 sXo:function(a){return this.e7($.Hk("handleClientLoad=","sXo",2,[a],[]))},
 swF:function(a){return this.e7($.Hk("_previous=","swF",2,[a],[]))},
 sJ8:function(a){return this.e7($.Hk("_membros=","sJ8",2,[a],[]))},
@@ -887,7 +887,7 @@ sfg:function(a){return this.e7($.Hk("height=","sfg",2,[a],[]))},
 sjC:function(a){return this.e7($.Hk("imagem=","sjC",2,[a],[]))},
 six:function(a){return this.e7($.Hk("nextIsolateId=","six",2,[a],[]))},
 sRV:function(a){return this.e7($.Hk("_state=","sRV",2,[a],[]))},
-sY9:function(a){return this.e7($.Hk("_jogo=","sY9",2,[a],[]))},
+sS9:function(a){return this.e7($.Hk("_jogo=","sS9",2,[a],[]))},
 sAV:function(a){return this.e7($.Hk("_jogo=","sAV",2,[a],[]))},
 sb0:function(a){return this.e7($.Hk("mapTypeId=","sb0",2,[a],[]))},
 spQ:function(a){return this.e7($.Hk("applyAuthorStyles=","spQ",2,[a],[]))},
@@ -2376,7 +2376,7 @@ y=null
 try{y=a.call$0()}finally{$globalState.N0=z
 if(z!=null)z.XN()}return y},
 XN:function(){$ = this.Pk},
-Zt:function(a){return $.lU(this.Gx,a)},
+iQ:function(a){return $.lU(this.Gx,a)},
 mg:function(a,b){if(this.Gx.x4(a)===!0)throw $.b($.jX("Registry: ports must be registered only once."))
 $.zj(this.Gx,a,b)
 $.zj($globalState.i2,this.iP,this)},
@@ -2493,7 +2493,7 @@ x=z.t(a,2)
 w=z.t(a,3)
 if($.OP(y,$globalState.NO)===!0){v=$.lU($globalState.i2,x)
 if(v==null)return
-u=v.Zt(w)
+u=v.iQ(w)
 if(u==null)return
 return $.Pc(u,x)}else return $.nF(y,x,w)}}
 $$.fP={"":"a;Vz",
@@ -2532,7 +2532,7 @@ YZ:function(a){throw $.b("Message serialization: Illegal value "+$.d(a)+" passed
 $$.Nt={"":"Ig;",
 Pq:function(a){return a},
 wb:function(a){var z,y,x,w
-if(typeof a!=="object"||a===null||a.constructor!==Array&&!a.$isXj())return this.OD(1,a)
+if(typeof a!=="object"||a===null||a.constructor!==Array&&!a.$isXj())return this.hd(1,a)
 z=$.lU(this.vu,a)
 if(z!=null)return z
 y=a.length
@@ -2542,7 +2542,7 @@ for(x=0;x<y;++x){if(x>=a.length)throw $.e(x)
 w=this.cE(a[x])
 if(x>=z.length)throw $.e(x)
 z[x]=w}return z},
-OD:function(a,b){var z,y,x,w,v
+hd:function(a,b){var z,y,x,w,v
 z=$.lU(this.vu,b)
 if(z!=null)return z
 y=$.dD(b)
@@ -3083,8 +3083,8 @@ BV:function(){$.f7(this.GC,this.P)
 this.P=null},
 YO:function(){this.tc()},
 gr4:function(){return this.P}}
-$$.Wm={"":"BA;GF,Gp,GC,G3,P",
-Gi:function(a,b){return this.GF.call$2(a,b)},
+$$.Wm={"":"BA;uJ,Gp,GC,G3,P",
+Gi:function(a,b){return this.uJ.call$2(a,b)},
 BV:function(){this.P=this.Gi($.Lu(this.GC),this.P)
 $.BA.prototype.BV.call(this)},
 qh:function(){this.P=this.Gi(this.G3,this.P)
@@ -3368,7 +3368,7 @@ for(z=this.tx,y=z.length,x=0;x<y;++x){w=z[x]
 if(w==null?a==null:w===a)throw $.b("Cyclic structure")}z.push(a)},
 C7:function(a){var z,y,x,w
 if(!this.Jc(a)){this.Dx(a)
-try{z=a.Lt()
+try{z=a.Bu()
 if(!this.Jc(z))throw $.b($.Gy(a))
 x=this.tx
 if(0>=x.length)throw $.e(0)
@@ -4478,8 +4478,8 @@ else this.rX=$.cR(this.fW,this.wo)},
 wg:function(){if(!this.V5){this.LJ()
 this.rX=null}},
 gUS:function(){return new $.kU(this,"wg")}}
-$$.av={"":"xs;HG,PG,FZ>,V5,rX",
-Re:function(a){return this.HG.call$1(a)},
+$$.av={"":"xs;BQ,PG,FZ>,V5,rX",
+Re:function(a){return this.BQ.call$1(a)},
 Gb:function(){return this.PG.call$0()},
 LJ:function(){return this.rX.call$0()},
 Mp:function(){if(this.V5===!0){var z=this.Gb()
@@ -4663,7 +4663,7 @@ bu:function(){var z=this.rs
 return z==null?"APIRequestException":"APIRequestException: "+$.d(z)},
 $isQ4:true}
 $$.i6={"":"a;Ar,iP>,fY,pW,Jd",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.Ar
 if(y!=null)z.u("etag",y)
@@ -4674,27 +4674,27 @@ if(y!=null)z.u("kind",y)
 y=this.pW
 if(y!=null)z.u("role",y)
 y=this.Jd
-if(y!=null)z.u("scope",y.Lt())
+if(y!=null)z.u("scope",y.Bu())
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 lA:function(a){if(a.x4("etag")===!0)this.Ar=$.lU(a,"etag")
 if(a.x4("id")===!0)this.iP=$.lU(a,"id")
 if(a.x4("kind")===!0)this.fY=$.lU(a,"kind")
 if(a.x4("role")===!0)this.pW=$.lU(a,"role")
 if(a.x4("scope")===!0)this.Jd=$.w3($.lU(a,"scope"))}}
 $$.OM={"":"a;rJ=,P=",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.rJ
 if(y!=null)z.u("type",y)
 y=this.P
 if(y!=null)z.u("value",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 lk:function(a){if(a.x4("type")===!0)this.rJ=$.lU(a,"type")
 if(a.x4("value")===!0)this.P=$.lU(a,"value")}}
 $$.Xp={"":"a;GB,Ar,iP>,fY,mW>,IT,dI",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.GB
 if(y!=null)z.u("description",y)
@@ -4711,7 +4711,7 @@ if(y!=null)z.u("summary",y)
 y=this.dI
 if(y!=null)z.u("timeZone",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 yV:function(a){if(a.x4("description")===!0)this.GB=$.lU(a,"description")
 if(a.x4("etag")===!0)this.Ar=$.lU(a,"etag")
 if(a.x4("id")===!0)this.iP=$.lU(a,"id")
@@ -4720,7 +4720,7 @@ if(a.x4("location")===!0)this.mW=$.lU(a,"location")
 if(a.x4("summary")===!0)this.IT=$.lU(a,"summary")
 if(a.x4("timeZone")===!0)this.dI=$.lU(a,"timeZone")}}
 $$.mZ={"":"a;PO,Vp,Ta,Jm>,GB,Ar,xD,nf,iP>,fY,mW>,w4,IT,Ld,dI",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.PO
 if(y!=null)z.u("accessRole",y)
@@ -4752,7 +4752,7 @@ if(y!=null)z.u("summaryOverride",y)
 y=this.dI
 if(y!=null)z.u("timeZone",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 jr:function(a){if(a.x4("accessRole")===!0)this.PO=$.lU(a,"accessRole")
 if(a.x4("backgroundColor")===!0)this.Vp=$.lU(a,"backgroundColor")
 if(a.x4("colorId")===!0)this.Ta=$.lU(a,"colorId")
@@ -4770,7 +4770,7 @@ if(a.x4("summaryOverride")===!0)this.Ld=$.lU(a,"summaryOverride")
 if(a.x4("timeZone")===!0)this.dI=$.lU(a,"timeZone")}}
 $$.JT={"":"a;Ab,cM>,GD,Ta,z1,Iz,GB,eX,wq,Ar,GG,pL,R9,ty,Lp,Tn,Xu,Qx,iP>,fY,mW>,Jp,FY,dt,Hy,I0>,au,L7,iU,M,pf>,IT,ai,nr,SW",
 iF:function(){return this.z1.call$0()},
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.Ab
 if(y!=null)z.u("anyoneCanAddSelf",y)
@@ -4782,19 +4782,19 @@ if(y!=null)z.u("colorId",y)
 y=this.z1
 if(y!=null)z.u("created",y)
 y=this.Iz
-if(y!=null)z.u("creator",y.Lt())
+if(y!=null)z.u("creator",y.Bu())
 y=this.GB
 if(y!=null)z.u("description",y)
 y=this.eX
-if(y!=null)z.u("end",y.Lt())
+if(y!=null)z.u("end",y.Bu())
 y=this.wq
 if(y!=null)z.u("endTimeUnspecified",y)
 y=this.Ar
 if(y!=null)z.u("etag",y)
 y=this.GG
-if(y!=null)z.u("extendedProperties",y.Lt())
+if(y!=null)z.u("extendedProperties",y.Bu())
 y=this.pL
-if(y!=null)z.u("gadget",y.Lt())
+if(y!=null)z.u("gadget",y.Bu())
 y=this.R9
 if(y!=null)z.u("guestsCanInviteOthers",y)
 y=this.ty
@@ -4816,20 +4816,20 @@ if(y!=null)z.u("location",y)
 y=this.Jp
 if(y!=null)z.u("locked",y)
 y=this.FY
-if(y!=null)z.u("organizer",y.Lt())
+if(y!=null)z.u("organizer",y.Bu())
 y=this.dt
-if(y!=null)z.u("originalStartTime",y.Lt())
+if(y!=null)z.u("originalStartTime",y.Bu())
 y=this.Hy
 if(y!=null)z.u("privateCopy",y)
 if(this.I0!=null){z.u("recurrence",$.A(0,null))
 $.Uq(this.I0,new $.PB(z))}y=this.au
 if(y!=null)z.u("recurringEventId",y)
 y=this.L7
-if(y!=null)z.u("reminders",y.Lt())
+if(y!=null)z.u("reminders",y.Bu())
 y=this.iU
 if(y!=null)z.u("sequence",y)
 y=this.M
-if(y!=null)z.u("start",y.Lt())
+if(y!=null)z.u("start",y.Bu())
 y=this.pf
 if(y!=null)z.u("status",y)
 y=this.IT
@@ -4841,7 +4841,7 @@ if(y!=null)z.u("updated",y)
 y=this.SW
 if(y!=null)z.u("visibility",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 WW:function(a){if(a.x4("anyoneCanAddSelf")===!0)this.Ab=$.lU(a,"anyoneCanAddSelf")
 if(a.x4("attendees")===!0){this.cM=[]
 $.Uq($.lU(a,"attendees"),new $.ac0(this))}if(a.x4("attendeesOmitted")===!0)this.GD=$.lU(a,"attendeesOmitted")
@@ -4878,7 +4878,7 @@ if(a.x4("transparency")===!0)this.ai=$.lU(a,"transparency")
 if(a.x4("updated")===!0)this.nr=$.lU(a,"updated")
 if(a.x4("visibility")===!0)this.SW=$.lU(a,"visibility")}}
 $$.aM={"":"a;yH>,ua>,iP>,L",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.yH
 if(y!=null)z.u("displayName",y)
@@ -4889,40 +4889,40 @@ if(y!=null)z.u("id",y)
 y=this.L
 if(y!=null)z.u("self",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 eq:function(a){if(a.x4("displayName")===!0)this.yH=$.lU(a,"displayName")
 if(a.x4("email")===!0)this.ua=$.lU(a,"email")
 if(a.x4("id")===!0)this.iP=$.lU(a,"id")
 if(a.x4("self")===!0)this.L=$.lU(a,"self")}}
 $$.GB={"":"a;tu,Y2",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.tu
-if(y!=null)z.u("private",y.Lt())
+if(y!=null)z.u("private",y.Bu())
 y=this.Y2
-if(y!=null)z.u("shared",y.Lt())
+if(y!=null)z.u("shared",y.Bu())
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 eK:function(a){if(a.x4("private")===!0)this.tu=$.qV($.lU(a,"private"))
 if(a.x4("shared")===!0)this.Y2=$.Zt($.lU(a,"shared"))}}
 $$.pA={"":"a;",
-Lt:function(){return $.Fj(null,null)},
+Bu:function(){return $.Fj(null,null)},
 bu:function(){return $.TC($.Fj(null,null))}}
 $$.uX={"":"a;",
-Lt:function(){return $.Fj(null,null)},
+Bu:function(){return $.Fj(null,null)},
 bu:function(){return $.TC($.Fj(null,null))}}
 $$.Ou={"":"a;aY>,pH",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 if(this.aY!=null){z.u("overrides",$.A(0,null))
 $.Uq(this.aY,new $.b1(z))}y=this.pH
 if(y!=null)z.u("useDefault",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
-eA:function(a){if(a.x4("overrides")===!0){this.aY=[]
+bu:function(){return $.TC(this.Bu())},
+Em:function(a){if(a.x4("overrides")===!0){this.aY=[]
 $.Uq($.lU(a,"overrides"),new $.QwA(this))}if(a.x4("useDefault")===!0)this.pH=$.lU(a,"useDefault")}}
 $$.Dg={"":"a;yH>,ua>,iP>,L",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.yH
 if(y!=null)z.u("displayName",y)
@@ -4933,13 +4933,13 @@ if(y!=null)z.u("id",y)
 y=this.L
 if(y!=null)z.u("self",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 DY:function(a){if(a.x4("displayName")===!0)this.yH=$.lU(a,"displayName")
 if(a.x4("email")===!0)this.ua=$.lU(a,"email")
 if(a.x4("id")===!0)this.iP=$.lU(a,"id")
 if(a.x4("self")===!0)this.L=$.lU(a,"self")}}
 $$.MX={"":"a;uL,fg<,tI,Pj>,ne,mk<,rJ=,R<",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.uL
 if(y!=null)z.u("display",y)
@@ -4950,7 +4950,7 @@ if(y!=null)z.u("iconLink",y)
 y=this.Pj
 if(y!=null)z.u("link",y)
 y=this.ne
-if(y!=null)z.u("preferences",y.Lt())
+if(y!=null)z.u("preferences",y.Bu())
 y=this.mk
 if(y!=null)z.u("title",y)
 y=this.rJ
@@ -4958,7 +4958,7 @@ if(y!=null)z.u("type",y)
 y=this.R
 if(y!=null)z.u("width",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 an:function(a){if(a.x4("display")===!0)this.uL=$.lU(a,"display")
 if(a.x4("height")===!0)this.fg=$.lU(a,"height")
 if(a.x4("iconLink")===!0)this.tI=$.lU(a,"iconLink")
@@ -4968,10 +4968,10 @@ if(a.x4("title")===!0)this.mk=$.lU(a,"title")
 if(a.x4("type")===!0)this.rJ=$.lU(a,"type")
 if(a.x4("width")===!0)this.R=$.lU(a,"width")}}
 $$.dc={"":"a;",
-Lt:function(){return $.Fj(null,null)},
+Bu:function(){return $.Fj(null,null)},
 bu:function(){return $.TC($.Fj(null,null))}}
 $$.Zn={"":"a;Y1,w0,yH>,ua>,iP>,Ax,FY,xI,WR>,L",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.Y1
 if(y!=null)z.u("additionalGuests",y)
@@ -4994,7 +4994,7 @@ if(y!=null)z.u("responseStatus",y)
 y=this.L
 if(y!=null)z.u("self",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 no:function(a){if(a.x4("additionalGuests")===!0)this.Y1=$.lU(a,"additionalGuests")
 if(a.x4("comment")===!0)this.w0=$.lU(a,"comment")
 if(a.x4("displayName")===!0)this.yH=$.lU(a,"displayName")
@@ -5006,7 +5006,7 @@ if(a.x4("resource")===!0)this.xI=$.lU(a,"resource")
 if(a.x4("responseStatus")===!0)this.WR=$.lU(a,"responseStatus")
 if(a.x4("self")===!0)this.L=$.lU(a,"self")}}
 $$.T4={"":"a;l8,yK,dI",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.l8
 if(y!=null)z.u("date",y)
@@ -5015,28 +5015,28 @@ if(y!=null)z.u("dateTime",y)
 y=this.dI
 if(y!=null)z.u("timeZone",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 S0:function(a){if(a.x4("date")===!0)this.l8=$.lU(a,"date")
 if(a.x4("dateTime")===!0)this.yK=$.lU(a,"dateTime")
 if(a.x4("timeZone")===!0)this.dI=$.lU(a,"timeZone")}}
 $$.cE={"":"a;bP,CK",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.bP
 if(y!=null)z.u("method",y)
 y=this.CK
 if(y!=null)z.u("minutes",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 Dp:function(a){if(a.x4("method")===!0)this.bP=$.lU(a,"method")
 if(a.x4("minutes")===!0)this.CK=$.lU(a,"minutes")}}
 $$.HO={"":"a;HP,Dy,fY,DV,LG",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.HP
-if(y!=null)z.u("calendars",y.Lt())
+if(y!=null)z.u("calendars",y.Bu())
 y=this.Dy
-if(y!=null)z.u("groups",y.Lt())
+if(y!=null)z.u("groups",y.Bu())
 y=this.fY
 if(y!=null)z.u("kind",y)
 y=this.DV
@@ -5044,20 +5044,20 @@ if(y!=null)z.u("timeMax",y)
 y=this.LG
 if(y!=null)z.u("timeMin",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 jF:function(a){if(a.x4("calendars")===!0)this.HP=$.Di($.lU(a,"calendars"))
 if(a.x4("groups")===!0)this.Dy=$.ry($.lU(a,"groups"))
 if(a.x4("kind")===!0)this.fY=$.lU(a,"kind")
 if(a.x4("timeMax")===!0)this.DV=$.lU(a,"timeMax")
 if(a.x4("timeMin")===!0)this.LG=$.lU(a,"timeMin")}}
 $$.ZS={"":"a;",
-Lt:function(){return $.Fj(null,null)},
+Bu:function(){return $.Fj(null,null)},
 bu:function(){return $.TC($.Fj(null,null))}}
 $$.dE={"":"a;",
-Lt:function(){return $.Fj(null,null)},
+Bu:function(){return $.Fj(null,null)},
 bu:function(){return $.TC($.Fj(null,null))}}
 $$.Ac={"":"a;Ar,iP>,fY,P=",
-Lt:function(){var z,y
+Bu:function(){var z,y
 z=$.Fj(null,null)
 y=this.Ar
 if(y!=null)z.u("etag",y)
@@ -5068,7 +5068,7 @@ if(y!=null)z.u("kind",y)
 y=this.P
 if(y!=null)z.u("value",y)
 return z},
-bu:function(){return $.TC(this.Lt())},
+bu:function(){return $.TC(this.Bu())},
 lK:function(a){if(a.x4("etag")===!0)this.Ar=$.lU(a,"etag")
 if(a.x4("id")===!0)this.iP=$.lU(a,"id")
 if(a.x4("kind")===!0)this.fY=$.lU(a,"kind")
@@ -5287,7 +5287,7 @@ this.eu=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.Z6
 if(!(typeof z==="object"&&z!==null&&z.$isI0()))this.Z6=this}}
-$$.tK={"":"a;Xv>,rk=,LU=,wP=,nS=,dn<,J8<,uy,om<,pm<,Ej<,dk,Y9<,YS<",
+$$.tK={"":"a;Xv>,rk=,LU=,wP=,nS=,dn<,J8<,uy,om<,pm<,Ej<,dk,S9<,YS<",
 gjb:function(){var z,y,x,w
 if($.OP($.Lu(this.gYJ()),0)===!0)return[]
 else{if(this.dn==null){this.dn=[]
@@ -5307,8 +5307,8 @@ gpx:function(){if(this.pm==null){this.pm=[]
 $.lt("http://json.fear-airsoft.com/json/publishedData/galeria",null,null,null,null,null).ml(new $.iz())}return this.pm},
 guz:function(){if(this.Ej==null){this.Ej=[]
 $.lt("http://json.fear-airsoft.com/json/publishedData/anuncios",null,null,null,null,null).ml(new $.at())}return this.Ej},
-gYJ:function(){if(this.Y9==null){this.Y9=[]
-$.lt("http://json.fear-airsoft.com/json/publishedData/jogo",null,null,null,null,null).ml(new $.lQ(this))}return this.Y9},
+gYJ:function(){if(this.S9==null){this.S9=[]
+$.lt("http://json.fear-airsoft.com/json/publishedData/jogo",null,null,null,null,null).ml(new $.lQ(this))}return this.S9},
 gY5:function(){if($.OP($.Lu(this.gYJ()),0)===!0)return[]
 else if(this.YS==null){var z=$.xy(null)
 z.sG3("AIzaSyDYBAsXgRApBsZVy46hcsTsNBkrumQ7Heg")
@@ -5386,29 +5386,29 @@ z=[]
 for(y=$.de($.V8().guz()),x=0;y.G()===!0;){++x
 z.push(y.gl())
 if(x===5)break}return z}}
-$$.cn={"":"Oj;T1,uJ,P2,RZ,xw<,lI=,vV,QL",
+$$.cn={"":"Oj;T1,Lt,Uq,RZ,xw<,lI=,vV,QL",
 xA:function(){var z,y
 this.T1=this.er()
 this.RZ=$.DJ(this.T1)
 z=this.T1
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.T1.gni(),$.Vr().Yv(!0))
-this.uJ=this.T1.Ja("#__e-112")
-this.P2=this.uJ.Ja("#__e-111")
+this.Lt=this.T1.Ja("#__e-65")
+this.Uq=this.Lt.Ja("#__e-64")
 y=this.RZ.Wk(new $.nB(this),!1)
-$.f7(this.P2.gni(),y)
-this.RZ.Qp(this.uJ,new $.b5(this),!1)
+$.f7(this.Uq.gni(),y)
+this.RZ.Qp(this.Lt,new $.b5(this),!1)
 this.RZ.rw()},
 CE:function(){this.RZ.Mp()},
 Qi:function(){this.RZ.wg()
-this.P2=null
-this.uJ=null
+this.Uq=null
+this.Lt=null
 this.RZ=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.T1
 if(!(typeof z==="object"&&z!==null&&z.$isI0()))this.T1=this},
 glr:function(){return $.Pd.SD("widget-",this.xw)}}
-$$.Mf={"":"Oj;JP,U7,Uc,kD,Kb,q5,B5,xT,nu,N7,vV,QL",
+$$.Mf={"":"Oj;JP,B5,xT,bG,Kb,q5,YF,eA,D8,N7,vV,QL",
 xA:function(){var z,y,x,w
 this.JP=this.er()
 this.N7=$.DJ(this.JP)
@@ -5416,33 +5416,33 @@ z=this.JP
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.JP.gni(),$.hS().Yv(!0))
 this.Kb=this.JP.Ja("#map_canvas")
-this.nu=this.JP.Ja("#__e-97")
-this.N7.hB(this.nu,new $.Jp(),new $.Xt(this))
-this.U7=this.JP.Ja("#__e-101")
+this.q5=this.JP.Ja("#__e-100")
+this.N7.hB(this.q5,new $.Jp(),new $.Xt(this))
+this.B5=this.JP.Ja("#__e-104")
 y=this.N7.Wk(new $.xm(this),!1)
-this.q5=$.Ry().Yv(!0)
-this.N7.Gj(this.q5,new $.Ob(this),new $.Jpx())
-$.pS(this.U7.gni(),[document.createTextNode("\n            Presentes: "),y,document.createTextNode("\n            "),this.q5,document.createTextNode("  \n          ")])
-this.Uc=this.JP.Ja("#__e-105")
+this.YF=$.Ry().Yv(!0)
+this.N7.Gj(this.YF,new $.Ob(this),new $.Jpx())
+$.pS(this.B5.gni(),[document.createTextNode("\n            Presentes: "),y,document.createTextNode("\n            "),this.YF,document.createTextNode("  \n          ")])
+this.xT=this.JP.Ja("#__e-108")
 x=this.N7.Wk(new $.Xtd(this),!1)
-this.B5=$.MP().Yv(!0)
-this.N7.Gj(this.B5,new $.vDa(this),new $.GNA())
-$.pS(this.Uc.gni(),[document.createTextNode("\n            Ausentes: "),x,document.createTextNode("\n            "),this.B5,document.createTextNode("  \n          ")])
-this.kD=this.JP.Ja("#__e-109")
+this.eA=$.MP().Yv(!0)
+this.N7.Gj(this.eA,new $.vDa(this),new $.GNA())
+$.pS(this.xT.gni(),[document.createTextNode("\n            Ausentes: "),x,document.createTextNode("\n            "),this.eA,document.createTextNode("  \n          ")])
+this.bG=this.JP.Ja("#__e-112")
 w=this.N7.Wk(new $.IfW(this),!1)
-this.xT=$.iE().Yv(!0)
-this.N7.Gj(this.xT,new $.X1g(this),new $.ZZj())
-$.pS(this.kD.gni(),[document.createTextNode("\n            Talvez: "),w,document.createTextNode("\n            "),this.xT,document.createTextNode("\n          ")])
+this.D8=$.iE().Yv(!0)
+this.N7.Gj(this.D8,new $.X1g(this),new $.ZZj())
+$.pS(this.bG.gni(),[document.createTextNode("\n            Talvez: "),w,document.createTextNode("\n            "),this.D8,document.createTextNode("\n          ")])
 this.N7.rw()},
 CE:function(){this.N7.Mp()},
 Qi:function(){this.N7.wg()
+this.D8=null
+this.bG=null
+this.eA=null
 this.xT=null
-this.kD=null
+this.YF=null
 this.B5=null
-this.Uc=null
 this.q5=null
-this.U7=null
-this.nu=null
 this.Kb=null
 this.N7=null},
 rN:function(){$.Oj.prototype.rN.call(this)
@@ -5571,43 +5571,43 @@ this.vn=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.CJ
 if(!(typeof z==="object"&&z!==null&&z.$isI0()))this.CJ=this}}
-$$.DO={"":"Oj;E6,P6,tj,EE,nk,po,TG,U4>,HU=,vV,QL",
+$$.DO={"":"Oj;E6,Sa,Mb,dG,U4,NW,TG,Mk>,HU=,vV,QL",
 xA:function(){var z,y,x,w,v
 this.E6=this.er()
 this.TG=$.DJ(this.E6)
 z=this.E6
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.E6.gni(),$.RX().Yv(!0))
-this.P6=this.E6.Ja("#__e-66")
+this.Sa=this.E6.Ja("#__e-69")
 y=this.TG.Wk(new $.Yd(this),!1)
 x=this.TG.Wk(new $.SS(this),!1)
 w=this.TG.Wk(new $.CG(this),!1)
-$.pS(this.P6.gni(),[y,document.createTextNode("/"),x,document.createTextNode("/"),w])
-this.tj=this.E6.Ja("#__e-73")
-this.TG.hB(this.tj,new $.An(this),new $.rf(this))
-this.EE=this.E6.Ja("#__e-80")
-this.TG.hB(this.EE,new $.Na(this),new $.ajO(this))
-this.nk=this.E6.Ja("#__e-85")
-this.TG.hB(this.nk,new $.SBx(this),new $.Ydv(this))
-this.po=this.E6.Ja("#__e-87")
-v=this.TG.Wk(new $.SSu(this),!1)
-$.f7(this.po.gni(),v)
+$.pS(this.Sa.gni(),[y,document.createTextNode("/"),x,document.createTextNode("/"),w])
+this.Mb=this.E6.Ja("#__e-76")
+this.TG.hB(this.Mb,new $.An(this),new $.rf(this))
+this.dG=this.E6.Ja("#__e-83")
+this.TG.hB(this.dG,new $.Na(this),new $.ajO(this))
 this.U4=this.E6.Ja("#__e-88")
+this.TG.hB(this.U4,new $.SBx(this),new $.Ydv(this))
+this.NW=this.E6.Ja("#__e-90")
+v=this.TG.Wk(new $.SSu(this),!1)
+$.f7(this.NW.gni(),v)
+this.Mk=this.E6.Ja("#__e-91")
 this.TG.lh(new $.RPu(this),new $.CGD(this),!1,!1)
 this.TG.lh(new $.Ane(this),new $.rfa(this),!1,!1)
 this.TG.lh(new $.Naa(this),new $.a0(this),!1,!1)
 this.TG.lh(new $.a5(this),new $.a8(this),!1,!1)
-$.yZ(this.U4)
-this.TG.J7(this.U4)
+$.yZ(this.Mk)
+this.TG.J7(this.Mk)
 this.TG.rw()},
 CE:function(){this.TG.Mp()},
 Qi:function(){this.TG.wg()
+this.Mk=null
+this.NW=null
 this.U4=null
-this.po=null
-this.nk=null
-this.EE=null
-this.tj=null
-this.P6=null
+this.dG=null
+this.Mb=null
+this.Sa=null
 this.TG=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.E6
@@ -5685,31 +5685,31 @@ this.Qs=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.Q9
 if(!(typeof z==="object"&&z!==null&&z.$isI0()))this.Q9=this}}
-$$.eH={"":"Oj;TQ,S9,AL,yp,MZ,Uv>,v6,UA=,vV,QL",
+$$.eH={"":"Oj;TQ,te,TP,Zt,z5,Ny>,v6,UA=,vV,QL",
 xA:function(){this.TQ=this.er()
 this.v6=$.DJ(this.TQ)
 var z=this.TQ
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.TQ.gni(),$.Yr().Yv(!0))
-this.Uv=this.TQ.Ja("#__e-52")
-this.v6.No(this.Uv.gLm(),new $.ix(this))
+this.Ny=this.TQ.Ja("#__e-49")
+this.v6.No(this.Ny.gLm(),new $.ix(this))
 this.v6.lh(new $.TD(this),new $.RE(this),!1,!1)
-this.S9=this.TQ.Ja("#__e-54")
-this.v6.hB(this.S9,new $.ve(),new $.kB())
-this.AL=this.TQ.Ja("#__e-56")
-this.v6.hB(this.AL,new $.qN(this),new $.UX(this))
-this.yp=this.TQ.Ja("#__e-58")
-this.v6.Gj(this.yp,new $.rh(this),new $.cb())
-this.MZ=this.TQ.Ja("#__e-60")
-this.v6.hB(this.MZ,new $.ixh(),new $.TDK())
+this.te=this.TQ.Ja("#__e-51")
+this.v6.hB(this.te,new $.ve(),new $.kB())
+this.TP=this.TQ.Ja("#__e-53")
+this.v6.hB(this.TP,new $.qN(this),new $.UX(this))
+this.Zt=this.TQ.Ja("#__e-55")
+this.v6.Gj(this.Zt,new $.rh(this),new $.cb())
+this.z5=this.TQ.Ja("#__e-57")
+this.v6.hB(this.z5,new $.ixh(),new $.TDK())
 this.v6.rw()},
 CE:function(){this.v6.Mp()},
 Qi:function(){this.v6.wg()
-this.MZ=null
-this.yp=null
-this.AL=null
-this.S9=null
-this.Uv=null
+this.z5=null
+this.Zt=null
+this.TP=null
+this.te=null
+this.Ny=null
 this.v6=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.TQ
@@ -5977,65 +5977,65 @@ x=$.JB($.V8().gpx(),new $.ZZ(y))
 w=$.dD(x)
 if(w.gl0(x)===!0)return
 return w.gtH(x)}return}}
-$$.kr={"":"Oj;eW,vK>,un>,Ll>,oj,BQ,cH,CG>,px=,pM=,vV,QL",
+$$.kr={"":"Oj;eW,rD>,Tp>,LE>,QU,oJ,cH,qj>,px=,pM=,vV,QL",
 xA:function(){this.eW=this.er()
 this.cH=$.DJ(this.eW)
 var z=this.eW
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.eW.gni(),$.kw().Yv(!0))
-this.vK=this.eW.Ja("#__e-126")
-this.cH.No(this.vK.gVl(),new $.z2(this))
+this.rD=this.eW.Ja("#__e-115")
+this.cH.No(this.rD.gVl(),new $.z2(this))
 this.cH.lh(new $.hz(),new $.M4(this),!1,!0)
-this.CG=this.eW.Ja("#__e-127")
+this.qj=this.eW.Ja("#__e-116")
 this.cH.VP(new $.JI(),new $.Iw(this),!0)
 this.cH.lh(new $.QD(this),new $.ne(this),!1,!1)
 this.cH.VP(new $.Fa(this),new $.z2v(this),!1)
 this.cH.lh(new $.d0u(),new $.hzM(this),!1,!1)
-$.yZ(this.CG)
-this.cH.J7(this.CG)
-this.oj=this.eW.Ja("#__e-129")
-this.cH.hB(this.oj,new $.M4O(this),new $.JIx(this))
-this.BQ=this.eW.Ja("#__e-132")
-this.cH.hB(this.BQ,new $.Iwd(this),new $.QDa(this))
-this.un=this.eW.Ja("#__e-133")
-this.cH.No(this.un.gVl(),new $.nea(this))
+$.yZ(this.qj)
+this.cH.J7(this.qj)
+this.QU=this.eW.Ja("#__e-118")
+this.cH.hB(this.QU,new $.M4O(this),new $.JIx(this))
+this.oJ=this.eW.Ja("#__e-121")
+this.cH.hB(this.oJ,new $.Iwd(this),new $.QDa(this))
+this.Tp=this.eW.Ja("#__e-122")
+this.cH.No(this.Tp.gVl(),new $.nea(this))
 this.cH.lh(new $.Faa(),new $.z0(this),!1,!0)
-this.Ll=this.eW.Ja("#__e-134")
-this.cH.No(this.Ll.gVl(),new $.z1(this))
+this.LE=this.eW.Ja("#__e-123")
+this.cH.No(this.LE.gVl(),new $.z1(this))
 this.cH.lh(new $.z5(),new $.z6(this),!1,!0)
 this.cH.rw()},
 CE:function(){this.cH.Mp()},
 Qi:function(){this.cH.wg()
-this.Ll=null
-this.un=null
-this.BQ=null
-this.oj=null
-this.CG=null
-this.vK=null
+this.LE=null
+this.Tp=null
+this.oJ=null
+this.QU=null
+this.qj=null
+this.rD=null
 this.cH=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.eW
 if(!(typeof z==="object"&&z!==null&&z.$isI0()))this.eW=this},
 gDo:function(){return $.Tl($.lU(this.px,"itens"),this.pM)},
 gru:function(){return"https://www.googledrive.com/host/0B4Nj2G61OMg-NXI4c3dyLU4wVzA/Galeria/"+$.d($.lU(this.px,"ano"))+"/"+$.d($.lU(this.px,"folder"))+"/"+$.d($.lU(this.gDo(),"nome"))}}
-$$.i4={"":"Oj;VD,Kk,Qj,CW,MY,px=,vV,QL",
+$$.i4={"":"Oj;VD,CW,VV,OD,MY,px=,vV,QL",
 xA:function(){this.VD=this.er()
 this.MY=$.DJ(this.VD)
 var z=this.VD
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.VD.gni(),$.GE().Yv(!0))
-this.Kk=this.VD.Ja("#__e-116")
-this.MY.hB(this.Kk,new $.hg(this),new $.Mj(this))
-this.Qj=this.VD.Ja("#__e-118")
-this.MY.hB(this.Qj,new $.B2(this),new $.d0(this))
 this.CW=this.VD.Ja("#__e-125")
-this.MY.hB(this.CW,new $.wh(this),new $.kb(this))
+this.MY.hB(this.CW,new $.hg(this),new $.Mj(this))
+this.VV=this.VD.Ja("#__e-127")
+this.MY.hB(this.VV,new $.B2(this),new $.d0(this))
+this.OD=this.VD.Ja("#__e-134")
+this.MY.hB(this.OD,new $.wh(this),new $.kb(this))
 this.MY.rw()},
 CE:function(){this.MY.Mp()},
 Qi:function(){this.MY.wg()
+this.OD=null
+this.VV=null
 this.CW=null
-this.Qj=null
-this.Kk=null
 this.MY=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.VD
@@ -6069,33 +6069,33 @@ this.uW=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.h9
 if(!(typeof z==="object"&&z!==null&&z.$isI0()))this.h9=this}}
-$$.F1={"":"Oj;TI,W8,Uq>,Yp>,hm>,vV,QL",
+$$.F1={"":"Oj;TI,W8,QP>,ZL>,Vb>,vV,QL",
 xA:function(){this.TI=this.er()
 this.W8=$.DJ(this.TI)
 var z=this.TI
 if(typeof z==="object"&&z!==null&&z.$isI0())z.spQ(!0)
 $.f7(this.TI.gni(),$.Rr().Yv(!0))
-this.Uq=this.TI.Ja("#__e-49")
+this.QP=this.TI.Ja("#__e-58")
 this.W8.VP(new $.K7(),new $.ur(this),!0)
 this.W8.VP(new $.zc(),new $.x2(this),!0)
-$.lf(this.Uq)
-this.W8.J7(this.Uq)
-this.Yp=this.TI.Ja("#__e-50")
+$.lf(this.QP)
+this.W8.J7(this.QP)
+this.ZL=this.TI.Ja("#__e-59")
 this.W8.VP(new $.Ki(),new $.BT(this),!0)
 this.W8.VP(new $.Ag(),new $.Wa(this),!0)
-$.lf(this.Yp)
-this.W8.J7(this.Yp)
-this.hm=this.TI.Ja("#__e-51")
+$.lf(this.ZL)
+this.W8.J7(this.ZL)
+this.Vb=this.TI.Ja("#__e-60")
 this.W8.VP(new $.K7l(),new $.urC(this),!0)
 this.W8.VP(new $.zce(),new $.ljB(this),!0)
-$.lf(this.hm)
-this.W8.J7(this.hm)
+$.lf(this.Vb)
+this.W8.J7(this.Vb)
 this.W8.rw()},
 CE:function(){this.W8.Mp()},
 Qi:function(){this.W8.wg()
-this.hm=null
-this.Yp=null
-this.Uq=null
+this.Vb=null
+this.ZL=null
+this.QP=null
 this.W8=null},
 rN:function(){$.Oj.prototype.rN.call(this)
 var z=this.TI
@@ -6848,7 +6848,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.ur={"":"v3;a",
-call$1:function(a){this.a.gUq().gyG().sxw("large")},
+call$1:function(a){this.a.gQP().gyG().sxw("large")},
 $isEH:true,
 $isMd:true}
 $$.zc={"":"v3;",
@@ -6856,7 +6856,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.x2={"":"v3;b",
-call$1:function(a){this.b.gUq().gyG().slI("Procedimento de Inscri\u00e7\u00e3o")},
+call$1:function(a){this.b.gQP().gyG().slI("Procedimento de Inscri\u00e7\u00e3o")},
 $isEH:true,
 $isMd:true}
 $$.Ki={"":"v3;",
@@ -6864,7 +6864,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.BT={"":"v3;c",
-call$1:function(a){this.c.gYp().gyG().sxw("small")},
+call$1:function(a){this.c.gZL().gyG().sxw("small")},
 $isEH:true,
 $isMd:true}
 $$.Ag={"":"v3;",
@@ -6872,7 +6872,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.Wa={"":"v3;d",
-call$1:function(a){this.d.gYp().gyG().slI("Pre\u00e7os")},
+call$1:function(a){this.d.gZL().gyG().slI("Pre\u00e7os")},
 $isEH:true,
 $isMd:true}
 $$.K7l={"":"v3;",
@@ -6880,7 +6880,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.urC={"":"v3;e",
-call$1:function(a){this.e.ghm().gyG().sxw("small")},
+call$1:function(a){this.e.gVb().gyG().sxw("small")},
 $isEH:true,
 $isMd:true}
 $$.zce={"":"v3;",
@@ -6888,7 +6888,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.ljB={"":"v3;f",
-call$1:function(a){this.f.ghm().gyG().slI("Pagamento")},
+call$1:function(a){this.f.gVb().gyG().slI("Pagamento")},
 $isEH:true,
 $isMd:true}
 $$.XP={"":"v3;c",
@@ -7160,7 +7160,7 @@ call$0:function(){return $.uj().gPj()},
 $isEH:true,
 $isrx:true}
 $$.M4={"":"v3;c",
-call$1:function(a){this.c.gvK().sLU(a)},
+call$1:function(a){this.c.grD().sLU(a)},
 $isEH:true,
 $isMd:true}
 $$.JI={"":"v3;",
@@ -7168,7 +7168,7 @@ call$0:function(){return},
 $isEH:true,
 $isrx:true}
 $$.Iw={"":"v3;d",
-call$1:function(a){this.d.gCG().gyG().sTD("Galeria do Clube de Praticantes FEAR")},
+call$1:function(a){this.d.gqj().gyG().sTD("Galeria do Clube de Praticantes FEAR")},
 $isEH:true,
 $isMd:true}
 $$.QD={"":"v3;e",
@@ -7176,7 +7176,7 @@ call$0:function(){return this.e.gru()},
 $isEH:true,
 $isrx:true}
 $$.ne={"":"v3;f",
-call$1:function(a){this.f.gCG().gyG().sjC(a)},
+call$1:function(a){this.f.gqj().gyG().sjC(a)},
 $isEH:true,
 $isMd:true}
 $$.Fa={"":"v3;g",
@@ -7185,7 +7185,7 @@ $isEH:true,
 $isrx:true}
 $$.z2v={"":"v3;h",
 call$1:function(a){var z="Galeria "+$.d(a.gdz())
-this.h.gCG().gyG().slI(z)},
+this.h.gqj().gyG().slI(z)},
 $isEH:true,
 $isMd:true}
 $$.d0u={"":"v3;",
@@ -7193,7 +7193,7 @@ call$0:function(){return $.V8().grk()},
 $isEH:true,
 $isrx:true}
 $$.hzM={"":"v3;i",
-call$1:function(a){this.i.gCG().gyG().sAs(a)},
+call$1:function(a){this.i.gqj().gyG().sAs(a)},
 $isEH:true,
 $isMd:true}
 $$.M4O={"":"v3;j",
@@ -7257,7 +7257,7 @@ call$0:function(){return $.uj().gPj()},
 $isEH:true,
 $isrx:true}
 $$.z0={"":"v3;r",
-call$1:function(a){this.r.gun().sLU(a)},
+call$1:function(a){this.r.gTp().sLU(a)},
 $isEH:true,
 $isMd:true}
 $$.z1={"":"v3;s",
@@ -7271,7 +7271,7 @@ call$0:function(){return $.uj().gPj()},
 $isEH:true,
 $isrx:true}
 $$.z6={"":"v3;t",
-call$1:function(a){this.t.gLl().sLU(a)},
+call$1:function(a){this.t.gLE().sLU(a)},
 $isEH:true,
 $isMd:true}
 $$.Lo={"":"v3;a",
@@ -7314,7 +7314,7 @@ $isEH:true,
 $isMd:true}
 $$.ix={"":"v3;d",
 call$1:function(a){var z=this.d
-z.sUA(z.gUv().gP())},
+z.sUA(z.gNy().gP())},
 $isEH:true,
 $isMd:true}
 $$.TD={"":"v3;e",
@@ -7322,7 +7322,7 @@ call$0:function(){return this.e.gUA()},
 $isEH:true,
 $isrx:true}
 $$.RE={"":"v3;f",
-call$1:function(a){this.f.gUv().sP(a)},
+call$1:function(a){this.f.gNy().sP(a)},
 $isEH:true,
 $isMd:true}
 $$.ve={"":"v3;",
@@ -8130,7 +8130,7 @@ call$1:function(a){var z,y,x,w,v
 z={}
 z.c=null
 y=$.Kr().Yv(!0)
-z.c=y.Ja("#__e-68")
+z.c=y.Ja("#__e-71")
 x=this.j
 w=a.Wk(new $.QpK(x),!1)
 $.f7(z.c.gni(),w)
@@ -8167,7 +8167,7 @@ z={}
 z.a=null
 z.b=null
 z.b=$.Uz().Yv(!0)
-z.a=z.b.Ja("#__e-70")
+z.a=z.b.Ja("#__e-73")
 y=this.o
 a.lh(new $.dZz(y),new $.azv(z),!1,!0)
 a.No(z.b.gVl(),new $.wm4(y))
@@ -8204,7 +8204,7 @@ call$1:function(a){var z,y,x,w,v
 z={}
 z.f=null
 y=$.q1().Yv(!0)
-z.f=y.Ja("#__e-75")
+z.f=y.Ja("#__e-78")
 x=this.t
 w=a.Wk(new $.nk(x),!1)
 $.f7(z.f.gni(),w)
@@ -8236,7 +8236,7 @@ z={}
 z.d=null
 z.e=null
 z.e=$.Ci().Yv(!0)
-z.d=z.e.Ja("#__e-77")
+z.d=z.e.Ja("#__e-80")
 y=this.x
 a.lh(new $.no(y),new $.bc(z),!1,!0)
 a.lh(new $.pa(y),new $.xV4(z),!1,!0)
@@ -8307,7 +8307,7 @@ call$0:function(){return $.lU(this.H.gHU(),"texto")},
 $isEH:true,
 $isrx:true}
 $$.CGD={"":"v3;I",
-call$1:function(a){this.I.gU4().gyG().sTD(a)},
+call$1:function(a){this.I.gMk().gyG().sTD(a)},
 $isEH:true,
 $isMd:true}
 $$.Ane={"":"v3;J",
@@ -8315,7 +8315,7 @@ call$0:function(){return this.J.gru()},
 $isEH:true,
 $isrx:true}
 $$.rfa={"":"v3;K",
-call$1:function(a){this.K.gU4().gyG().sjC(a)},
+call$1:function(a){this.K.gMk().gyG().sjC(a)},
 $isEH:true,
 $isMd:true}
 $$.Naa={"":"v3;L",
@@ -8323,7 +8323,7 @@ call$0:function(){return $.lU(this.L.gHU(),"titulo")},
 $isEH:true,
 $isrx:true}
 $$.a0={"":"v3;M",
-call$1:function(a){this.M.gU4().gyG().slI(a)},
+call$1:function(a){this.M.gMk().gyG().slI(a)},
 $isEH:true,
 $isMd:true}
 $$.a5={"":"v3;N",
@@ -8331,7 +8331,7 @@ call$0:function(){return $.lU(this.N.gHU(),"url")},
 $isEH:true,
 $isrx:true}
 $$.a8={"":"v3;O",
-call$1:function(a){this.O.gU4().gyG().sAs(a)},
+call$1:function(a){this.O.gMk().gyG().sAs(a)},
 $isEH:true,
 $isMd:true}
 $$.S7={"":"v3;",
@@ -8561,7 +8561,7 @@ $$.lQ={"":"v3;a",
 call$1:function(a){var z,y
 z=$.Dn(a.gil(),null)
 y=$.dD(z)
-if($.z8(y.gB(z),0)===!0&&this.a.Ep(y.t(z,0)).ac($.Xs())!==!0){$.V8().sY9(z)
+if($.z8(y.gB(z),0)===!0&&this.a.Ep(y.t(z,0)).ac($.Xs())!==!0){$.V8().sS9(z)
 $.Xh()}},
 $isEH:true,
 $isMd:true}
@@ -8914,7 +8914,7 @@ return!0},
 $isEH:true,
 $isMd:true}
 $$.jU={"":"v3;a",
-call$1:function(a){$.f7($.lU(this.a,"attendees"),a.Lt())},
+call$1:function(a){$.f7($.lU(this.a,"attendees"),a.Bu())},
 $isEH:true,
 $isMd:true}
 $$.PB={"":"v3;b",
@@ -8930,7 +8930,7 @@ call$1:function(a){$.f7(this.b.gI0(),a)},
 $isEH:true,
 $isMd:true}
 $$.b1={"":"v3;a",
-call$1:function(a){$.f7($.lU(this.a,"overrides"),a.Lt())},
+call$1:function(a){$.f7($.lU(this.a,"overrides"),a.Bu())},
 $isEH:true,
 $isMd:true}
 $$.QwA={"":"v3;a",
@@ -8962,7 +8962,7 @@ return!0},
 $isEH:true,
 $isMd:true}
 $$.LE={"":"v3;a",
-call$1:function(a){$.f7($.lU(this.a,"defaultReminders"),a.Lt())},
+call$1:function(a){$.f7($.lU(this.a,"defaultReminders"),a.Bu())},
 $isEH:true,
 $isMd:true}
 $$.CVd={"":"v3;a",
@@ -10649,7 +10649,7 @@ return z}
 $.qV=function(a){return new $.pA()}
 $.Zt=function(a){return new $.uX()}
 $.Ij=function(a){var z=new $.Ou(null,null)
-z.eA(a)
+z.Em(a)
 return z}
 $.mo=function(a){var z=new $.Dg(null,null,null,null)
 z.DY(a)
@@ -11243,26 +11243,26 @@ I.$lazy($,"Forum","lv","db",function(){return $.wN("F\u00f3rum","#/forum.html")}
 I.$lazy($,"Inscricoes","hd","Xy",function(){return $.wN("Inscri\u00e7\u00f5es","#/inscricoes")})
 I.$lazy($,"Documentos","UM","r4",function(){return $.wN("Links","#/documentos")})
 I.$lazy($,"Contas","Ew","tM",function(){return $.wN("Contas","#/contas")})
-I.$lazy($,"__html1","rZ","Kr",function(){return $.Ri("<div class=\"anuncio-item-title\">\n              <a id=\"__e-68\"></a>\n            </div>")})
+I.$lazy($,"__html1","rZ","Kr",function(){return $.Ri("<div class=\"anuncio-item-title\">\n              <a id=\"__e-71\"></a>\n            </div>")})
 I.$lazy($,"__html2","XI","WC",function(){return $.hi("template")})
-I.$lazy($,"__html3","lc","Uz",function(){return $.Ri("<a><img class=\"anuncio-item-imagem\" id=\"__e-70\"></a>")})
-I.$lazy($,"__html4","Bk","q1",function(){return $.Ri("<div class=\"anuncio-item-title\">\n              <a target=\"_blank\" id=\"__e-75\"></a>\n            </div>")})
+I.$lazy($,"__html3","lc","Uz",function(){return $.Ri("<a><img class=\"anuncio-item-imagem\" id=\"__e-73\"></a>")})
+I.$lazy($,"__html4","Bk","q1",function(){return $.Ri("<div class=\"anuncio-item-title\">\n              <a target=\"_blank\" id=\"__e-78\"></a>\n            </div>")})
 I.$lazy($,"__html5","Nh","n1",function(){return $.hi("template")})
-I.$lazy($,"__html6","D3","Ci",function(){return $.Ri("<a target=\"_blank\"><img class=\"anuncio-item-imagem\" id=\"__e-77\"></a>")})
+I.$lazy($,"__html6","D3","Ci",function(){return $.Ri("<a target=\"_blank\"><img class=\"anuncio-item-imagem\" id=\"__e-80\"></a>")})
 I.$lazy($,"__html7","G7","HS",function(){return $.Ri("<div class=\"anuncio-item-title\"></div>")})
 I.$lazy($,"__html8","R3","AR",function(){return $.hi("template")})
 I.$lazy($,"__html9","wK","ML",function(){return $.Ri("<img class=\"anuncio-item-imagem\">")})
-I.$lazy($,"__shadowTemplate","C0","RX",function(){return $.q4("        <div class=\"anuncio-item\">\n          <div class=\"anuncio-item-data\" id=\"__e-66\"></div>         \n          <template id=\"__e-73\"></template>\n          <template id=\"__e-80\"></template>\n          <template id=\"__e-85\"></template>\n          <div class=\"anuncio-item-texto\"><p id=\"__e-87\"></p></div>\n          <x-share id=\"__e-88\"></x-share>         \n        </div>\n        <div class=\"divClearBoth\"></div>\n      ")})
+I.$lazy($,"__shadowTemplate","C0","RX",function(){return $.q4("        <div class=\"anuncio-item\">\n          <div class=\"anuncio-item-data\" id=\"__e-69\"></div>         \n          <template id=\"__e-76\"></template>\n          <template id=\"__e-83\"></template>\n          <template id=\"__e-88\"></template>\n          <div class=\"anuncio-item-texto\"><p id=\"__e-90\"></p></div>\n          <x-share id=\"__e-91\"></x-share>         \n        </div>\n        <div class=\"divClearBoth\"></div>\n      ")})
 I.$lazy($,"__shadowTemplate","WF","Kc",function(){return $.q4("        <a class=\"navlink\" id=\"__e-114\"></a>\n      ")})
 I.$lazy($,"__html1","rJ","NB",function(){return $.Ri("<div class=\"galeriaFolderFrameBack  \"><div></div></div>")})
 I.$lazy($,"__html2","W1","V1",function(){return $.Ri("<div class=\"galeriaFolderFrameBack  \"><div></div></div>")})
 I.$lazy($,"__html3","Zy","Jn",function(){return $.Ri("<a class=\"galeriaFolderFrameTop  \"></a>")})
-I.$lazy($,"__html4","OC","NL",function(){return $.Ri("<img class=\"galeriaFolderThumbnail\" id=\"__e-119\">")})
-I.$lazy($,"__shadowTemplate","yc","GE",function(){return $.q4("        <div class=\"galeriaFolder\">                   \n          <template id=\"__e-116\"></template>\n          <template id=\"__e-118\"></template>\n          <template id=\"__e-125\"></template>              \n        </div>\n      ")})
+I.$lazy($,"__html4","OC","NL",function(){return $.Ri("<img class=\"galeriaFolderThumbnail\" id=\"__e-128\">")})
+I.$lazy($,"__shadowTemplate","yc","GE",function(){return $.q4("        <div class=\"galeriaFolder\">                   \n          <template id=\"__e-125\"></template>\n          <template id=\"__e-127\"></template>\n          <template id=\"__e-134\"></template>              \n        </div>\n      ")})
 I.$lazy($,"__html1","qy","ya",function(){return $.Ri("<img class=\"galeriaFotoImagem\">")})
 I.$lazy($,"__html2","xM","Xa",function(){return $.hi("template")})
 I.$lazy($,"__html3","FJ","Hz",function(){return $.hi("template")})
-I.$lazy($,"__shadowTemplate","vl","kw",function(){return $.q4("        <div class=\"disabled\">\n          <div class=\"galeriaFotoFrame\">\n            <a class=\"closeWindow\" id=\"__e-126\">X</a>\n            <x-share class=\"galeriaFotoShare\" descricao=\"Galeria do Clube de Praticantes FEAR\" id=\"__e-127\"></x-share>\n            <template id=\"__e-129\"></template>\n            <template id=\"__e-132\"></template>\n             <a class=\"galeriaFotoPrevious\" id=\"__e-133\"></a>\n             <a class=\"galeriaFotoNext\" id=\"__e-134\"></a>\n          </div>          \n        </div>\n      ")})
+I.$lazy($,"__shadowTemplate","vl","kw",function(){return $.q4("        <div class=\"disabled\">\n          <div class=\"galeriaFotoFrame\">\n            <a class=\"closeWindow\" id=\"__e-115\">X</a>\n            <x-share class=\"galeriaFotoShare\" descricao=\"Galeria do Clube de Praticantes FEAR\" id=\"__e-116\"></x-share>\n            <template id=\"__e-118\"></template>\n            <template id=\"__e-121\"></template>\n             <a class=\"galeriaFotoPrevious\" id=\"__e-122\"></a>\n             <a class=\"galeriaFotoNext\" id=\"__e-123\"></a>\n          </div>          \n        </div>\n      ")})
 I.$lazy($,"__html1","t5","Bi",function(){return $.xA()})
 I.$lazy($,"__html10","S4","Ry",function(){return $.hi("template")})
 I.$lazy($,"__html11","Ft","AB",function(){return $.hi("x-participante")})
@@ -11278,7 +11278,7 @@ I.$lazy($,"__html6","QI","am",function(){return $.jm(null,null,null)})
 I.$lazy($,"__html7","L2","Tx",function(){return $.Ri("<span class=\"weatherSmallText \"></span>")})
 I.$lazy($,"__html8","mC","ng",function(){return $.Ri("<span class=\"weatherSmallText \"></span>")})
 I.$lazy($,"__html9","jZ","nL",function(){return $.Ri("<span class=\"weatherSmallText \"></span>")})
-I.$lazy($,"__shadowTemplate","ko","hS",function(){return $.q4("        <div class=\"proximoJogo\">\n          <div id=\"map_canvas\" class=\"mapSmall\"></div>\n          <div class=\"weatherSmall\">\n            <template id=\"__e-97\"></template>\n          </div>\n          <div class=\"participantes\" id=\"__e-101\"></div>\n          <div class=\"participantes\" id=\"__e-105\"></div>\n          <div class=\"participantes\" id=\"__e-109\"></div>\n        </div>\n      ")})
+I.$lazy($,"__shadowTemplate","ko","hS",function(){return $.q4("        <div class=\"proximoJogo\">\n          <div id=\"map_canvas\" class=\"mapSmall\"></div>\n          <div class=\"weatherSmall\">\n            <template id=\"__e-100\"></template>\n          </div>\n          <div class=\"participantes\" id=\"__e-104\"></div>\n          <div class=\"participantes\" id=\"__e-108\"></div>\n          <div class=\"participantes\" id=\"__e-112\"></div>\n        </div>\n      ")})
 I.$lazy($,"__html1","Gl","VF",function(){return $.hi("x-loading")})
 I.$lazy($,"__html10","YG","O6",function(){return $.Ri("<strong>Descri\u00e7\u00e3o:</strong>")})
 I.$lazy($,"__html2","kI","DN",function(){return $.Ri("<div><img class=\"membro-emblema\" id=\"__e-172\"></div>")})
@@ -11314,20 +11314,20 @@ I.$lazy($,"__html1","JK","H9",function(){return $.hi("x-loading")})
 I.$lazy($,"__html2","CC","qP",function(){return $.hi("x-galeria")})
 I.$lazy($,"__html3","jH","Uo",function(){return $.hi("x-galeria-folder")})
 I.$lazy($,"__shadowTemplate","ea","yQ",function(){return $.q4("        <div class=\"pesquisa\">\n          <input type=\"text\" placeholder=\"Pesquisar\" id=\"__e-40\">\n          <input type=\"checkbox\" id=\"__e-41\"><span>Imagens</span>\n          <input type=\"checkbox\" id=\"__e-42\"><span>Video</span>          \n        </div>\n        <div class=\"divClearBoth\"></div>\n        <template id=\"__e-44\"></template>\n        <template id=\"__e-46\"></template>\n        <div class=\"galeriaFolders\"> \n          <template id=\"__e-48\"></template>\n          <div class=\"divClearBoth\"></div>\n        </div>\n      ")})
-I.$lazy($,"__shadowTemplate","I1","Rr",function(){return $.q4("        <x-widget tamanho=\"large\" titulo=\"Procedimento de Inscri\u00e7\u00e3o\" id=\"__e-49\">\n          <ul class=\"ordered\">\n            <li>Enviar os seguintes documentos digitalizados para <a href=\"mailto:contacto@fear-airsoft.com\" target=\"_blank\">contacto@fear-airsoft.com</a>:\n              <ul>\n                <li><a href=\"http://www.ala-airsoft.com/imagens/ficha_individual.pdf\" target=\"_blank\">Formul\u00e1rio de inscri\u00e7\u00e3o na ALA</a> devidamente preenchido e assinado</li>\n                <li>Frente e Verso do Cart\u00e3o de cidad\u00e3o ou Bilhete de Identidade da pessoa inscrita e do encarregado de educa\u00e7\u00e3o no caso da pessoa inscrita ter a idade compreendia entre 16 e 18 anos</li>\n                <li>Fotografia a cores tipo passe</li>\n                <li>(Opcional) Fotografia relacionada com o Airsoft para colocar no site (tamanho minimo 300x300)</li>\n                <li>No caso de pertencer a uma equipe, enviar o nome da equipa</li>\n                <li>Enviar tamb\u00e9m o logotipo e site da equipa se esta ainda n\u00e3o existir no clube</li>\n              </ul>\n            </li>\n            <li>Ao receber um email a indicar que a sua inscri\u00e7\u00e3o foi aceite provisoriamente dever\u00e1 proceder ao pagamento da inscri\u00e7\u00e3o nesta p\u00e1gina</li>\n            <li>Ap\u00f3s a recep\u00e7\u00e3o do pagamento, num prazo de aproximadamente 15 dias ser\u00e1 entregue o cart\u00e3o identificativo e personalizado</li>\n          </ul>\n        </x-widget>\n        <x-widget tamanho=\"small\" titulo=\"Pre\u00e7os\" id=\"__e-50\">\n          <ul>\n            <li>22\u20ac para novas inscri\u00e7\u00f5es (12\u20ac para as quotas da <a href=\"http://www.ala-airsoft.com/\" target=\"_blank\">ALA</a>)</li>\n            <li>Entre 10 a 22\u20ac para a renova\u00e7\u00e3o de quota efectuada no ano seguinte \u00e0 inscri\u00e7\u00e3o (10\u20ac para o clube e o restante para a <a href=\"http://www.ala-airsoft.com/\" target=\"_blank\">ALA</a> - o montante dependente do m\u00eas da inscri\u00e7\u00e3o)</li>\n            <li>22\u20ac para as quotas dos anos seguintes (12\u20ac para as quotas da <a href=\"http://www.ala-airsoft.com/\" target=\"_blank\">ALA</a>)</li>\n          </ul>\n        </x-widget>\n        <x-widget tamanho=\"small\" titulo=\"Pagamento\" id=\"__e-51\">\n          <form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">\n            <input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">\n            <input type=\"hidden\" name=\"hosted_button_id\" value=\"29AXF4L75R8BS\">\n            <table>\n              <tbody><tr><td><input type=\"hidden\" name=\"on0\" value=\"Nome da pessoa a inscrever\">Nome da pessoa a inscrever</td></tr><tr><td><input type=\"text\" name=\"os0\" maxlength=\"200\"></td></tr>\n            </tbody></table>\n            <input type=\"image\" src=\"https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\">\n            <img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\">\n          </form>          \n        </x-widget>\n      ")})
+I.$lazy($,"__shadowTemplate","I1","Rr",function(){return $.q4("        <x-widget tamanho=\"large\" titulo=\"Procedimento de Inscri\u00e7\u00e3o\" id=\"__e-58\">\n          <ul class=\"ordered\">\n            <li>Enviar os seguintes documentos digitalizados para <a href=\"mailto:contacto@fear-airsoft.com\" target=\"_blank\">contacto@fear-airsoft.com</a>:\n              <ul>\n                <li><a href=\"http://www.ala-airsoft.com/imagens/ficha_individual.pdf\" target=\"_blank\">Formul\u00e1rio de inscri\u00e7\u00e3o na ALA</a> devidamente preenchido e assinado</li>\n                <li>Frente e Verso do Cart\u00e3o de cidad\u00e3o ou Bilhete de Identidade da pessoa inscrita e do encarregado de educa\u00e7\u00e3o no caso da pessoa inscrita ter a idade compreendia entre 16 e 18 anos</li>\n                <li>Fotografia a cores tipo passe</li>\n                <li>(Opcional) Fotografia relacionada com o Airsoft para colocar no site (tamanho minimo 300x300)</li>\n                <li>No caso de pertencer a uma equipe, enviar o nome da equipa</li>\n                <li>Enviar tamb\u00e9m o logotipo e site da equipa se esta ainda n\u00e3o existir no clube</li>\n              </ul>\n            </li>\n            <li>Ao receber um email a indicar que a sua inscri\u00e7\u00e3o foi aceite provisoriamente dever\u00e1 proceder ao pagamento da inscri\u00e7\u00e3o nesta p\u00e1gina</li>\n            <li>Ap\u00f3s a recep\u00e7\u00e3o do pagamento, num prazo de aproximadamente 15 dias ser\u00e1 entregue o cart\u00e3o identificativo e personalizado</li>\n          </ul>\n        </x-widget>\n        <x-widget tamanho=\"small\" titulo=\"Pre\u00e7os\" id=\"__e-59\">\n          <ul>\n            <li>22\u20ac para novas inscri\u00e7\u00f5es (12\u20ac para as quotas da <a href=\"http://www.ala-airsoft.com/\" target=\"_blank\">ALA</a>)</li>\n            <li>Entre 10 a 22\u20ac para a renova\u00e7\u00e3o de quota efectuada no ano seguinte \u00e0 inscri\u00e7\u00e3o (10\u20ac para o clube e o restante para a <a href=\"http://www.ala-airsoft.com/\" target=\"_blank\">ALA</a> - o montante dependente do m\u00eas da inscri\u00e7\u00e3o)</li>\n            <li>22\u20ac para as quotas dos anos seguintes (12\u20ac para as quotas da <a href=\"http://www.ala-airsoft.com/\" target=\"_blank\">ALA</a>)</li>\n          </ul>\n        </x-widget>\n        <x-widget tamanho=\"small\" titulo=\"Pagamento\" id=\"__e-60\">\n          <form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">\n            <input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">\n            <input type=\"hidden\" name=\"hosted_button_id\" value=\"29AXF4L75R8BS\">\n            <table>\n              <tbody><tr><td><input type=\"hidden\" name=\"on0\" value=\"Nome da pessoa a inscrever\">Nome da pessoa a inscrever</td></tr><tr><td><input type=\"text\" name=\"os0\" maxlength=\"200\"></td></tr>\n            </tbody></table>\n            <input type=\"image\" src=\"https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\">\n            <img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\">\n          </form>          \n        </x-widget>\n      ")})
 I.$lazy($,"__shadowTemplate","QV","eF",function(){return $.q4("        <p>akakak</p>\n      ")})
 I.$lazy($,"__html1","HJ","dw",function(){return $.hi("x-loading")})
 I.$lazy($,"__html2","pf","O8",function(){return $.hi("x-member")})
 I.$lazy($,"__html3","Z6","MJ",function(){return $.hi("x-member-item")})
 I.$lazy($,"__html4","G2","uR",function(){return $.hi("x-legenda-emblema")})
-I.$lazy($,"__shadowTemplate","zU","Yr",function(){return $.q4("        <div class=\"pesquisa\">\n          <input type=\"text\" placeholder=\"Pesquisar\" id=\"__e-52\">\n        </div>\n        <div class=\"divClearBoth\"></div>\n        <template id=\"__e-54\"></template>\n        <template id=\"__e-56\"></template>\n        <template id=\"__e-58\"></template>\n        <template id=\"__e-60\"></template>\n      ")})
+I.$lazy($,"__shadowTemplate","zU","Yr",function(){return $.q4("        <div class=\"pesquisa\">\n          <input type=\"text\" placeholder=\"Pesquisar\" id=\"__e-49\">\n        </div>\n        <div class=\"divClearBoth\"></div>\n        <template id=\"__e-51\"></template>\n        <template id=\"__e-53\"></template>\n        <template id=\"__e-55\"></template>\n        <template id=\"__e-57\"></template>\n      ")})
 I.$lazy($,"__shadowTemplate","Me","uV",function(){return $.q4("        <img class=\"participante\" id=\"__e-184\">\n      ")})
 I.$lazy($,"__shadowTemplate","EO","tc",function(){return $.q4("        <a id=\"__e-183\"><img class=\"shareImg\" title=\"Partilhar no facebook\" src=\"../share-facebook.png\" alt=\"Partilhar no Facebook\"></a>\n      ")})
 I.$lazy($,"__shadowTemplate","ze","oC",function(){return $.q4("        <div class=\"sitefooter\">\n<!--          <div class=\"share\">\n            <a href=\"https://plus.google.com/share?url={{model.encoded_href}}\" onclick=\"javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;\">\n              <img src=\"../share-google.png\" alt=\"Partilhar no Google+\"/>\n            </a>\n            <a href=\"https://www.facebook.com/dialog/feed?app_id=150298198459974&link={{model.encoded_href}}&picture={{model.encoded_imagem}}&name={{model.encoded_titulo}}&caption={{model.encoded_titulo}}&description={{model.encoded_descricao}}&redirect_uri={{model.encoded_href}}\">\n              <img src=\"../share-facebook.png\" alt=\"Partilhar no Facebook\"/>\n            </a>\n            <a href=\"mailto:?to=&subject={{model.encoded_titulo}}&body={{model.encoded_href}}\">\n              <img src=\"../share-email.png\" alt=\"Partilhar por email\"/>\n            </a>\n          </div>-->\n        </div>\n      ")})
 I.$lazy($,"__shadowTemplate","Tu","xI",function(){return $.q4("        <div class=\"siteheader\">\n          <div class=\"sitelogo\">\n          </div>\n        </div>\n      ")})
 I.$lazy($,"__html1","b4","AI",function(){return $.hi("x-buttonnav")})
 I.$lazy($,"__shadowTemplate","Cj","v9",function(){return $.q4("        <ul class=\"sitenavigation\">\n        <template id=\"__e-34\"></template>\n        </ul>\n      ")})
-I.$lazy($,"__shadowTemplate","Ue","Vr",function(){return $.q4("        <div class=\"widget \" id=\"__e-112\">\n          <div class=\"widget-title\"><h3 id=\"__e-111\"></h3></div>\n          <div class=\"widget-content\"><content></content></div>\n        </div>\n      ")})
+I.$lazy($,"__shadowTemplate","Ue","Vr",function(){return $.q4("        <div class=\"widget \" id=\"__e-65\">\n          <div class=\"widget-title\"><h3 id=\"__e-64\"></h3></div>\n          <div class=\"widget-content\"><content></content></div>\n        </div>\n      ")})
 I.$lazy($,"__shadowTemplate","J6","FW",function(){return $.q4("        <div class=\"xp-container\">\n          <div class=\"xp-number\"><p id=\"__e-188\"></p></div>\n          <div class=\"xp-bar-left\"></div>\n          <div class=\"xp-bar\">\n            <div style=\"width:{{larguraXp}}%;\" class=\"xp\" id=\"__e-189\"></div>\n          </div>\n          <div class=\"xp-bar-right\"></div>\n          <div class=\"xp-number\"><p id=\"__e-191\"></p></div>\n        </div>\n      ")})
 I.$lazy($,"maps","vH","Xe",function(){return $.L3($.eo().gCp().gvH())})
 I.$lazy($,"NONE","H4","Mv",function(){return $.Fe()})

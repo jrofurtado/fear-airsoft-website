@@ -122,8 +122,9 @@ class LegendaEmblema extends WebComponent {
   Map get emblema{
     if(nome!=null){
       var res = model.emblemas['emblemas'].where((emblema) => emblema["nome"] == nome);
-      if(res.isEmpty)
+      if(res.isEmpty) {
         return null;
+      }
       return res.first;
     }
     return null;

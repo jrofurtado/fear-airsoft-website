@@ -73,7 +73,7 @@ class Xp extends WebComponent {
   /** Original code from the component. */
 
   Map membro;
-  
+
   int get larguraXp{
     double amplitudeTotal = (membro["nextLevelXp"] - membro["previousLevelXp"]).toDouble();
     double amplitudeXp = (membro["xp"]-membro["previousLevelXp"]).toDouble();

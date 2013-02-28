@@ -4,7 +4,7 @@ import 'model.dart';
 
 class ButtonNav extends WebComponent {
   NavLink navlink;
-  
+
   void click(){
     model.changePage(navlink.link);
   }

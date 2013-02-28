@@ -145,15 +145,16 @@ O clube de praticantes FEAR tem como principal objetivo a promoção do airsoft 
   }
 
   /** Original code from the component. */
-  
+
   List<Map> get anunciosRecentes{
     List<Map> result = [];
     int i = 0;
-    for(Map a in model.anuncios){      
+    for(Map a in model.anuncios){
       i++;
       result.add(a);
-      if(i==5)
+      if(i==5) {
         break;
+      }
     }
     return result;
   }

@@ -13,8 +13,9 @@ class PaginaMembros extends WebComponent {
     List<String> params = model.hash.split("/");
     if(params.length>=3){
       var res = model.membros.where((member) => member["socio"].toString() == params.elementAt(2));
-      if(res.isEmpty)
+      if(res.isEmpty) {
         return null;
+      }
       return res.first;
     }
     return null;

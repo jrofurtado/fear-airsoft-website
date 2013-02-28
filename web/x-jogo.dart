@@ -9,30 +9,38 @@ import 'model.dart';
 
 class Jogo extends WebComponent {
   String get temperaturaClass{
-    if(double.parse(model.tempo[0]["tempMinC"])<5)
+    if(double.parse(model.tempo[0]["tempMinC"])<5) {
       return "red";
-    if(double.parse(model.tempo[0]["tempMaxC"])>=35)
+    }
+    if(double.parse(model.tempo[0]["tempMaxC"])>=35) {
       return "red";
-    if(double.parse(model.tempo[0]["tempMinC"])<10)
+    }
+    if(double.parse(model.tempo[0]["tempMinC"])<10) {
       return "yellow";
-    if(double.parse(model.tempo[0]["tempMaxC"])>=30)
+    }
+    if(double.parse(model.tempo[0]["tempMaxC"])>=30) {
       return "yellow";
+    }
     return "";
   }
   String get precipitacaoClass{
-    if(double.parse(model.tempo[0]["precipMM"])>=4) //Chuva intensa (http://wiki.sandaysoft.com/a/Rain_measurement#Standard_.28graduated_cylinder.29Rain_Gauge)
+    if(double.parse(model.tempo[0]["precipMM"])>=4) { //Chuva intensa (http://wiki.sandaysoft.com/a/Rain_measurement#Standard_.28graduated_cylinder.29Rain_Gauge)
         return "red";
-    if(double.parse(model.tempo[0]["precipMM"])>=1) //Chuva moderada
+    }
+    if(double.parse(model.tempo[0]["precipMM"])>=1) { //Chuva moderada
       return "yellow";
+    }
     return "";
   }
   String get ventoClass{
-    if(double.parse(model.tempo[0]["windspeedKmph"])>=45) //Vento intenso (http://library.thinkquest.org/C003603/english/hurricanes/hurricanewind.shtml)
+    if(double.parse(model.tempo[0]["windspeedKmph"])>=45) { //Vento intenso (http://library.thinkquest.org/C003603/english/hurricanes/hurricanewind.shtml)
         return "red";
-    if(double.parse(model.tempo[0]["windspeedKmph"])>=25) //Vento moderado
+    }
+    if(double.parse(model.tempo[0]["windspeedKmph"])>=25) { //Vento moderado
       return "yellow";
+    }
     return "";
-  }  
+  }
   List<calendarclient.EventAttendee> get participantesSim{
     var res = model.participantes.where((participante) => (participante.responseStatus=="accepted"));
     return res.toList();
@@ -45,7 +53,7 @@ class Jogo extends WebComponent {
     var res = model.participantes.where((participante) => (participante.responseStatus=="tentative"));
     return res.toList();
   }
-  
+
   void inserted() {
     if(model.jogo.length>0){
       js.scoped(() {

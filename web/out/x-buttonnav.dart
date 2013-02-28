@@ -61,7 +61,7 @@ class ButtonNav extends WebComponent {
   /** Original code from the component. */
 
   NavLink navlink;
-  
+
   void click(){
     model.changePage(navlink.link);
   }
