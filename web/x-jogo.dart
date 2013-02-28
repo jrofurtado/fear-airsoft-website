@@ -1,8 +1,10 @@
 import 'package:web_ui/web_ui.dart';
-import 'dart:html';
 import 'package:js/js.dart' as js;
 import 'package:google_maps/js_wrap.dart' as jsw;
 import 'package:google_maps/google_maps.dart';
+import 'package:google_calendar_v3_api/calendar_v3_api_browser.dart' as calendarclient;
+import 'dart:html';
+import 'dart:async';
 import 'model.dart';
 
 class Jogo extends WebComponent {
@@ -30,6 +32,18 @@ class Jogo extends WebComponent {
     if(double.parse(model.tempo[0]["windspeedKmph"])>=25) //Vento moderado
       return "yellow";
     return "";
+  }  
+  List<calendarclient.EventAttendee> get participantesSim{
+    var res = model.participantes.where((participante) => (participante.responseStatus=="accepted"));
+    return res.toList();
+  }
+  List<calendarclient.EventAttendee> get participantesNao{
+    var res = model.participantes.where((participante) => (participante.responseStatus=="declined"));
+    return res.toList();
+  }
+  List<calendarclient.EventAttendee> get participantesTalvez{
+    var res = model.participantes.where((participante) => (participante.responseStatus=="tentative"));
+    return res.toList();
   }
   
   void inserted() {
