@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="components" href="x-participante.html">
   </head>
   <body>
     <element name="x-jogo" extends="div" constructor="Jogo" apply-author-styles>
@@ -20,6 +21,24 @@
               <span class="weatherSmallText {{ventoClass}}">Vento (Km/h): {{model.tempo[0]['windspeedKmph']}} Km/h</span>
               <br>
               <span class="copyrightReference">Powered by <a href="http://www.worldweatheronline.com/" title="Free local weather content provider" target="_blank">World Weather Online</a></span>        
+            </template>
+          </div>
+          <div class="participantes">
+            Presentes: {{participantesSim.length}}
+            <template iterate="participante in participantesSim">
+              <x-participante participante="{{participante}}"></x-participante>
+            </template>  
+          </div>
+          <div class="participantes">
+            Ausentes: {{participantesNao.length}}
+            <template iterate="participante in participantesNao">
+              <x-participante participante="{{participante}}"></x-participante>
+            </template>  
+          </div>
+          <div class="participantes">
+            Talvez: {{participantesTalvez.length}}
+            <template iterate="participante in participantesTalvez">
+              <x-participante participante="{{participante}}"></x-participante>
             </template>
           </div>
         </div>

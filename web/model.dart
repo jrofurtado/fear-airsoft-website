@@ -3,6 +3,7 @@ library model;
 import 'dart:html';
 import 'dart:json';
 import 'dart:async';
+import 'package:google_calendar_v3_api/calendar_v3_api_browser.dart' as calendarclient;
 import 'package:web_ui/web_ui.dart';
 import 'package:js/js.dart' as js;
 import 'package:web_ui/watcher.dart' as watchers;
@@ -105,6 +106,22 @@ class Model{
       });
     }
     return _jogo;
+  }
+  List<calendarclient.EventAttendee> _participantes;
+  List<calendarclient.EventAttendee> get participantes {
+    if(jogo.length==0){
+      return [];
+    } else {
+      if(_participantes==null){
+        calendarclient.Calendar calendar = new calendarclient.Calendar();
+        calendar.key = "AIzaSyDYBAsXgRApBsZVy46hcsTsNBkrumQ7Heg";
+        Future<calendarclient.Event> event = calendar.events.get("jrofurtado@fear-airsoft.com", model.jogo[0]["id"]);
+        event.then((calendarclient.Event event){
+          model._participantes = event.attendees;
+        });
+      }
+    }
+    return _participantes;
   }
 
   DateTime dataFimJogo(Map jogo) {
