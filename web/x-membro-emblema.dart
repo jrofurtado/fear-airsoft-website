@@ -6,7 +6,7 @@ class MembroEmblema extends WebComponent {
   Map achievement;
   String titulo="";
   String classe="";
-  
+
   void clickLegenda(){
     model.emblemaSeleccionado = achievement['name'];
   }

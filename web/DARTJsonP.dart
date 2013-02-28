@@ -33,9 +33,9 @@ class JsonpCallback {
   /// call
   _addScriptText() {
     _script.text = """
-        function $_callbackFunctionName(s) { 
+        function $_callbackFunctionName(s) {
           var messageData = JSON.stringify(s);
-          var data = '{"requestName":"$_callbackFunctionName","jsonpData":' + messageData + '}';           
+          var data = '{"requestName":"$_callbackFunctionName","jsonpData":' + messageData + '}';
           window.postMessage(data, '*');
         }
     """;

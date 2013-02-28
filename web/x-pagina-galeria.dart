@@ -7,7 +7,7 @@ class PaginaGaleria extends WebComponent {
   String pesquisa="";
   bool imagens = true;
   bool video = true;
-  
+
   List<Map> get resultados{
     String lpesquisa = pesquisa.toLowerCase();
     var res = model.galeria.where((galeria) => ((video&&galeria["video"])||(imagens&&galeria["imagem"]))&&galeria["nomeCompleto"].toLowerCase().contains(lpesquisa));
@@ -18,8 +18,9 @@ class PaginaGaleria extends WebComponent {
     if(params.length>=3){
       String decoded = decodeUriComponent(params.elementAt(2));
       var res = model.galeria.where((galeria) => galeria["nomeCompleto"] == decoded);
-      if(res.isEmpty)
+      if(res.isEmpty) {
         return null;
+      }
       return res.first;
     }
     return null;

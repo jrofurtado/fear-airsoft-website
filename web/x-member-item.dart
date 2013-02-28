@@ -14,7 +14,7 @@ class MemberItem extends WebComponent {
   String get activoImg{
     return membro['quota']?"member_active.png":"member_inactive.png";
   }
-  
+
   void click(){
     model.changePage("${NavLink.Membros.link}/${membro["socio"]}");
   }

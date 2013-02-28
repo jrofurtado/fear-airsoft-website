@@ -4,7 +4,7 @@ import 'model.dart';
 
 class Xp extends WebComponent {
   Map membro;
-  
+
   int get larguraXp{
     double amplitudeTotal = (membro["nextLevelXp"] - membro["previousLevelXp"]).toDouble();
     double amplitudeXp = (membro["xp"]-membro["previousLevelXp"]).toDouble();

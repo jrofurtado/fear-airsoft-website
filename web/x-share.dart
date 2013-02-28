@@ -12,19 +12,21 @@ class Share extends WebComponent {
     return encodeUriComponent(model.href);
   }
   String get encodedUrl{
-    if(emptyUrl)
+    if(emptyUrl) {
       return encodeUriComponent(model.mainPage);
-    else 
-      if (relativeUrl)
+    } else
+      if (relativeUrl) {
         return encodeUriComponent("${model.mainPage}${url}");
-      else
+      } else {
         return encodeUriComponent(url);
-  }  
+    }
+  }
   String get encodedImagem{
-    if(imagem.length==0)
+    if(imagem.length==0) {
       return encodeUriComponent("${model.mainPage}/../logo_fear_150x150.png");
-    else
+    } else {
       return encodeUriComponent(imagem);
+    }
   }
   String get encodedTitulo{
     return encodeUriComponent(titulo);

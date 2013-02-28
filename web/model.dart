@@ -11,7 +11,7 @@ import 'package:web_ui/watcher.dart' as watchers;
 class Model{
   static final String endpoint_imagens = "https://www.googledrive.com/host/0B4Nj2G61OMg-NXI4c3dyLU4wVzA/";
   static final String endpoint_json ="http://json.fear-airsoft.com/json/";
-  
+
   Collection<NavLink> navlinks = [
                          NavLink.Clube,
                          NavLink.Anuncios,
@@ -128,7 +128,7 @@ class Model{
     return new DateTime(jogo['ano'],jogo['mes'],jogo['dia'],jogo['horaFim'],jogo['minutosFim'],0);
   }
 
-  changePage(String link) {    
+  changePage(String link) {
     model.mainPage=window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
     model.href=mainPage.concat(link);
     model.hash=link;
@@ -150,14 +150,14 @@ class NavLink {
   static final NavLink Contas = new NavLink("Contas", "#/contas");
   String name;
   String link;
-  
+
   NavLink(this.name, this.link);
 }
 
 void main() {
 //  useShadowDom = true; // to enable use of experimental Shadow DOM in the browser
   updateFilters(e) {
-    model.mainPage=window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);    
+    model.mainPage=window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
     model.hash=window.location.hash;
     model.href=window.location.href;
     watchers.dispatch();

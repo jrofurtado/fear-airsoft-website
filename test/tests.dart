@@ -23,7 +23,7 @@ void galeriaFolderUnitTests(){
     });
     test('hash5_1 inteiro entre 0 e 4', (){expect(galeriaFolder.hash5_1, inInclusiveRange(0, 4));});
     test('hash5_2 inteiro entre 0 e 4', (){expect(galeriaFolder.hash5_2, inInclusiveRange(0, 4));});
-    test('hash5_3 inteiro entre 0 e 4', (){expect(galeriaFolder.hash5_3, inInclusiveRange(0, 4));});    
+    test('hash5_3 inteiro entre 0 e 4', (){expect(galeriaFolder.hash5_3, inInclusiveRange(0, 4));});
   });
 }
 void galeriaUnitTests(){
