@@ -7,7 +7,7 @@
   <body>
     <element name="x-participante" extends="div" constructor="Participante" apply-author-styles>
       <template>
-        <img class="participante" title="{{participante.displayName}}" src="{{foto}}">
+        <img class="participante" title="{{participante['displayName']}}" src="{{participante['foto']}}">
       </template>
       <script type="application/dart" src="x-participante.dart"></script>
     </element>

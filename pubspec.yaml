@@ -6,7 +6,6 @@ dependencies:
   google_maps: any
   browser: any
   web_ui: any
-  google_calendar_v3_api: any
 
 #dependencies:
 #  js: any
