@@ -40,9 +40,16 @@ class Jogo extends WebComponent {
     }
     return "";
   }
+  int get participantesSimNumero{
+    int total = 0;
+    for(Map participante in participantesSim)
+      total += 1 + participante["additionalGuests"];
+    return total;
+  }
   List<Map> get participantesSim{
     var res = model.jogo[0]["participantes"].where((participante) => (participante["responseStatus"]=="accepted"));
     return res.toList();
+    //Map x = model.jogo[0]["participantes"][0];return [x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x];
   }
   List<Map> get participantesNao{
     var res = model.jogo[0]["participantes"].where((participante) => (participante["responseStatus"]=="declined"));
@@ -51,6 +58,9 @@ class Jogo extends WebComponent {
   List<Map> get participantesTalvez{
     var res = model.jogo[0]["participantes"].where((participante) => (participante["responseStatus"]=="tentative"));
     return res.toList();
+  }
+  String get descricaoJogo{
+    return model.jogo[0]['descricao'];
   }
 
   void inserted() {

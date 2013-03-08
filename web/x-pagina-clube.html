@@ -11,11 +11,6 @@
   <body>
     <element name="x-pagina-clube" extends="div" constructor="PaginaClube" apply-author-styles>
       <template>
-        <template instantiate="if model.jogo.length>0">
-          <x-widget tamanho="small" titulo="{{model.jogo[0]['nome']}} {{model.jogo[0]['dia']}}/{{model.jogo[0]['mes']}}/{{model.jogo[0]['ano']}}">
-            <x-jogo></x-jogo>       
-          </x-widget>
-        </template>
         <x-widget tamanho="small" titulo="Contacto">
           <a href="mailto:contacto@fear-airsoft.com">contacto@fear-airsoft.com</a>
           <br/>
@@ -24,6 +19,21 @@
           <a href="tel:+351962535853">+351 962 535 853</a>
           <br/>
         </x-widget>
+        <x-widget tamanho="small" titulo="Redes Sociais">
+          <div class="fb-like" data-href="http://www.fear-airsoft.com" data-send="false" data-width="300" data-show-faces="true" data-font="arial"></div>
+          <br/><br/>
+          <div class="g-plusone" data-annotation="inline" data-width="300" data-href="http://www.fear-airsoft.com"></div>          
+        </x-widget>
+        <template instantiate="if model.jogo.length==0">
+          <x-widget tamanho="large" titulo="Próximo Jogo">
+            Não há jogos marcados
+          </x-widget>
+        </template>  
+        <template instantiate="if model.jogo.length>0">
+          <x-widget tamanho="large" titulo="{{model.jogo[0]['nome']}} {{model.jogo[0]['dia']}}/{{model.jogo[0]['mes']}}/{{model.jogo[0]['ano']}}">
+            <x-jogo></x-jogo>
+          </x-widget>
+        </template>
         <x-widget tamanho="small" titulo="Anúncios Recentes">
           <template instantiate="if anunciosRecentes.length==0">
             <x-loading></x-loading>
