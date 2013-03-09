@@ -7,6 +7,7 @@ import 'dart:async';
 import 'model.dart';
 
 class Jogo extends WebComponent {
+  bool descricaoExpandida=false;
   String get temperaturaClass{
     if(double.parse(model.jogo[0]["tempo"]["tempMinC"])<5) {
       return "red";
@@ -59,8 +60,19 @@ class Jogo extends WebComponent {
     var res = model.jogo[0]["participantes"].where((participante) => (participante["responseStatus"]=="tentative"));
     return res.toList();
   }
+  int numCharsDescricaoNaoExpandida = 500;
+  bool get descricaoExpansivel{
+    return model.jogo[0]['descricao'].length>numCharsDescricaoNaoExpandida&&!descricaoExpandida;
+  }
   String get descricaoJogo{
-    return model.jogo[0]['descricao'];
+    if(descricaoExpandida)
+      return model.jogo[0]['descricao'];
+    else
+      return model.jogo[0]['descricao'].substring(0, numCharsDescricaoNaoExpandida).concat("...");
+  }
+  
+  void clickExpandirDescricao(){
+    descricaoExpandida = true;
   }
 
   void inserted() {

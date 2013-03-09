@@ -1,9 +1,12 @@
-p{
-  color:#604030;
-}
 a{
   font-weight:bold;
+}
+.fakeLink{
+  font-weight:bold;
   color:#604030;
+}
+.fakeLink:hover{
+  cursor:pointer;
 }
 .red{
   background-color: #fbb;
@@ -85,7 +88,8 @@ a{
   background-color:#dacea9;
   border-width:10px;
   border-bottom-left-radius:10px;
-  border-bottom-right-radius:10px;  
+  border-bottom-right-radius:10px;
+  color:#604030;
 }
 .closeWindow{
   background:#DDDDDD;

@@ -48,7 +48,10 @@
               </template>
             </div>
           </div>
-          <div>{{descricaoJogo}}</div>
+          <span style="white-space: pre-wrap">{{descricaoJogo}}</span>
+          <template instantiate="if descricaoExpansivel">
+            <span class="fakeLink" on-click="clickExpandirDescricao()">expandir descrição</span>
+          </template>
         </div>
       </template>
       <script type="application/dart" src="x-jogo.dart"></script>
