@@ -45,7 +45,7 @@ abstract class VisitorBase {
   void visitClassSelector(ClassSelector node);
   void visitPseudoClassSelector(PseudoClassSelector node);
   void visitPseudoElementSelector(PseudoElementSelector node);
-  void visitNotSelector(NotSelector node);
+  void visitNegationSelector(NegationSelector node);
 
   void visitLiteralTerm(LiteralTerm node);
   void visitHexColorTerm(HexColorTerm node);
@@ -76,6 +76,7 @@ abstract class VisitorBase {
 
   void visitIdentifier(Identifier node);
   void visitWildcard(Wildcard node);
+  void visitNegation(Negation node);
 
   void visitDartStyleExpression(DartStyleExpression node);
   void visitFontExpression(FontExpression node);
@@ -210,8 +211,8 @@ class Visitor implements VisitorBase {
       visitPseudoClassSelector(selector);
     } else if (selector is PseudoElementSelector) {
       visitPseudoElementSelector(selector);
-    } else if (selector is NotSelector) {
-      visitNotSelector(selector);
+    } else if (selector is NegationSelector) {
+      visitNegationSelector(selector);
     } else if (selector is AttributeSelector) {
       visitAttributeSelector(selector);
     } else {
@@ -248,7 +249,8 @@ class Visitor implements VisitorBase {
   void visitPseudoElementSelector(PseudoElementSelector node) =>
       visitSimpleSelector(node);
 
-  void visitNotSelector(NotSelector node) => visitSimpleSelector(node);
+  void visitNegationSelector(NegationSelector node) =>
+      visitSimpleSelector(node);
 
   void visitLiteralTerm(LiteralTerm node) { }
 
@@ -346,6 +348,8 @@ class Visitor implements VisitorBase {
   void visitIdentifier(Identifier node) { }
 
   void visitWildcard(Wildcard node) { }
+
+  void visitNegation(Negation node) { }
 
   void visitDartStyleExpression(DartStyleExpression node) { }
 

@@ -58,7 +58,6 @@ class Compiler {
   final List<OutputFile> output = <OutputFile>[];
 
   Path _mainPath;
-  Path _packageRoot;
   PathInfo _pathInfo;
   Messages _messages;
 
@@ -84,14 +83,15 @@ class Compiler {
         options.baseDir != null ? new Path(options.baseDir) : mainDir;
     var outputPath =
         options.outputDir != null ? new Path(options.outputDir) : mainDir;
-    _packageRoot = options.packageRoot != null ? new Path(options.packageRoot)
+    var packageRoot = options.packageRoot != null
+        ? new Path(options.packageRoot)
         : _mainPath.directoryPath.join(new Path('packages'));
 
     // Normalize paths - all should be relative or absolute paths.
     bool anyAbsolute = _mainPath.isAbsolute || basePath.isAbsolute ||
-        outputPath.isAbsolute || _packageRoot.isAbsolute;
+        outputPath.isAbsolute || packageRoot.isAbsolute;
     bool allAbsolute = _mainPath.isAbsolute && basePath.isAbsolute &&
-        outputPath.isAbsolute || _packageRoot.isAbsolute;
+        outputPath.isAbsolute || packageRoot.isAbsolute;
     if (anyAbsolute && !allAbsolute) {
       if (currentDir == null)  {
         _messages.error('internal error: could not normalize paths. Please '
@@ -103,11 +103,12 @@ class Compiler {
       if (!_mainPath.isAbsolute) _mainPath = currentPath.join(_mainPath);
       if (!basePath.isAbsolute) basePath = currentPath.join(basePath);
       if (!outputPath.isAbsolute) outputPath = currentPath.join(outputPath);
-      if (!_packageRoot.isAbsolute) {
-        _packageRoot = currentPath.join(_packageRoot);
+      if (!packageRoot.isAbsolute) {
+        packageRoot = currentPath.join(packageRoot);
       }
     }
-    _pathInfo = new PathInfo(basePath, outputPath, options.forceMangle);
+    _pathInfo = new PathInfo(basePath, outputPath, packageRoot,
+        options.forceMangle);
   }
 
   /** Compile the application starting from the given [mainFile]. */
@@ -148,7 +149,8 @@ class Compiler {
     files.add(file);
 
     var fileInfo = _time('Analyzed definitions', file.path,
-        () => analyzeDefinitions(file, _messages, isEntryPoint: isEntryPoint));
+        () => analyzeDefinitions(file, _pathInfo.packageRoot, _messages,
+            isEntryPoint: isEntryPoint));
     info[file.path] = fileInfo;
 
     _processImports(fileInfo);
@@ -158,6 +160,14 @@ class Compiler {
       if (!_processed.contains(href)) {
         _processed.add(href);
         _tasks.add(_parseHtmlFile(href).then(_processHtmlFile));
+      }
+    }
+
+    // Load stylesheet files referenced by [file].
+    for (var href in fileInfo.styleSheetHref) {
+      if (!_processed.contains(href)) {
+        _processed.add(href);
+        _tasks.add(_parseStyleSheetFile(href).then(_processStyleSheetFile));
       }
     }
 
@@ -194,7 +204,8 @@ class Compiler {
   /** Parse [filename] and treat it as a .dart file. */
   Future<SourceFile> _parseDartFile(Path path) {
     return fileSystem.readText(path)
-        .then((code) => new SourceFile(path, isDart: true)..code = code)
+        .then((code) => new SourceFile(path, type: SourceFile.DART)
+            ..code = code)
         .catchError((e) => _readError(e, path));
   }
 
@@ -235,6 +246,31 @@ class Compiler {
     }
   }
 
+  /** Parse [filename] and treat it as a .dart file. */
+  Future<SourceFile> _parseStyleSheetFile(Path path) {
+    return fileSystem.readText(path)
+        .then((code) =>
+            new SourceFile(path, type: SourceFile.STYLESHEET)..code = code)
+        .catchError((e) => _readError(e, path));
+  }
+
+  void _processStyleSheetFile(SourceFile cssFile) {
+    if (!_shouldProcessFile(cssFile)) return;
+
+    files.add(cssFile);
+
+    var fileInfo = new FileInfo(cssFile.path);
+    info[cssFile.path] = fileInfo;
+
+    var uriVisitor = new UriVisitor(_pathInfo, _mainPath, fileInfo.path,
+        options.rewriteUrls);
+    var styleSheet = _parseCss(cssFile.path.toString(),
+        cssFile.code, uriVisitor, options);
+    if (styleSheet != null) {
+      fileInfo.styleSheets.add(styleSheet);
+    }
+  }
+
   Path _getDirectivePath(LibraryInfo libInfo, Directive directive) {
     var uriDirective = (directive as UriBasedDirective).uri;
     var uri = uriDirective.value;
@@ -244,8 +280,7 @@ class Compiler {
       // Don't process our own package -- we'll implement @observable manually.
       if (uri.startsWith('package:web_ui/')) return null;
 
-
-      return _packageRoot.join(new Path(uri.substring(8)));
+      return _pathInfo.packageRoot.join(new Path(uri.substring(8)));
     } else {
       return libInfo.inputPath.directoryPath.join(new Path(uri));
     }
@@ -260,14 +295,16 @@ class Compiler {
     var libraries = _findAllDartLibraries();
 
     var transformed = [];
-    for (var library in libraries) {
-      var transaction = transformObservables(library.userCode);
+    for (var lib in libraries) {
+      var transaction = transformObservables(lib.userCode);
       if (transaction != null) {
-        _edits[library.userCode] = transaction;
+        _edits[lib.userCode] = transaction;
         if (transaction.hasEdits) {
-          // TODO(jmesserly): what about ObservableList/Map/Set?
           _useObservers = true;
-          transformed.add(library);
+          transformed.add(lib);
+        } else if (lib.htmlFile != null) {
+          // All web components will be transformed too. Track that.
+          transformed.add(lib);
         }
       }
     }
@@ -332,12 +369,15 @@ class Compiler {
           transaction.edit(d.offset, d.end, d.toString());
         }
 
-        var pos = lib.userCode.directivesEnd;
-        // TODO(sigmund): maybe don't generate this new import? the user already
-        // had to import @observable, so we could take advantage of that to add
-        // also notifyRead/notifyWrite.
-        transaction.edit(pos, pos,
-            "\nimport 'package:web_ui/observe.dart' as autogenerated;");
+        if (!lib.userCode.isPart) {
+          var pos = lib.userCode.firstPartOffset;
+          // Note: we use a different prefix than "autogenerated" to make
+          // ChangeRecord unambiguous. Otherwise it would be imported by this
+          // and web_ui, resulting in a collision.
+          // TODO(jmesserly): only generate this for libraries that need it.
+          transaction.edit(pos, pos, "\nimport "
+              "'package:web_ui/observe/observable.dart' as __observe;\n");
+        }
         _emitFileAndSourceMaps(lib, transaction.commit(), lib.inputPath);
       }
     }
@@ -356,14 +396,14 @@ class Compiler {
     // Compute files that reference each file, then use this information to
     // flip the modified bit transitively. This is a lot simpler than trying
     // to compute it the other way because of circular references.
-    for (var library in libraries) {
-      for (var directive in library.userCode.directives) {
-        var importPath = _getDirectivePath(library, directive);
+    for (var lib in libraries) {
+      for (var directive in lib.userCode.directives) {
+        var importPath = _getDirectivePath(lib, directive);
         if (importPath == null) continue;
 
         var importInfo = info[importPath];
         if (importInfo != null) {
-          importInfo.referencedBy.add(library);
+          importInfo.referencedBy.add(lib);
         }
       }
     }
@@ -376,9 +416,9 @@ class Compiler {
     }
     transformed.forEach(setModified);
 
-    for (var library in libraries) {
+    for (var lib in libraries) {
       // We don't need this anymore, so free it.
-      library.referencedBy = null;
+      lib.referencedBy = null;
     }
   }
 
@@ -393,7 +433,7 @@ class Compiler {
       var importInfo = info[importPath];
       if (importInfo == null) continue;
 
-      String newUri;
+      String newUri = null;
       if (importInfo.modified) {
         // Use the generated URI for this file.
         newUri = _pathInfo.relativePath(library, importInfo).toString();
@@ -401,7 +441,9 @@ class Compiler {
         // Get the relative path to the input file.
         newUri = _pathInfo.transformUrl(library.inputPath, directive.uri.value);
       }
-      directive.uri = createStringLiteral(newUri);
+      if (newUri != null) {
+        directive.uri = createStringLiteral(newUri);
+      }
     }
   }
 
@@ -409,20 +451,26 @@ class Compiler {
   void _analyze() {
     var uniqueIds = new IntIterator();
     for (var file in files) {
-      if (file.isDart) continue;
-      _time('Analyzed contents', file.path, () =>
-          analyzeFile(file, info, uniqueIds, _messages));
+      if (file.isHtml) {
+        _time('Analyzed contents', file.path, () =>
+            analyzeFile(file, info, uniqueIds, _messages));
+      }
     }
   }
 
   /** Emit the generated code corresponding to each input file. */
   void _emit() {
     for (var file in files) {
-      if (file.isDart) continue;
+      if (file.isDart || file.isStyleSheet) continue;
       _time('Codegen', file.path, () {
         var fileInfo = info[file.path];
         cleanHtmlNodes(fileInfo);
-        _processStylesheet(fileInfo, options: options);
+        if (!fileInfo.isEntryPoint) {
+          // Check all components files for <style> tags and parse the CSS.
+          var uriVisitor = new UriVisitor(_pathInfo, _mainPath, fileInfo.path,
+              options.rewriteUrls);
+          _processStylesheet(uriVisitor, fileInfo, options: options);
+        }
         fixupHtmlCss(fileInfo, options);
         _emitComponents(fileInfo);
         if (fileInfo.isEntryPoint) {
@@ -431,12 +479,16 @@ class Compiler {
         }
       });
     }
+
+    if (options.processCss) {
+      _emitAllCss();
+    }
   }
 
   /** Emit the main .dart file. */
   void _emitMainDart(SourceFile file) {
     var fileInfo = info[file.path];
-    var printer = new MainPageEmitter(fileInfo)
+    var printer = new MainPageEmitter(fileInfo, options.processCss)
         .run(file.document, _pathInfo, _edits[fileInfo.userCode],
             options.rewriteUrls);
     _emitFileAndSourceMaps(fileInfo, printer, fileInfo.inputPath);
@@ -488,9 +540,62 @@ class Compiler {
         document.outerHtml, source: file.path));
   }
 
+  /** Generate an CSS file for all style sheets (main and components). */
+  void _emitAllCss() {
+    var allCssBuff = new StringBuffer();
+    var mainFile;
+
+    // Emit all linked style sheet files first.
+    for (var file in files) {
+      var fileInfo = info[file.path];
+      if (fileInfo.isEntryPoint) mainFile = file;
+      if (file.isStyleSheet) {
+        for (var styleSheet in fileInfo.styleSheets) {
+          allCssBuff.write(
+              '/* ==================================================== */\n'
+              '/* Linked style sheet href = ${file.path.filename} */\n'
+              '/* ==================================================== */\n');
+          allCssBuff.write(emitStyleSheet(styleSheet));
+          allCssBuff.write('\n\n');
+        }
+      }
+    }
+
+    // Emit all CSS in each component (style scoped).
+    for (var file in files) {
+      if (file.isHtml) {
+        var fileInfo = info[file.path];
+        for (var component in fileInfo.declaredComponents) {
+          for (var styleSheet in component.styleSheets) {
+            allCssBuff.write(
+                '/* ==================================================== */\n'
+                '/* Component ${component.tagName} stylesheet */\n'
+                '/* ==================================================== */\n');
+            allCssBuff.write(emitStyleSheet(styleSheet, component.tagName));
+            allCssBuff.write('\n\n');
+          }
+        }
+      }
+    }
+
+    var allCss = allCssBuff.toString();
+    if (!allCss.isEmpty) {
+      var allCssFile = '${mainFile.path.filename}.css';
+      var allCssPath = mainFile.path.directoryPath.append(allCssFile);
+      var allCssOutPath = _pathInfo.outputPath(allCssPath, '');
+      output.add(new OutputFile(allCssOutPath, allCss));
+    }
+  }
+
   /** Emits the Dart code for all components in [fileInfo]. */
   void _emitComponents(FileInfo fileInfo) {
     for (var component in fileInfo.declaredComponents) {
+      // TODO(terry): Handle one stylesheet per component see fixupHtmlCss.
+      if (component.styleSheets.length > 1 && options.processCss) {
+        _messages.warning(
+            'Component has more than one stylesheet'
+            ' - first stylesheet used.', null, file: component.externalFile);
+      }
       var printer = new WebComponentEmitter(fileInfo, _messages)
           .run(component, _pathInfo, _edits[component.userCode]);
       _emitFileAndSourceMaps(component, printer, component.externalFile);
@@ -503,6 +608,9 @@ class Compiler {
    */
   void _emitFileAndSourceMaps(
       LibraryInfo lib, CodePrinter printer, Path inputPath) {
+    // Bail if we had an error generating the code for the file.
+    if (printer == null) return;
+
     var path = _pathInfo.outputLibraryPath(lib);
     var dir = path.directoryPath;
     printer.add('\n//@ sourceMappingURL=${path.filename}.map');
@@ -557,33 +665,57 @@ class Compiler {
 }
 
 /** Parse all stylesheet for polyfilling assciated with [info]. */
-void _processStylesheet(info, {CompilerOptions options : null}) {
-  new _ProcessCss(options).visit(info);
+void _processStylesheet(uriVisitor, info, {CompilerOptions options : null}) {
+  new _ProcessCss(uriVisitor, options).visit(info);
+}
+
+StyleSheet _parseCss(String src, String content, UriVisitor uriVisitor,
+                     CompilerOptions options) {
+  if (!content.trim().isEmpty) {
+    // TODO(terry): Add --checked when fully implemented and error handling.
+    var styleSheet = css.parse(content, options:
+      [options.warningsAsErrors ? '--warnings_as_errors' : '', 'memory']);
+    uriVisitor.visitTree(styleSheet);
+    if (options.debugCss) {
+      print('\nCSS source: $src');
+      print('==========\n');
+      print(treeToDebugString(styleSheet));
+    }
+    return styleSheet;
+  }
 }
 
 /** Post-analysis of style sheet; parsed ready for emitting with polyfill. */
 class _ProcessCss extends InfoVisitor {
+  final UriVisitor uriVisitor;
   final CompilerOptions options;
+  ComponentInfo component;
 
-  _ProcessCss(this.options);
-
-  // TODO(terry): Add --checked when fully implemented and error handling too.
-  StyleSheet _parseCss(String cssInput, CompilerOptions option) =>
-      css.parse(cssInput, options:
-        [option.warningsAsErrors ? '--warnings_as_errors' : '', 'memory']);
+  _ProcessCss(this.uriVisitor, this.options);
 
   void visitComponentInfo(ComponentInfo info) {
-    if (!info.cssSource.isEmpty) {
-      info.styleSheet = _parseCss(info.cssSource.toString(), options);
-      info.cssSource = null;    // Once CSS parsed original not needed.
+    var oldComponent = component;
+    component = info;
 
-      if (options.debugCss) {
-        print('\nComponent: ${info.tagName}');
-        print('==========\n');
-        print(treeToDebugString(info.styleSheet));
+    super.visitComponentInfo(info);
+
+    component = oldComponent;
+  }
+
+  void visitElementInfo(ElementInfo info) {
+    if (component != null) {
+      var node = info.node;
+      if (node.tagName == 'style' && node.attributes.containsKey("scoped")) {
+        // Get contents of style tag.
+        var content = node.nodes.single.value;
+        var styleSheet = _parseCss(component.tagName, content, uriVisitor,
+            options);
+        if (styleSheet != null) {
+          component.styleSheets.add(styleSheet);
+        }
       }
     }
 
-    super.visitComponentInfo(info);
+    super.visitElementInfo(info);
   }
 }

@@ -271,10 +271,11 @@ class _TreePrinter extends Visitor {
     output.depth--;
   }
 
-  void visitNotSelector(NotSelector node) {
-    super.visitNotSelector(node);
+  void visitNegationSelector(NegationSelector node) {
+    super.visitNegationSelector(node);
     output.depth++;
-    heading('Not Selector', node);
+    heading('Negation Selector', node);
+    output.writeNode('Negation arg', node.negationArg);
     output.depth--;
   }
 

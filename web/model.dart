@@ -3,14 +3,13 @@ library model;
 import 'dart:html';
 import 'dart:json';
 import 'dart:async';
-import 'package:google_calendar_v3_api/calendar_v3_api_browser.dart' as calendarclient;
 import 'package:web_ui/web_ui.dart';
 import 'package:js/js.dart' as js;
 import 'package:web_ui/watcher.dart' as watchers;
 
 class Model{
   static final String endpoint_imagens = "https://www.googledrive.com/host/0B4Nj2G61OMg-NXI4c3dyLU4wVzA/";
-  static final String endpoint_json ="http://json.fear-airsoft.com/json/";
+  static final String endpoint_json ="http://json.fear-airsoft.com/";
 
   Collection<NavLink> navlinks = [
                          NavLink.Clube,
@@ -27,29 +26,12 @@ class Model{
   String hash = window.location.hash;
   String href = window.location.href;
   String mainPage = window.location.protocol.concat("//").concat(window.location.host).concat(window.location.pathname);
-  String emblemaSeleccionado;
-  List<Map> _tempo;
-  List<Map> get tempo {
-    if(jogo.length==0){
-      return [];
-    } else {
-      if(_tempo==null){
-        _tempo=[];
-        String mes = "0${jogo[0]['mes']}";
-        mes = mes.substring(mes.length-2, mes.length);
-        String dia = "0${jogo[0]['dia']}";
-        dia = dia.substring(dia.length-2, dia.length);
-        String data = "${jogo[0]['ano']}-${mes}-${dia}";
-        HttpRequest.request("${endpoint_json}tempo?lat=${jogo[0]['campo']['lat']}&lng=${jogo[0]['campo']['lng']}&data=${data}").then((req){model._tempo=parse(req.responseText);watchers.dispatch();});
-      }
-      return _tempo;
-    }
-  }
+  String emblemaSeleccionado;  
   List<Map> _membros;
   List<Map> get membros {
     if(_membros==null){
       _membros=[];
-      HttpRequest.request("${endpoint_json}publishedData/membros").then((req){model._membros=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}publicado/membros").then((req){model._membros=parse(req.responseText);watchers.dispatch();});
     }
     return _membros;
   }
@@ -57,7 +39,7 @@ class Model{
   List<List> get equipes {
     if(equipes==null){
       _equipes=[];
-      HttpRequest.request("${endpoint_json}publishedData/equipes").then((req){model._equipes=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}publicado/equipes").then((req){model._equipes=parse(req.responseText);watchers.dispatch();});
     }
     return _equipes;
   }
@@ -65,7 +47,7 @@ class Model{
   Map get emblemas {
     if(_emblemas==null){
       _emblemas={"emblemas":[],"patentes":[]};
-      HttpRequest.request("${endpoint_json}publishedData/emblemas").then((req){model._emblemas=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}publicado/emblemas").then((req){model._emblemas=parse(req.responseText);watchers.dispatch();});
     }
     return _emblemas;
   }
@@ -73,7 +55,7 @@ class Model{
   List<Map> get galeria {
     if(_galeria==null){
       _galeria=[];
-      HttpRequest.request("${endpoint_json}publishedData/galeria").then((req){model._galeria=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}publicado/galeria").then((req){model._galeria=parse(req.responseText);watchers.dispatch();});
     }
     return _galeria;
   }
@@ -81,7 +63,7 @@ class Model{
   List<Map> get anuncios {
     if(_anuncios==null){
       _anuncios=[];
-      HttpRequest.request("${endpoint_json}publishedData/anuncios").then((req){model._anuncios=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}publicado/anuncios").then((req){model._anuncios=parse(req.responseText);watchers.dispatch();});
     }
     return _anuncios;
   }
@@ -89,43 +71,40 @@ class Model{
   List<Map> get campos {
     if(_campos==null){
       _campos=[];
-      HttpRequest.request("${endpoint_json}publishedData/campos").then((req){model._campos=parse(req.responseText);watchers.dispatch();});
+      HttpRequest.request("${endpoint_json}publicado/campos").then((req){model._campos=parse(req.responseText);watchers.dispatch();});
     }
     return _campos;
   }
   List<Map> _jogo;
   List<Map> get jogo {
-    if(_jogo==null){
-      _jogo=[];
-      HttpRequest.request("${endpoint_json}publishedData/jogo").then((req){
-        List<Map> tmpJogo =parse(req.responseText);
-        if(tmpJogo.length>0 && !dataFimJogo(tmpJogo[0]).isBefore(new DateTime.now())){
-          model._jogo = tmpJogo;
-          watchers.dispatch();
-        }
-      });
-    }
-    return _jogo;
-  }
-  List<calendarclient.EventAttendee> _participantes;
-  List<calendarclient.EventAttendee> get participantes {
-    if(jogo.length==0){
+    if(membros.length==0)
       return [];
-    } else {
-      if(_participantes==null){
-        calendarclient.Calendar calendar = new calendarclient.Calendar();
-        calendar.key = "AIzaSyDYBAsXgRApBsZVy46hcsTsNBkrumQ7Heg";
-        Future<calendarclient.Event> event = calendar.events.get("jrofurtado@fear-airsoft.com", model.jogo[0]["id"]);
-        event.then((calendarclient.Event event){
-          model._participantes = event.attendees;
+    else{
+      if(_jogo==null){
+        _jogo=[];
+        HttpRequest.request("${endpoint_json}jogo").then((req){
+          List<Map> tmpJogo =parse(req.responseText);
+          if(tmpJogo.length>0){
+            DateTime dataFimJogo = new DateTime(tmpJogo[0]['ano'],tmpJogo[0]['mes'],tmpJogo[0]['dia'],tmpJogo[0]['horaFim'],tmpJogo[0]['minutosFim'],0);
+            if(tmpJogo.length>0 && !dataFimJogo.isBefore(new DateTime.now())){
+              for(Map participante in tmpJogo[0]["participantes"]){
+                var res = model.membros.where((membro) => (membro["email"]==participante["email"]));
+                if(res.length>0) {
+                  participante["foto"] = "${Model.endpoint_imagens}/Fotos/100x100/${res.first["socio"]}.jpg";
+                  participante["displayName"] = res.first["name"];
+                } else {
+                  participante["foto"] = "${Model.endpoint_imagens}/Fotos/no_photo_100x100.jpg";
+                  participante["displayName"] = "convidado";
+                }
+              }
+              model._jogo = tmpJogo;
+              watchers.dispatch();
+            }
+          }
         });
       }
     }
-    return _participantes;
-  }
-
-  DateTime dataFimJogo(Map jogo) {
-    return new DateTime(jogo['ano'],jogo['mes'],jogo['dia'],jogo['horaFim'],jogo['minutosFim'],0);
+    return _jogo;
   }
 
   changePage(String link) {

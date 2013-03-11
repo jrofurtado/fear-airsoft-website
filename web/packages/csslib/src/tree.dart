@@ -23,9 +23,14 @@ class Wildcard extends TreeNode {
   visit(VisitorBase visitor) => visitor.visitWildcard(this);
 }
 
+class Negation extends TreeNode {
+  Negation(Span span): super(span);
+  visit(VisitorBase visitor) => visitor.visitNegation(this);
+}
+
 // /*  ....   */
 class CssComment extends TreeNode {
-  String comment;
+  final String comment;
 
   CssComment(this.comment, Span span): super(span);
   visit(VisitorBase visitor) => visitor.visitCssComment(this);
@@ -48,7 +53,7 @@ class SelectorGroup extends TreeNode {
 }
 
 class Selector extends TreeNode {
-  List<SimpleSelectorSequence> _simpleSelectorSequences;
+  final List<SimpleSelectorSequence> _simpleSelectorSequences;
 
   Selector(this._simpleSelectorSequences, Span span) : super(span);
 
@@ -66,8 +71,9 @@ class Selector extends TreeNode {
 }
 
 class SimpleSelectorSequence extends TreeNode {
-  int _combinator;              // +, >, ~, NONE
-  SimpleSelector _selector;
+  /** +, >, ~, NONE */
+  final int _combinator;
+  final SimpleSelector _selector;
 
   SimpleSelectorSequence(this._selector, Span span,
       [int combinator = TokenKind.COMBINATOR_NONE])
@@ -95,7 +101,7 @@ class SimpleSelectorSequence extends TreeNode {
  * namespace, *) are derived from this selector.
  */
 class SimpleSelector extends TreeNode {
-  var _name;
+  final _name;
 
   SimpleSelector(this._name, Span span) : super(span);
 
@@ -115,7 +121,7 @@ class ElementSelector extends SimpleSelector {
 
 // namespace|element
 class NamespaceSelector extends SimpleSelector {
-  var _namespace;           // null, Wildcard or Identifier
+  final _namespace;           // null, Wildcard or Identifier
 
   NamespaceSelector(this._namespace, var name, Span span) : super(name, span);
 
@@ -131,8 +137,8 @@ class NamespaceSelector extends SimpleSelector {
 
 // [attr op value]
 class AttributeSelector extends SimpleSelector {
-  int _op;
-  var _value;
+  final int _op;
+  final _value;
 
   AttributeSelector(Identifier name, this._op, this._value,
       Span span) : super(name, span);
@@ -213,19 +219,21 @@ class PseudoElementSelector extends SimpleSelector {
   visit(VisitorBase visitor) => visitor.visitPseudoElementSelector(this);
 }
 
-// TODO(terry): Implement
-// NOT
-class NotSelector extends SimpleSelector {
-  NotSelector(String name, Span span) : super(name, span);
+// :NOT(negation_arg)
+class NegationSelector extends SimpleSelector {
+  SimpleSelector negationArg;
 
-  visit(VisitorBase visitor) => visitor.visitNotSelector(this);
+  NegationSelector(this.negationArg, Span span)
+      : super(new Negation(span), span);
+
+  visit(VisitorBase visitor) => visitor.visitNegationSelector(this);
 }
 
 class StyleSheet extends TreeNode {
   /**
    * Contains charset, ruleset, directives (media, page, etc.), and selectors.
    */
-  var _topLevels;
+  final _topLevels;
 
   StyleSheet(this._topLevels, Span span) : super(span) {
     for (final node in _topLevels) {
@@ -247,8 +255,8 @@ class TopLevelProduction extends TreeNode {
 }
 
 class RuleSet extends TopLevelProduction {
-  SelectorGroup _selectorGroup;
-  DeclarationGroup _declarationGroup;
+  final SelectorGroup _selectorGroup;
+  final DeclarationGroup _declarationGroup;
 
   RuleSet(this._selectorGroup, this._declarationGroup, Span span) : super(span);
 
@@ -268,8 +276,8 @@ class Directive extends TreeNode {
 }
 
 class ImportDirective extends Directive {
-  String import;
-  List<MediaQuery> mediaQueries;
+  final String import;
+  final List<MediaQuery> mediaQueries;
 
   ImportDirective(this.import, this.mediaQueries, Span span) : super(span);
 
@@ -281,9 +289,9 @@ class ImportDirective extends Directive {
  *    '(' S* media_feature S* [ ':' S* expr ]? ')' S*
  */
 class MediaExpression extends TreeNode {
-  bool andOperator;
-  Identifier _mediaFeature;
-  Expressions exprs;
+  final bool andOperator;
+  final Identifier _mediaFeature;
+  final Expressions exprs;
 
   MediaExpression(this.andOperator, this._mediaFeature, this.exprs, Span span)
       : super(span);
@@ -306,9 +314,9 @@ class MediaExpression extends TreeNode {
  */
 class MediaQuery extends TreeNode {
   /** not, only or no operator. */
-  int _mediaUnary;
-  Identifier _mediaType;
-  List<MediaExpression> expressions;
+  final int _mediaUnary;
+  final Identifier _mediaType;
+  final List<MediaExpression> expressions;
 
   MediaQuery(this._mediaUnary, this._mediaType, this.expressions, Span span)
       : super(span);
@@ -330,8 +338,8 @@ class MediaDirective extends Directive {
 }
 
 class PageDirective extends Directive {
-  String _ident;
-  String _pseudoPage;
+  final String _ident;
+  final String _pseudoPage;
   List<DeclarationGroup> _declsMargin;
 
   PageDirective(this._ident, this._pseudoPage, this._declsMargin,
@@ -344,8 +352,8 @@ class PageDirective extends Directive {
 }
 
 class KeyFrameDirective extends Directive {
-  var _name;
-  List<KeyFrameBlock> _blocks;
+  final _name;
+  final List<KeyFrameBlock> _blocks;
 
   KeyFrameDirective(this._name, Span span) : _blocks = [], super(span);
 
@@ -359,8 +367,8 @@ class KeyFrameDirective extends Directive {
 }
 
 class KeyFrameBlock extends Expression {
-  Expressions _blockSelectors;
-  DeclarationGroup _declarations;
+  final Expressions _blockSelectors;
+  final DeclarationGroup _declarations;
 
   KeyFrameBlock(this._blockSelectors, this._declarations, Span span)
       : super(span);
@@ -370,7 +378,7 @@ class KeyFrameBlock extends Expression {
 
 // TODO(terry): TBD
 class FontFaceDirective extends Directive {
-  List<Declaration> _declarations;
+  final List<Declaration> _declarations;
 
   FontFaceDirective(this._declarations, Span span) : super(span);
 
@@ -378,8 +386,8 @@ class FontFaceDirective extends Directive {
 }
 
 class IncludeDirective extends Directive {
-  String _include;
-  StyleSheet _stylesheet;
+  final String _include;
+  final StyleSheet _stylesheet;
 
   IncludeDirective(this._include, this._stylesheet, Span span) : super(span);
 
@@ -392,8 +400,8 @@ class IncludeDirective extends Directive {
 }
 
 class StyletDirective extends Directive {
-  String _dartClassName;
-  List<RuleSet> _rulesets;
+  final String _dartClassName;
+  final List<RuleSet> _rulesets;
 
   StyletDirective(this._dartClassName, this._rulesets, Span span) : super(span);
 
@@ -408,10 +416,10 @@ class StyletDirective extends Directive {
 
 class NamespaceDirective extends Directive {
   /** Namespace prefix. */
-  String _prefix;
+  final String _prefix;
 
   /** URI associated with this namespace. */
-  String _uri;
+  final String _uri;
 
   NamespaceDirective(this._prefix, this._uri, Span span) : super(span);
 
@@ -421,8 +429,8 @@ class NamespaceDirective extends Directive {
 }
 
 class Declaration extends TreeNode {
-  Identifier _property;
-  Expression _expression;
+  final Identifier _property;
+  final Expression _expression;
   /** Style exposed to Dart. */
   var _dart;
   bool _important;
@@ -446,7 +454,7 @@ class Declaration extends TreeNode {
 }
 
 class DeclarationGroup extends TreeNode {
-  List<Declaration> _declarations;
+  final List<Declaration> _declarations;
 
   DeclarationGroup(this._declarations, Span span) : super(span);
 
@@ -456,7 +464,7 @@ class DeclarationGroup extends TreeNode {
 }
 
 class MarginGroup extends DeclarationGroup {
-  int margin_sym;       // TokenType for for @margin sym.
+  final int margin_sym;       // TokenType for for @margin sym.
 
   MarginGroup(this.margin_sym, List<Declaration> decls, Span span)
       : super(decls, span);
@@ -474,13 +482,13 @@ class OperatorComma extends Expression {
 }
 
 class LiteralTerm extends Expression {
-  var _value;
-  String _text;
+  // TODO(terry): value and text fields can be made final once all CSS resources
+  //              are copied/symlink'd in the build tool and UriVisitor in
+  //              web_ui is removed.
+  var value;
+  String text;
 
-  LiteralTerm(this._value, this._text, Span span) : super(span);
-
-  get value => _value;
-  String get text => _text;
+  LiteralTerm(this.value, this.text, Span span) : super(span);
 
   visit(VisitorBase visitor) => visitor.visitLiteralTerm(this);
 }
@@ -491,7 +499,7 @@ class NumberTerm extends LiteralTerm {
 }
 
 class UnitTerm extends LiteralTerm {
-  int _unit;
+  final int _unit;
 
   UnitTerm(value, String t, Span span, this._unit) : super(value, t, span);
 
@@ -628,7 +636,7 @@ class HexColorTerm extends LiteralTerm {
 }
 
 class FunctionTerm extends LiteralTerm {
-  Expressions _params;
+  final Expressions _params;
 
   FunctionTerm(var value, String t, this._params, Span span)
       : super(value, t, span);
@@ -637,7 +645,7 @@ class FunctionTerm extends LiteralTerm {
 }
 
 class GroupTerm extends Expression {
-  List<LiteralTerm> _terms;
+  final List<LiteralTerm> _terms;
 
   GroupTerm(Span span) : _terms =  [], super(span);
 
@@ -655,7 +663,7 @@ class ItemTerm extends NumberTerm {
 }
 
 class Expressions extends Expression {
-  List<Expression> _expressions;
+  final List<Expression> _expressions;
 
   Expressions(Span span): super(span), _expressions = [];
 
@@ -669,9 +677,9 @@ class Expressions extends Expression {
 }
 
 class BinaryExpression extends Expression {
-  Token op;
-  Expression x;
-  Expression y;
+  final Token op;
+  final Expression x;
+  final Expression y;
 
   BinaryExpression(this.op, this.x, this.y, Span span): super(span);
 
@@ -679,8 +687,8 @@ class BinaryExpression extends Expression {
 }
 
 class UnaryExpression extends Expression {
-  Token op;
-  Expression self;
+  final Token op;
+  final Expression self;
 
   UnaryExpression(this.op, this.self, Span span): super(span);
 
@@ -696,7 +704,7 @@ abstract class DartStyleExpression extends TreeNode {
   static final int heightStyle = 5;
   static final int widthStyle = 6;
 
-  int _styleType;
+  final int _styleType;
   int priority;
 
   DartStyleExpression(this._styleType, Span span) : super(span);
@@ -759,7 +767,7 @@ class FontExpression extends DartStyleExpression {
 }
 
 abstract class BoxExpression extends DartStyleExpression {
-  BoxEdge boxEdge;
+  final BoxEdge boxEdge;
 
   BoxExpression(int styleType, Span span, this.boxEdge)
       : super(styleType, span);
@@ -851,7 +859,7 @@ class BorderExpression extends BoxExpression {
 }
 
 class HeightExpression extends DartStyleExpression {
-  var height;
+  final height;
 
   HeightExpression(Span span, this.height)
       : super(DartStyleExpression.heightStyle, span);
@@ -868,7 +876,7 @@ class HeightExpression extends DartStyleExpression {
 }
 
 class WidthExpression extends DartStyleExpression {
-  var width;
+  final width;
 
   WidthExpression(Span span, this.width)
       : super(DartStyleExpression.widthStyle, span);

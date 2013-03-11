@@ -1,3 +1,4 @@
+file:///home/ubuntu/dart/dart-sdk/lib/_collection_dev/arrays.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_collection_dev/collection_dev.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_collection_dev/iterable.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_collection_dev/list.dart
@@ -14,6 +15,7 @@ file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_a
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_helper.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_number.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_string.dart
+file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/json_patch.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/math_patch.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/native_helper.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/regexp_helper.dart
@@ -29,7 +31,6 @@ file:///home/ubuntu/dart/dart-sdk/lib/async/stream_controller.dart
 file:///home/ubuntu/dart/dart-sdk/lib/async/stream_impl.dart
 file:///home/ubuntu/dart/dart-sdk/lib/async/stream_pipe.dart
 file:///home/ubuntu/dart/dart-sdk/lib/async/timer.dart
-file:///home/ubuntu/dart/dart-sdk/lib/collection/arrays.dart
 file:///home/ubuntu/dart/dart-sdk/lib/collection/collection.dart
 file:///home/ubuntu/dart/dart-sdk/lib/collection/collections.dart
 file:///home/ubuntu/dart/dart-sdk/lib/collection/hash_map.dart
@@ -68,6 +69,7 @@ file:///home/ubuntu/dart/dart-sdk/lib/core/pattern.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/print.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/regexp.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/set.dart
+file:///home/ubuntu/dart/dart-sdk/lib/core/stacktrace.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/stopwatch.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/string.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/string_buffer.dart
@@ -102,19 +104,11 @@ file:///home/ubuntu/dart/dart-sdk/lib/utf/utf_core.dart
 file:///home/ubuntu/dart/dart-sdk/lib/utf/utf_stream.dart
 file:///home/ubuntu/dart/dart-sdk/lib/web_audio/dart2js/web_audio_dart2js.dart
 file:///home/ubuntu/dart/dart-sdk/lib/web_sql/dart2js/web_sql_dart2js.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/model.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/index.html_bootstrap.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/model.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/args/args.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/args/src/parser.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/args/src/usage.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/calendar_v3_api_browser.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/calendar_v3_api_client.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/src/browser/browserclient.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/src/browser/calendar.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/src/common/client.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/src/common/resources.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_calendar_v3_api/src/common/schemas.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_maps/google_maps.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_maps/js_wrap.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_maps/optional.dart
@@ -252,14 +246,6 @@ file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packa
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_maps/src/core/street_view/street_view_service.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_maps/src/core/street_view/street_view_status.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_maps/src/core/street_view/street_view_tile_data.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/google_oauth2_browser.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/browser/googleoauth2.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/browser/oauth2.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/browser/proxy_callback.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/browser/simpleoauth2.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/browser/token.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/browser/utils.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/google_oauth2_client/src/common/url_pattern.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/js/js.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/logging/logging.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/meta/meta.dart
@@ -268,6 +254,7 @@ file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packa
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/observe.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/observe/list.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/observe/map.dart
+file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/observe/observable.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/observe/reference.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/observe/set.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/packages/web_ui/safe_html.dart
@@ -301,7 +288,6 @@ file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-pag
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-pagina-membros.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-participante.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-share.dart
-file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-sitefooter.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-siteheader.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-sitenavigation.dart
 file:///home/ubuntu/src/github.com/jrofurtado/fear-airsoft-website/web/out/x-widget.dart

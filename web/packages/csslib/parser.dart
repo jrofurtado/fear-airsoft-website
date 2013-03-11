@@ -815,8 +815,8 @@ class Parser {
     }
   }
 
-  /* Return list of selectors
-   *
+  /**
+   * Return list of selectors
    */
   processSelector() {
     List<SimpleSelectorSequence> simpleSequences = [];
@@ -952,6 +952,9 @@ class Parser {
     return false;
   }
 
+  /**
+   * type_selector | universal | HASH | class | attrib | pseudo
+   */
   simpleSelectorTail() {
     // Check for HASH | class | attrib | pseudo | negation
     int start = _peekToken.start;
@@ -990,13 +993,24 @@ class Parser {
         // TODO(terry): '::' should be token.
         _eat(TokenKind.COLON);
         bool pseudoElement = _maybeEat(TokenKind.COLON);
-        var name = identifier();
+        var pseudoName = identifier();
+
+        // Functional pseudo?
+        if (_maybeEat(TokenKind.LPAREN)) {
+          if (!pseudoElement && pseudoName.name.toLowerCase() == 'not') {
+            // Negation :   ':NOT(' S* negation_arg S* ')'
+            var negArg = simpleSelector();
+            _eat(TokenKind.RPAREN);
+            return new NegationSelector(negArg, _makeSpan(start));
+          }
+        }
+
         // TODO(terry): Need to handle specific pseudo class/element name and
         // backward compatible names that are : as well as :: as well as
         // parameters.
         return pseudoElement ?
-            new PseudoElementSelector(name, _makeSpan(start)) :
-            new PseudoClassSelector(name, _makeSpan(start));
+            new PseudoElementSelector(pseudoName, _makeSpan(start)) :
+            new PseudoClassSelector(pseudoName, _makeSpan(start));
       case TokenKind.LBRACK:
         return processAttribute();
       case TokenKind.DOUBLE:
@@ -1005,6 +1019,19 @@ class Parser {
         _next();
         break;
     }
+  }
+
+  /**
+   *  In CSS3, the expressions are identifiers, strings, or of the form "an+b".
+   *
+   *    : [ [ PLUS | '-' | DIMENSION | NUMBER | STRING | IDENT ] S* ]+
+   *
+   *    num               [0-9]+|[0-9]*\.[0-9]+
+   *    PLUS              '+'
+   *    DIMENSION         {num}{ident}
+   *    NUMBER            {num}
+   */
+  processSelectorExpression() {
   }
 
   //  Attribute grammar:
@@ -1567,6 +1594,10 @@ class Parser {
       if (_maybeEat(TokenKind.LPAREN)) {
         // FUNCTION
         return processFunction(nameValue);
+      } if (_maybeEat(TokenKind.COLON) &&
+          nameValue.name.toLowerCase() == 'progid') {
+        // IE filter:progid:
+        return processIEFilter(start);
       } else {
         // TODO(terry): Need to have a list of known identifiers today only
         //              'from' is special.
@@ -1716,6 +1747,39 @@ class Parser {
     }
 
     return stringValue;
+  }
+
+  // TODO(terry): Should probably understand IE's non-standard filter syntax to
+  //              fully support calc, var(), etc.
+  /**
+   * IE's filter property breaks CSS value parsing.  IE's format can be:
+   *
+   *    filter: progid:DXImageTransform.MS.gradient(Type=0, Color='#9d8b83');
+   *
+   * We'll just parse everything after the 'progid:' look for the left paren
+   * then parse to the right paren ignoring everything in between.
+   */
+  processIEFilter(int startAfterProgidColon) {
+    int parens = 0;
+
+    while (_peek() != TokenKind.END_OF_FILE) {
+      switch (_peek()) {
+        case TokenKind.LPAREN:
+          _eat(TokenKind.LPAREN);
+          parens++;
+          break;
+        case TokenKind.RPAREN:
+          _eat(TokenKind.RPAREN);
+          if (--parens == 0) {
+            var tok = tokenizer.makeIEFilter(startAfterProgidColon,
+                _peekToken.start);
+            return new LiteralTerm(tok.text, tok.text, tok.span);
+          }
+          break;
+        default:
+          _eat(_peek());
+      }
+    }
   }
 
   //  Function grammar:

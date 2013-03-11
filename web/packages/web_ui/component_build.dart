@@ -14,9 +14,7 @@
  *     import 'dart:io';
  *     import 'package:web_ui/component_build.dart';
  *
- *     main() => build(new Options().arguments, ['web/main.html']);
- *
- *
+ *     main() => build(new Options().arguments, ['web/index.html']);
  */
 library build_utils;
 
@@ -105,15 +103,17 @@ void _handleCleanCommand(List<Directory> trackDirs) {
   for (var dir in trackDirs) {
     dir.exists().then((exists) {
       if (!exists) return;
-      dir.list(recursive: false).onFile = (path) {
-        if (_isGeneratedFile(path, trackDirs)) {
-          // TODO(jmesserly): we need a cleaner way to do this with dart:io.
-          // The bug is that DirectoryLister returns native paths, so you need
-          // to use Path.fromNative to work around this. Ideally we could just
-          // write: new File(path).delete();
-          new File.fromPath(new Path(path)).delete();
+      dir.list(recursive: false).listen((f) {
+        if (f is File) {
+          if (_isGeneratedFile(f.path, trackDirs)) {
+            // TODO(jmesserly): we need a cleaner way to do this with dart:io.
+            // The bug is that DirectoryLister returns native paths, so you need
+            // to use Path.fromNative to work around this. Ideally we could just
+            // write: new File(path).delete();
+            new File.fromPath(new Path(f.path)).delete();
+          }
         }
-      };
+      });
     });
   }
 }

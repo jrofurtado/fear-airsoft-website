@@ -225,6 +225,11 @@ abstract class TokenizerBase {
     return new LiteralToken(kind, _file.span(_startIndex, _index), s);
   }
 
+  Token makeIEFilter(int start, int end) {
+    var filter = _text.substring(start, end);
+    return new LiteralToken(TokenKind.STRING, _file.span(start, end), filter);
+  }
+
   Token _makeRawStringToken(bool isMultiline) {
     var s;
     if (isMultiline) {

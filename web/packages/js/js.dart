@@ -960,6 +960,13 @@ class FunctionProxy extends Proxy /*implements Function*/ {
   }
 }
 
+/// Marker class used to indicate it is serializable to js. If a class is a
+/// [Serializable] the "toJs" method will be called and the result will be used
+/// as value.
+abstract class Serializable {
+  dynamic toJs();
+}
+
 // A table to managed local Dart objects that are proxied in JavaScript.
 class _ProxiedObjectTable {
   // Debugging name.
@@ -990,7 +997,7 @@ class _ProxiedObjectTable {
 
   // Enters a new scope.
   enterScope() {
-    _scopeIndices.addLast(_handleStack.length);
+    _scopeIndices.add(_handleStack.length);
   }
 
   // Invalidates non-global IDs created in the current scope and
@@ -1060,7 +1067,7 @@ class _ProxiedObjectTable {
     // TODO(vsm): Cache x and reuse id.
     final id = '$_name-${_nextId++}';
     _registry[id] = x;
-    _handleStack.addLast(id);
+    _handleStack.add(id);
     return id;
   }
 
@@ -1105,6 +1112,9 @@ _serialize(var message) {
   } else if (message is Proxy) {
     // Remote object proxy.
     return [ 'objref', message._id, message._port ];
+  } else if (message is Serializable) {
+    // use of result of toJs()
+    return _serialize(message.toJs());
   } else {
     // Local object proxy.
     return [ 'objref',

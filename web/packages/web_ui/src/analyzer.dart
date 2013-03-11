@@ -8,6 +8,7 @@
  */
 library analyzer;
 
+import 'dart:uri';
 import 'package:html5lib/dom.dart';
 import 'package:html5lib/dom_parsing.dart';
 import 'package:source_maps/span.dart';
@@ -27,10 +28,10 @@ import 'utils.dart';
  * Adds emitted error/warning messages to [messages], if [messages] is
  * supplied.
  */
-FileInfo analyzeDefinitions(SourceFile file, Messages messages,
-    {bool isEntryPoint: false}) {
+FileInfo analyzeDefinitions(SourceFile file, Path packageRoot,
+    Messages messages, {bool isEntryPoint: false}) {
   var result = new FileInfo(file.path, isEntryPoint);
-  var loader = new _ElementLoader(result, messages);
+  var loader = new _ElementLoader(result, packageRoot, messages);
   loader.visit(file.document);
   return result;
 }
@@ -119,18 +120,6 @@ class _Analyzer extends TreeVisitor {
       info = new ElementInfo(node, parent);
     }
 
-    // TODO(terry): How to handle <link rel="stylesheet" href="...">
-    //              - What if multiple stylesheet links for a component?
-    //              - What if a stylesheet link for all component and particular
-    //                stylesheet links for each component?
-    //              - What if multiple <style> tags for the same component?
-    if (node.tagName == 'style' && node.attributes.containsKey("scoped")) {
-      // TODO(terry): Faster to parse the CSS tags separately instead of
-      //              concatenating all styles.
-      // Get contents of style tag.
-      _currentInfo.cssSource.write(node.nodes.single.value);
-    }
-
     visitElementInfo(info);
 
     if (_parent == null) {
@@ -163,7 +152,7 @@ class _Analyzer extends TreeVisitor {
       // Associate ElementInfo of the <element> tag with its component.
       component.elemInfo = info;
 
-      _bindExtends(component);
+      _analyzeComponent(component);
 
       _currentInfo = component;
     }
@@ -232,27 +221,31 @@ class _Analyzer extends TreeVisitor {
        info.events.length > 0;
   }
 
-  void _bindExtends(ComponentInfo component) {
+  void _analyzeComponent(ComponentInfo component) {
     component.extendsComponent = _fileInfo.components[component.extendsTag];
     if (component.extendsComponent == null &&
-        component.extendsTag.startsWith('x-')) {
+        isCustomTag(component.extendsTag)) {
       _messages.warning(
           'custom element with tag name ${component.extendsTag} not found.',
           component.element.sourceSpan, file: _fileInfo.path);
     }
+
+    // Now that the component's code has been loaded, we can validate that the
+    // class exists.
+    component.findClassDeclaration(_messages);
   }
 
   void _bindCustomElement(Element node, ElementInfo info) {
-    // <x-fancy-button>
+    // <fancy-button>
     var component = _fileInfo.components[node.tagName];
     if (component == null) {
       // TODO(jmesserly): warn for unknown element tags?
 
-      // <button is="x-fancy-button">
+      // <button is="fancy-button">
       var componentName = node.attributes['is'];
       if (componentName != null) {
         component = _fileInfo.components[componentName];
-      } else if (node.tagName.startsWith('x-')) {
+      } else if (isCustomTag(node.tagName)) {
         componentName = node.tagName;
       }
       if (component == null && componentName != null) {
@@ -296,6 +289,24 @@ class _Analyzer extends TreeVisitor {
     if (condition != null && iterate != null) {
       _messages.warning('template cannot have both iteration and conditional '
           'attributes', node.sourceSpan, file: _fileInfo.path);
+      return null;
+    }
+
+    if (node.parent != null && node.parent.tagName == 'element' &&
+        (condition != null || iterate != null)) {
+
+      // TODO(jmesserly): would be cool if we could just refactor this, or offer
+      // a quick fix in the Editor.
+      var example = new Element.html('<element><template><template>');
+      node.parent.attributes.forEach((k, v) { example.attributes[k] = v; });
+      var nestedTemplate = example.nodes.first.nodes.first;
+      node.attributes.forEach((k, v) { nestedTemplate.attributes[k] = v; });
+
+      _messages.warning('the <template> of a custom element does not support '
+          '"if" or "iterate". However, you can create another template node '
+          'that is a child node, for example:\n'
+          '${example.outerHtml}',
+          node.parent.sourceSpan, file: _fileInfo.path);
       return null;
     }
 
@@ -703,6 +714,7 @@ class _Analyzer extends TreeVisitor {
 class _ElementLoader extends TreeVisitor {
   final FileInfo _fileInfo;
   LibraryInfo _currentInfo;
+  Path _packageRoot;
   bool _inHead = false;
   Messages _messages;
 
@@ -710,7 +722,7 @@ class _ElementLoader extends TreeVisitor {
    * Adds emitted warning/error messages to [_messages]. [_messages]
    * must not be null.
    */
-  _ElementLoader(this._fileInfo, this._messages) {
+  _ElementLoader(this._fileInfo, this._packageRoot, this._messages) {
     assert(this._messages != null);
     _currentInfo = _fileInfo;
   }
@@ -730,24 +742,46 @@ class _ElementLoader extends TreeVisitor {
     }
   }
 
+  /**
+   * Process `link rel="component"` as specified in:
+   * <https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/components/index.html#link-type-component>
+   */
   void visitLinkElement(Element node) {
-    if (node.attributes['rel'] != 'components') return;
+    // TODO(jmesserly): deprecate the plural form, it is singular in the spec.
+    var rel = node.attributes['rel'];
+    if (rel != 'component' && rel != 'components' &&
+        rel != 'stylesheet') return;
 
     if (!_inHead) {
-      _messages.warning('link rel="components" only valid in '
+      _messages.warning('link rel="$rel" only valid in '
           'head.', node.sourceSpan, file: _fileInfo.path);
       return;
     }
 
     var href = node.attributes['href'];
     if (href == null || href == '') {
-      _messages.warning('link rel="components" missing href.',
+      _messages.warning('link rel="$rel" missing href.',
           node.sourceSpan, file: _fileInfo.path);
       return;
     }
 
-    var path = _fileInfo.path.directoryPath.join(new Path(href));
-    _fileInfo.componentLinks.add(path);
+    var path;
+    if (href.startsWith('package:')) {
+      path = _packageRoot.join(new Path(href.substring(8)));
+    } else {
+      path = _fileInfo.path.directoryPath.join(new Path(href));
+    }
+
+    if (rel == 'component' || rel == 'components') {
+      _fileInfo.componentLinks.add(path);
+    } else {
+      assert(rel == 'stylesheet');
+      // Local stylesheets only are handled.
+      var scheme = Uri.parse(href).scheme;
+      if (scheme != 'http' && scheme != 'https') {
+        _fileInfo.styleSheetHref.add(path);
+      }
+    }
   }
 
   void visitElementElement(Element node) {
@@ -762,12 +796,11 @@ class _ElementLoader extends TreeVisitor {
 
     var tagName = node.attributes['name'];
     var extendsTag = node.attributes['extends'];
-    var constructor = node.attributes['constructor'];
     var templateNodes = node.nodes.where((n) => n.tagName == 'template');
 
     if (tagName == null) {
       _messages.error('Missing tag name of the component. Please include an '
-          'attribute like \'name="x-your-tag-name"\'.',
+          'attribute like \'name="your-tag-name"\'.',
           node.sourceSpan, file: _fileInfo.path);
       return;
     }
@@ -788,14 +821,8 @@ class _ElementLoader extends TreeVisitor {
           node.sourceSpan, file: _fileInfo.path);
     }
 
-    if (constructor == null) {
-      var name = tagName;
-      if (name.startsWith('x-')) name = name.substring(2);
-      constructor = toCamelCase(name, startUppercase: true);
-    }
-
     var component = new ComponentInfo(node, _fileInfo, tagName, extendsTag,
-        constructor, template);
+        template);
 
     _fileInfo.declaredComponents.add(component);
 

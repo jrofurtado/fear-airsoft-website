@@ -9,38 +9,55 @@
     <element name="x-jogo" extends="div" constructor="Jogo" apply-author-styles>
       <template>
         <div class="proximoJogo">
-          <div id="map_canvas" class="mapSmall"></div>
-          <div class="weatherSmall">
-            <template instantiate="if model.tempo.length>0">
-              <img src="{{model.tempo[0]['weatherIconUrl'][0]['value']}}"/>
-              <br>
-              <span class="weatherSmallText {{temperaturaClass}}">{{model.tempo[0]['tempMinC']}}º C - {{model.tempo[0]['tempMaxC']}}º C</span>
-              <br>
-              <span class="weatherSmallText {{precipitacaoClass}}">Precipitação: {{model.tempo[0]['precipMM']}} mm</span>
-              <br>
-              <span class="weatherSmallText {{ventoClass}}">Vento (Km/h): {{model.tempo[0]['windspeedKmph']}} Km/h</span>
-              <br>
-              <span class="copyrightReference">Powered by <a href="http://www.worldweatheronline.com/" title="Free local weather content provider" target="_blank">World Weather Online</a></span>        
+          <div>
+            <div id="map_canvas" class="mapSmall"></div>
+            <div><a href="https://maps.google.com/maps?daddr={{model.jogo[0]['campo']['estacionamentoLat']}},{{model.jogo[0]['campo']['estacionamentoLng']}}" target="_blank">Obter direcções para o local de estacionamento</a></div>
+          </div>
+          <div class="weather">
+            <template instantiate="if model.jogo[0]['tempo']!=null">
+              <div><img src="{{model.jogo[0]['tempo']['weatherIconUrl'][0]['value']}}"/></div>
+              <div>
+                <span class="{{temperaturaClass}}">{{model.jogo[0]['tempo']['tempMinC']}}º C - {{model.jogo[0]['tempo']['tempMaxC']}}º C</span>
+                <br>
+                <span class="{{precipitacaoClass}}">Precipitação: {{model.jogo[0]['tempo']['precipMM']}} mm</span>
+                <br>
+                <span class="{{ventoClass}}">Vento (Km/h): {{model.jogo[0]['tempo']['windspeedKmph']}} Km/h</span>
+                <br>
+                <span class="copyrightReference">Powered by <a href="http://www.worldweatheronline.com/" title="Free local weather content provider" target="_blank">World Weather Online</a></span>        
+              </div>
+              <div class="clearBoth"></div>
             </template>
           </div>
           <div class="participantes">
-            Presentes: {{participantesSim.length}}
-            <template iterate="participante in participantesSim">
-              <x-participante participante="{{participante}}"></x-participante>
-            </template>  
-          </div>
-          <div class="participantes">
-            Ausentes: {{participantesNao.length}}
-            <template iterate="participante in participantesNao">
-              <x-participante participante="{{participante}}"></x-participante>
-            </template>  
-          </div>
-          <div class="participantes">
-            Talvez: {{participantesTalvez.length}}
-            <template iterate="participante in participantesTalvez">
-              <x-participante participante="{{participante}}"></x-participante>
+            <template instantiate if="participantesSimNumero>0">  
+              Presentes: {{participantesSimNumero}}
+              <div>              
+                <template iterate="participante in participantesSim">
+                  <x-participante participante="{{participante}}"></x-participante>
+                </template>  
+              </div>
+            </template>
+            <template instantiate if="participantesNao.length>0">
+              Ausentes: {{participantesNao.length}}
+              <div>              
+                <template iterate="participante in participantesNao">
+                  <x-participante participante="{{participante}}"></x-participante>
+                </template>  
+              </div>
+            </template>
+            <template instantiate if="participantesTalvez.length>0">
+              Talvez: {{participantesTalvez.length}}
+              <div>              
+                <template iterate="participante in participantesTalvez">
+                  <x-participante participante="{{participante}}"></x-participante>
+                </template>
+              </div>
             </template>
           </div>
+          <span style="white-space: pre-wrap">{{descricaoJogo}}</span>
+          <template instantiate="if descricaoExpansivel">
+            <span class="fakeLink" on-click="clickExpandirDescricao()">expandir descrição</span>
+          </template>
         </div>
       </template>
       <script type="application/dart" src="x-jogo.dart"></script>

@@ -256,12 +256,14 @@ class CssPrinter extends Visitor {
     emit("::${node.name}");
   }
 
-  void visitNotSelector(NotSelector node) {
-    // TODO(terry): TBD
+  void visitNegationSelector(NegationSelector node) {
+    emit(':not(');
+    node.negationArg.visit(this);
+    emit(')');
   }
 
   void visitLiteralTerm(LiteralTerm node) {
-    emit(node._text);
+    emit(node.text);
   }
 
   void visitHexColorTerm(HexColorTerm node) {
