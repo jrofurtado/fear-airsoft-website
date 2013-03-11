@@ -29,24 +29,30 @@
             </template>
           </div>
           <div class="participantes">
-            Presentes: {{participantesSimNumero}}
-            <div>              
-              <template iterate="participante in participantesSim">
-                <x-participante participante="{{participante}}"></x-participante>
-              </template>  
-            </div>
-            Ausentes: {{participantesNao.length}}
-            <div>              
-              <template iterate="participante in participantesNao">
-                <x-participante participante="{{participante}}"></x-participante>
-              </template>  
-            </div>
-            Talvez: {{participantesTalvez.length}}
-            <div>              
-              <template iterate="participante in participantesTalvez">
-                <x-participante participante="{{participante}}"></x-participante>
-              </template>
-            </div>
+            <template instantiate if="participantesSimNumero>0">  
+              Presentes: {{participantesSimNumero}}
+              <div>              
+                <template iterate="participante in participantesSim">
+                  <x-participante participante="{{participante}}"></x-participante>
+                </template>  
+              </div>
+            </template>
+            <template instantiate if="participantesNao.length>0">
+              Ausentes: {{participantesNao.length}}
+              <div>              
+                <template iterate="participante in participantesNao">
+                  <x-participante participante="{{participante}}"></x-participante>
+                </template>  
+              </div>
+            </template>
+            <template instantiate if="participantesTalvez.length>0">
+              Talvez: {{participantesTalvez.length}}
+              <div>              
+                <template iterate="participante in participantesTalvez">
+                  <x-participante participante="{{participante}}"></x-participante>
+                </template>
+              </div>
+            </template>
           </div>
           <span style="white-space: pre-wrap">{{descricaoJogo}}</span>
           <template instantiate="if descricaoExpansivel">
