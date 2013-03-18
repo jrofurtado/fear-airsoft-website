@@ -1,0 +1,150 @@
+/* Auto-generated from style sheet href = web/desktop.css */
+/* DO NOT EDIT. */
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: rgba(224, 224, 144, 0.8);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(224, 224, 144, 0.4);
+}
+.body {
+  max-width: 940px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.2em;
+}
+.main {
+}
+.siteheader {
+  background-image: url("../banner.png");
+  background-repeat: no-repeat;
+  height: 180px;
+}
+.sitefooter {
+}
+.sitelogo {
+  position: relative;
+  left: 765px;
+  top: 15px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.sitenavigation {
+}
+.navlink {
+  float: left;
+  width: inherit;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  text-align: center;
+  padding: 4px;
+  font-size: 16px;
+}
+.item {
+  box-shadow: 5px 5px 5px #3c331a;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+.item-foto {
+  height: 100px;
+  width: 100px;
+}
+.item-equipa {
+  left: 175px;
+  height: 100px;
+  width: 100px;
+}
+.item-emblema1, .item-emblema2 {
+  top: 29px;
+  height: 43px;
+  width: 70px;
+}
+.item-emblema1 {
+  left: 290px;
+}
+.item-emblema2 {
+  left: 365px;
+}
+.item-patente {
+  height: 100px;
+  width: 70px;
+}
+.item-memberActive {
+  top: 29px;
+  left: 275px;
+}
+.item-nome {
+  top: 36px;
+  left: 440px;
+}
+.item-nome a {
+  font-size: 20px;
+}
+.galeriaFolder {
+  margin-left: 30px;
+  margin-right: 15px;
+  margin-bottom: 50px;
+  width: 256px;
+  height: 276px;
+}
+.galeriaFolderFrameBack, .galeriaFolderFrameTop {
+  width: 256px;
+  min-height: 256px;
+  padding: 8px;
+}
+.galeriaFolderThumbnail {
+  max-width: 256px;
+  max-height: 256px;
+}
+.galeriaFotoFrame {
+  margin: 10px auto;
+  background-color: #fff;
+  padding: 20px;
+}
+.galeriaFotoImagem {
+  max-width: 800px;
+  max-height: 600px;
+  min-width: 300px;
+  min-height: 300px;
+}
+.mapSmall {
+  float: left;
+  width: 630px;
+  height: 200px;
+}
+.weather {
+  float: left;
+  padding-left: 5px;
+  padding-top: 10px;
+}
+.widget-small {
+  width: 50%;
+}
+.widget-large {
+  width: 100%;
+}
+.widgetInner {
+  margin-top: 3px;
+  margin-bottom: 6px;
+  margin-left: 3px;
+  margin-right: 6px;
+  box-shadow: 5px 5px 5px #3c331a;
+}
+.pesquisa {
+  max-width: 100%;
+}
+

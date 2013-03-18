@@ -219,6 +219,39 @@ class PseudoElementSelector extends SimpleSelector {
   visit(VisitorBase visitor) => visitor.visitPseudoElementSelector(this);
 }
 
+// :pseudoClassFunction(expression)
+class PseudoClassFunctionSelector extends PseudoClassSelector {
+  SelectorExpression expression;
+
+  PseudoClassFunctionSelector(Identifier name, this.expression, Span span)
+      : super(name, span);
+  visit(VisitorBase visitor) => visitor.visitPseudoClassFunctionSelector(this);
+}
+
+// ::pseudoElementFunction(expression)
+class PseudoElementFunctionSelector extends PseudoElementSelector {
+  SelectorExpression expression;
+
+  PseudoElementFunctionSelector(Identifier name, this.expression, Span span)
+      : super(name, span);
+  visit(VisitorBase visitor) =>
+      visitor.visitPseudoElementFunctionSelector(this);
+}
+
+class SelectorExpression extends TreeNode {
+  final List<Expression> _expressions = [];
+
+  SelectorExpression(Span span): super(span);
+
+  add(Expression expression) {
+    _expressions.add(expression);
+  }
+
+  List<Expression> get expressions => _expressions;
+
+  visit(VisitorBase visitor) => visitor.visitSelectorExpression(this);
+}
+
 // :NOT(negation_arg)
 class NegationSelector extends SimpleSelector {
   SimpleSelector negationArg;
@@ -479,6 +512,16 @@ class OperatorSlash extends Expression {
 class OperatorComma extends Expression {
   OperatorComma(Span span) : super(span);
   visit(VisitorBase visitor) => visitor.visitOperatorComma(this);
+}
+
+class OperatorPlus extends Expression {
+  OperatorPlus(Span span) : super(span);
+  visit(VisitorBase visitor) => visitor.visitOperatorPlus(this);
+}
+
+class OperatorMinus extends Expression {
+  OperatorMinus(Span span) : super(span);
+  visit(VisitorBase visitor) => visitor.visitOperatorMinus(this);
 }
 
 class LiteralTerm extends Expression {

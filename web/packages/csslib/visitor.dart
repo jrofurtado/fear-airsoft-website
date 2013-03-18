@@ -45,7 +45,10 @@ abstract class VisitorBase {
   void visitClassSelector(ClassSelector node);
   void visitPseudoClassSelector(PseudoClassSelector node);
   void visitPseudoElementSelector(PseudoElementSelector node);
+  void visitPseudoClassFunctionSelector(PseudoClassFunctionSelector node);
+  void visitPseudoElementFunctionSelector(PseudoElementFunctionSelector node);
   void visitNegationSelector(NegationSelector node);
+  void visitSelectorExpression(SelectorExpression node);
 
   void visitLiteralTerm(LiteralTerm node);
   void visitHexColorTerm(HexColorTerm node);
@@ -69,6 +72,8 @@ abstract class VisitorBase {
   void visitItemTerm(ItemTerm node);
   void visitOperatorSlash(OperatorSlash node);
   void visitOperatorComma(OperatorComma node);
+  void visitOperatorPlus(OperatorPlus node);
+  void visitOperatorMinus(OperatorMinus node);
 
   void visitExpressions(Expressions node);
   void visitBinaryExpression(BinaryExpression node);
@@ -207,12 +212,18 @@ class Visitor implements VisitorBase {
       visitIdSelector(selector);
     } else if (selector is ClassSelector) {
       visitClassSelector(selector);
+    } else if (selector is PseudoClassFunctionSelector) {
+      visitPseudoClassFunctionSelector(selector);
+    } else if (selector is PseudoElementFunctionSelector) {
+      visitPseudoElementFunctionSelector(selector);
     } else if (selector is PseudoClassSelector) {
       visitPseudoClassSelector(selector);
     } else if (selector is PseudoElementSelector) {
       visitPseudoElementSelector(selector);
     } else if (selector is NegationSelector) {
       visitNegationSelector(selector);
+    } else if (selector is SelectorExpression) {
+      visitSelectorExpression(selector);
     } else if (selector is AttributeSelector) {
       visitAttributeSelector(selector);
     } else {
@@ -249,8 +260,18 @@ class Visitor implements VisitorBase {
   void visitPseudoElementSelector(PseudoElementSelector node) =>
       visitSimpleSelector(node);
 
+  void visitPseudoClassFunctionSelector(PseudoClassFunctionSelector node) =>
+      visitSimpleSelector(node);
+
+  void visitPseudoElementFunctionSelector(PseudoElementFunctionSelector node) =>
+      visitSimpleSelector(node);
+
   void visitNegationSelector(NegationSelector node) =>
       visitSimpleSelector(node);
+
+  void visitSelectorExpression(SelectorExpression node) {
+    _visitNodeList(node._expressions);
+  }
 
   void visitLiteralTerm(LiteralTerm node) { }
 
@@ -330,6 +351,10 @@ class Visitor implements VisitorBase {
   void visitOperatorSlash(OperatorSlash node) { }
 
   void visitOperatorComma(OperatorComma node) { }
+
+  void visitOperatorPlus(OperatorPlus node) { }
+
+  void visitOperatorMinus(OperatorMinus node) { }
 
   void visitExpressions(Expressions node) {
     _visitNodeList(node._expressions);

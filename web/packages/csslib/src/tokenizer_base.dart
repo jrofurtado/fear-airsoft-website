@@ -14,6 +14,12 @@ abstract class TokenizerBase {
   final bool _skipWhitespace;
   final String _text;
 
+  /**
+   * Changes tokenization when in a pseudo function expression.  If true then
+   * minus signs are handled as operators instead of identifiers.
+   */
+  bool selectorExpression = false;
+
   int _index;
   int _startIndex;
 

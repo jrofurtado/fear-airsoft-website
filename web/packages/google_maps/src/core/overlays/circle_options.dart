@@ -17,6 +17,7 @@ part of google_maps;
 class CircleOptions extends jsw.IsJsProxy {
   set center(LatLng center) => $.center = center;
   set clickable(bool clickable) => $.clickable = clickable;
+  set draggable(bool draggable) => $.draggable = draggable;
   set editable(bool editable) => $.editable = editable;
   set fillColor(String fillColor) => $.fillColor = fillColor;
   set fillOpacity(num fillOpacity) => $.fillOpacity = fillOpacity;
@@ -24,6 +25,7 @@ class CircleOptions extends jsw.IsJsProxy {
   set radius(num radius) => $.radius = radius;
   set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
   set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
+  set strokePosition(StrokePosition strokePosition) => $.strokePosition = strokePosition;
   set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
   set visible(bool visible) => $.visible = visible;
   set zIndex(num zIndex) => $.zIndex = zIndex;

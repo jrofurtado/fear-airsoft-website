@@ -91,7 +91,11 @@ class Tokenizer extends TokenizerBase {
         }
         break;
       case TokenChar.MINUS:
-        if (maybeEatDigit()) {
+        if (selectorExpression) {
+          // If parsing in pseudo function expression then minus is an operator
+          // not part of identifier.
+          return _finishToken(TokenKind.MINUS);
+        } else if (maybeEatDigit()) {
           return finishNumber();
         } else if (TokenizerHelpers.isIdentifierStart(ch)) {
           return this.finishIdentifier(ch);
@@ -211,8 +215,13 @@ class Tokenizer extends TokenizerBase {
   // Need to override so CSS version of isIdentifierPart is used.
   Token finishIdentifier(int ch) {
     while (_index < _text.length) {
-      if (!TokenizerHelpers.isIdentifierPart(_text.codeUnitAt(_index))) {
-        break;
+      // If parsing in pseudo function expression then minus is an operator
+      // not part of identifier.
+      var isIdentifier = selectorExpression
+          ? TokenizerHelpers.isIdentifierPartExpr(_text.codeUnitAt(_index))
+          : TokenizerHelpers.isIdentifierPart(_text.codeUnitAt(_index));
+      if (!isIdentifier) {
+          break;
       } else {
         _index += 1;
       }
@@ -308,10 +317,8 @@ class Tokenizer extends TokenizerBase {
 
 /** Static helper methods. */
 class TokenizerHelpers {
-
   static bool isIdentifierStart(int c) {
-    return ((c >= 97/*a*/ && c <= 122/*z*/) || (c >= 65/*A*/ && c <= 90/*Z*/) ||
-        c == 95/*_*/ || c == 45 /*-*/);
+    return isIdentifierStartExpr(c) || c == 45 /*-*/;
   }
 
   static bool isDigit(int c) {
@@ -324,6 +331,17 @@ class TokenizerHelpers {
   }
 
   static bool isIdentifierPart(int c) {
-    return (isIdentifierStart(c) || isDigit(c) || c == 45 /*-*/);
+    return isIdentifierPartExpr(c) || c == 45 /*-*/;
+  }
+
+  /** Pseudo function expressions identifiers can't have a minus sign. */
+  static bool isIdentifierStartExpr(int c) {
+    return ((c >= 97/*a*/ && c <= 122/*z*/) || (c >= 65/*A*/ && c <= 90/*Z*/) ||
+        c == 95/*_*/);
+  }
+
+  /** Pseudo function expressions identifiers can't have a minus sign. */
+  static bool isIdentifierPartExpr(int c) {
+    return (isIdentifierStartExpr(c) || isDigit(c));
   }
 }

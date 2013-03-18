@@ -1,30 +1,18 @@
 library java.core;
 
 import "dart:math" as math;
-import "dart:io";
 import "dart:uri";
 
-class System {
-  static final String pathSeparator = Platform.pathSeparator;
-  static final int pathSeparatorChar = Platform.pathSeparator.codeUnitAt(0);
-
+class JavaSystem {
   static int currentTimeMillis() {
     return (new DateTime.now()).millisecondsSinceEpoch;
   }
-  static String getProperty(String name) {
-    if (name == 'os.name') {
-      return Platform.operatingSystem;
-    }
-    if (name == 'line.separator') {
-      if (Platform.operatingSystem == 'windows') {
-        return '\r\n';
-      }
-      return '\n';
-    }
-    return null;
-  }
-  static String getenv(String name) => Platform.environment[name];
 
+  static void arraycopy(List src, int srcPos, List dest, int destPos, int length) {
+    for (int i = 0; i < length; i++) {
+      dest[destPos + i] = src[srcPos + i];
+    }
+  }
 }
 
 /**
@@ -43,15 +31,22 @@ bool isInstanceOf(o, Type t) {
   if (oTypeName == tTypeName) {
     return true;
   }
-  if (oTypeName == "${tTypeName}Impl") {
-    return true;
-  }
-  if (oTypeName.startsWith("_HashMap") && tTypeName == "Map") {
+  if (oTypeName.startsWith("HashMap") && tTypeName == "Map") {
     return true;
   }
   if (oTypeName.startsWith("List") && tTypeName == "List") {
     return true;
   }
+  // Dart Analysis Engine specific
+  if (oTypeName == "${tTypeName}Impl") {
+    return true;
+  }
+  if (tTypeName == "ExecutableElement") {
+    if (oTypeName == "MethodElementImpl" || oTypeName == "FunctionElementImpl") {
+      return true;
+    }
+  }
+  // no
   return false;
 }
 
@@ -90,6 +85,9 @@ class Character {
   static bool isLetterOrDigit(int c) {
     return isLetter(c) || c >= 0x30 && c <= 0x39;
   }
+  static bool isWhitespace(int c) {
+    return c == 0x09 || c == 0x20 || c == 0x0A || c == 0x0D;
+  }
   static int digit(int codePoint, int radix) {
     if (radix != 16) {
       throw new ArgumentError("only radix == 16 is supported");
@@ -100,6 +98,10 @@ class Character {
     if (0x41 <= codePoint && codePoint <= 0x46) {
       return 0xA + (codePoint - 0x41);
     }
+    if (0x61 <= codePoint && codePoint <= 0x66) {
+      return 0xA + (codePoint - 0x61);
+    }
+    return -1;
   }
   static String toChars(int codePoint) {
     throw new UnsupportedOperationException();
@@ -132,7 +134,7 @@ String _printf(String fmt, List args) {
     int c = fmt.codeUnitAt(i);
     if (c == 0x25) {
       if (markFound) {
-        sb.addCharCode(c);
+        sb.writeCharCode(c);
         markFound = false;
       } else {
         markFound = true;
@@ -143,18 +145,18 @@ String _printf(String fmt, List args) {
       markFound = false;
       // %d
       if (c == 0x64) {
-        sb.add(args[argIndex++]);
+        sb.writeCharCode(args[argIndex++]);
         continue;
       }
       // %s
       if (c == 0x73) {
-        sb.add(args[argIndex++]);
+        sb.writeCharCode(args[argIndex++]);
         continue;
       }
       // unknown
       throw new IllegalArgumentException('[$fmt][$i] = 0x${c.toRadixString(16)}');
     } else {
-      sb.addCharCode(c);
+      sb.writeCharCode(c);
     }
   }
   return sb.toString();
@@ -181,7 +183,7 @@ class PrintStringWriter extends PrintWriter {
   final StringBuffer _sb = new StringBuffer();
 
   void print(x) {
-    _sb.add(x);
+    _sb.write(x);
   }
 
   String toString() => _sb.toString();
@@ -193,7 +195,7 @@ class StringUtils {
   static String repeat(String s, int n) {
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < n; i++) {
-      sb.add(s);
+      sb.write(s);
     }
     return sb.toString();
   }
@@ -220,6 +222,12 @@ class IllegalArgumentException implements Exception {
   final String message;
   const IllegalArgumentException([this.message = "", Exception e = null]);
   String toString() => "IllegalStateException: $message";
+}
+
+class StringIndexOutOfBoundsException implements Exception {
+  final int index;
+  const StringIndexOutOfBoundsException(this.index);
+  String toString() => "StringIndexOutOfBoundsException: $index";
 }
 
 class IllegalStateException implements Exception {
@@ -268,7 +276,7 @@ class ListWrapper<E> extends Collection<E> implements List<E> {
   }
 
   void addLast(E value) {
-    elements.addLast(value);
+    elements.add(value);
   }
 
   void addAll(Iterable<E> iterable) {
@@ -281,6 +289,10 @@ class ListWrapper<E> extends Collection<E> implements List<E> {
 
   int indexOf(E element, [int start = 0]) {
     return elements.indexOf(element, start);
+  }
+
+  void insert(int index, E element) {
+    elements.insert(index, element);
   }
 
   int lastIndexOf(E element, [int start]) {
@@ -305,9 +317,9 @@ class ListWrapper<E> extends Collection<E> implements List<E> {
 
   Iterable<E> get reversed => elements.reversed;
 
-  List<E> getRange(int start, int length) {
-    return elements.getRange(start, length);
-  }
+  List<E> sublist(int start, [int end]) => elements.sublist(start, end);
+
+  List<E> getRange(int start, int length) => sublist(start, start + length);
 
   void setRange(int start, int length, List<E> from, [int startFrom]) {
     elements.setRange(start, length, from, startFrom);
@@ -319,6 +331,10 @@ class ListWrapper<E> extends Collection<E> implements List<E> {
 
   void insertRange(int start, int length, [E fill]) {
     elements.insertRange(start, length, fill);
+  }
+
+  Map<int, E> asMap() {
+    return elements.asMap();
   }
 }
 
@@ -388,20 +404,34 @@ void javaMapPutAll(Map target, Map source) {
   });
 }
 
-File newRelativeFile(File base, String child) {
-  var childPath = new Path(base.fullPathSync()).join(new Path(child));
-  return new File.fromPath(childPath);
+bool javaStringEqualsIgnoreCase(String a, String b) {
+  return a.toLowerCase() == b.toLowerCase();
 }
 
-File newFileFromUri(Uri uri) {
-  return new File(uri.path);
-}
-
-File getAbsoluteFile(File file) {
-  var path = file.fullPathSync();
-  return new File(path);
-}
-
-Uri newUriFromFile(File file) {
-  return new Uri.fromComponents(path: file.fullPathSync());
+class JavaStringBuilder {
+  StringBuffer sb = new StringBuffer();
+  String toString() => sb.toString();
+  void append(x) {
+    sb.write(x);
+  }
+  void appendChar(int c) {
+    sb.writeCharCode(c);
+  }
+  int get length => sb.length;
+  void set length(int newLength) {
+    if (newLength < 0) {
+      throw new StringIndexOutOfBoundsException(newLength);
+    }
+    if (sb.length < newLength) {
+      while (sb.length < newLength) {
+        sb.writeCharCode(0);
+      }
+    } else if (sb.length > newLength) {
+      var s = sb.toString().substring(0, newLength);
+      sb = new StringBuffer(s);
+    }
+  }
+  void clear() {
+    sb = new StringBuffer();
+  }
 }

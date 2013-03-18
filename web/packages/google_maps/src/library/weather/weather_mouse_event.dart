@@ -18,8 +18,8 @@ class WeatherMouseEvent extends jsw.IsJsProxy {
   WeatherMouseEvent();
   WeatherMouseEvent.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  WeatherFeature get featureDetails => $.getProperty("featureDetails", WeatherFeature.INSTANCIATOR);
-  String get infoWindowHtml => $["infoWindowHtml"];
-  LatLng get latLng => $.getProperty("latLng", LatLng.INSTANCIATOR);
-  Size get pixelOffset => $.getProperty("pixelOffset", Size.INSTANCIATOR);
+  WeatherFeature get featureDetails => $.featureDetails.map(WeatherFeature.INSTANCIATOR).value;
+  String get infoWindowHtml => $.infoWindowHtml.value;
+  LatLng get latLng => $.latLng.map(LatLng.INSTANCIATOR).value;
+  Size get pixelOffset => $.pixelOffset.map(Size.INSTANCIATOR).value;
 }

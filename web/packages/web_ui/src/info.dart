@@ -11,15 +11,17 @@ library info;
 import 'dart:collection' show SplayTreeMap, LinkedHashMap;
 import 'dart:uri';
 
-import 'package:html5lib/dom.dart';
 import 'package:analyzer_experimental/src/generated/ast.dart';
 import 'package:csslib/parser.dart' as css;
 import 'package:csslib/visitor.dart';
+import 'package:html5lib/dom.dart';
+import 'package:source_maps/span.dart' show Span;
+import 'package:pathos/path.dart' as path;
 
 import 'dart_parser.dart' show DartCodeInfo;
-import 'file_system/path.dart';
 import 'files.dart';
 import 'messages.dart';
+import 'summary.dart';
 import 'utils.dart';
 
 /** Information about input, base, and output path locations. */
@@ -31,13 +33,13 @@ class PathInfo {
    * [_outputDir] is `g/h/`, then the corresponding output file for
    * `a/b/c/e/f.html` will be under `g/h/e/f.html.dart`.
    */
-  final Path _baseDir;
+  final String _baseDir;
 
   /** Base path where all output is generated. */
-  final Path _outputDir;
+  final String _outputDir;
 
   /** The package root directory. */
-  final Path packageRoot;
+  final String packageRoot;
 
   /** Whether to add prefixes and to output file names. */
   final bool _mangleFilenames;
@@ -45,7 +47,7 @@ class PathInfo {
   /** Default prefix added to all filenames. */
   static const String _DEFAULT_PREFIX = '_';
 
-  PathInfo(Path baseDir, Path outputDir, this.packageRoot, bool forceMangle)
+  PathInfo(String baseDir, String outputDir, this.packageRoot, bool forceMangle)
       : _baseDir = baseDir,
         _outputDir = outputDir,
         _mangleFilenames = forceMangle || (baseDir == outputDir);
@@ -62,17 +64,17 @@ class PathInfo {
    * Adds emitted error/warning messages to [messages], if [messages] is
    * supplied.
    */
-  bool checkInputPath(Path input, Messages messages) {
+  bool checkInputPath(String input, Messages messages) {
     if (_mangleFilenames) return true;
-    var canonicalized = input.canonicalize();
-    if (!canonicalized.relativeTo(_outputDir).toString().startsWith('../')) {
+    var canonicalized = path.normalize(input);
+    if (!path.relative(canonicalized, from: _outputDir).startsWith('../')) {
       messages.error(
           'The file ${input} cannot be processed. '
           'Files cannot be under the output folder (${_outputDir}).',
           null, file: input);
       return false;
     }
-    if (canonicalized.relativeTo(_baseDir).toString().startsWith('../')) {
+    if (path.relative(canonicalized, from: _baseDir).startsWith('../')) {
       messages.error(
           'The file ${input} cannot be processed. '
           'All processed files must be under the base folder (${_baseDir}), you'
@@ -87,17 +89,19 @@ class PathInfo {
    * The path to the output file corresponding to [input], by adding
    * [_DEFAULT_PREFIX] and a [suffix] to its file name.
    */
-  Path outputPath(Path input, String suffix) =>
-      outputDirPath(input).append(mangle(input.filename, suffix));
+  String outputPath(String input, String suffix, [bool forceSuffix = false]) =>
+      path.join(outputDirPath(input),
+          mangle(path.basename(input), suffix, forceSuffix));
 
   /** The path to the output file corresponding to [info]. */
-  Path outputLibraryPath(LibraryInfo info) =>
-      outputDirPath(info.inputPath).append(info._getOutputFilename(mangle));
+  String outputLibraryPath(LibrarySummary lib) =>
+      path.join(outputDirPath(lib.dartCodePath), lib.outputFilename);
 
   /** The corresponding output directory for [input]'s directory. */
-  Path outputDirPath(Path input) {
-    var outputSubdir = input.directoryPath.relativeTo(_baseDir);
-    return _rewritePackages(_outputDir.join(outputSubdir).canonicalize());
+  String outputDirPath(String input) {
+    return _rewritePackages(path.normalize(
+          path.join(_outputDir, path.relative(
+              path.dirname(input), from: _baseDir))));
   }
 
   /**
@@ -113,18 +117,12 @@ class PathInfo {
    * inside `packages/` for those components.  Instead we will generate such
    * code in a special directory called `_from_packages/`.
    */
-  Path _rewritePackages(Path outputPath) {
+  String _rewritePackages(String outputPath) {
     // TODO(jmesserly): this should match against packageRoot instead.
-    if (!outputPath.toString().contains('packages')) return outputPath;
-    var segments = outputPath.segments().map(
+    if (!outputPath.contains('packages')) return outputPath;
+    var segments = path.split(outputPath).map(
         (segment) => segment == 'packages' ? '_from_packages' : segment);
-    var rewrittenPath = segments.join('/');
-    if (outputPath.isAbsolute) {
-      // TODO(jmesserly): this is probably broken on Windows.
-      // We need to switch to package:pathos.
-      rewrittenPath = '/$rewrittenPath';
-    }
-    return new Path(rewrittenPath);
+    return path.joinAll(segments);
   }
 
   /**
@@ -132,11 +130,12 @@ class PathInfo {
    * [target] from the output library of [src]. In other words, a path to import
    * or export `target.outputFilename` from `src.outputFilename`.
    */
-  Path relativePath(LibraryInfo src, LibraryInfo target) {
-    var srcDir = src.inputPath.directoryPath;
-    var relDir = target.inputPath.directoryPath.relativeTo(srcDir);
-    return _rewritePackages(
-        relDir.append(target._getOutputFilename(mangle)).canonicalize());
+  String relativePath(LibrarySummary src, LibrarySummary target) {
+    var srcDir = path.dirname(src.dartCodePath);
+    var relDir = path.relative(
+        path.dirname(target.dartCodePath), from: srcDir);
+    return _rewritePackages(path.normalize(
+          path.join(relDir, target.outputFilename)));
   }
 
   /**
@@ -147,13 +146,11 @@ class PathInfo {
    * directory back to the input directory. An exception will be thrown if
    * [target] is not under [_baseDir].
    */
-  String transformUrl(Path src, String target) {
+  String transformUrl(String src, String target) {
     if (new Uri.fromString(target).isAbsolute) return target;
-    var path = new Path(target);
-    if (path.isAbsolute) return target;
-    var pathToTarget = src.directoryPath.join(path);
-    var outputLibraryDir = outputDirPath(src);
-    return pathToTarget.relativeTo(outputLibraryDir).canonicalize().toString();
+    if (path.isAbsolute(target)) return target;
+    return path.normalize(path.relative(
+          path.join(path.dirname(src), target), from: outputDirPath(src)));
   }
 }
 
@@ -172,7 +169,7 @@ typedef String NameMangler(String name, String suffix, [bool forceSuffix]);
  * component-level behavior code. This code can either be inlined in the HTML
  * file or included in a script tag with the "src" attribute.
  */
-abstract class LibraryInfo extends Hashable {
+abstract class LibraryInfo extends Hashable implements LibrarySummary {
 
   /** Whether there is any code associated with the page/component. */
   bool get codeAttached => inlinedCode != null || externalFile != null;
@@ -184,7 +181,7 @@ abstract class LibraryInfo extends Hashable {
   DartCodeInfo inlinedCode;
 
   /** The name of the file sourced in a script tag, if any. */
-  Path externalFile;
+  String externalFile;
 
   /** Info asscociated with [externalFile], if any. */
   FileInfo externalCode;
@@ -196,16 +193,16 @@ abstract class LibraryInfo extends Hashable {
   LibraryInfo htmlFile;
 
   /** File where the top-level code was defined. */
-  Path get inputPath;
-
-  /** Parsed cssSource. */
-  List<StyleSheet> styleSheets = [];
+  String get dartCodePath;
 
   /**
    * Name of the file that will hold any generated Dart code for this library
-   * unit.
+   * unit. Note this is initialized after parsing.
    */
-  String _getOutputFilename(NameMangler mangle);
+  String outputFilename;
+
+  /** Parsed cssSource. */
+  List<StyleSheet> styleSheets = [];
 
   /** This is used in transforming Dart code to track modified files. */
   bool modified = false;
@@ -221,8 +218,8 @@ abstract class LibraryInfo extends Hashable {
    * components used directly in the page. For [ComponentInfo] these are
    * components used within their shadowed template.
    */
-  final Map<ComponentInfo, bool> usedComponents =
-      new LinkedHashMap<ComponentInfo, bool>();
+  final Map<ComponentSummary, bool> usedComponents =
+      new LinkedHashMap<ComponentSummary, bool>();
 
   /**
    * The actual code, either inlined or from an external file, or `null` if none
@@ -233,9 +230,9 @@ abstract class LibraryInfo extends Hashable {
 }
 
 /** Information extracted at the file-level. */
-class FileInfo extends LibraryInfo {
+class FileInfo extends LibraryInfo implements HtmlFileSummary {
   /** Relative path to this file from the compiler's base directory. */
-  final Path path;
+  final String inputPath;
 
   /**
    * Whether this file should be treated as the entry point of the web app, i.e.
@@ -247,14 +244,10 @@ class FileInfo extends LibraryInfo {
 
   // TODO(terry): Ensure that that the libraryName is a valid identifier:
   //              a..z || A..Z || _ [a..z || A..Z || 0..9 || _]*
-  String get libraryName => path.filename.replaceAll('.', '_');
+  String get libraryName => path.basename(inputPath).replaceAll('.', '_');
 
   /** File where the top-level code was defined. */
-  Path get inputPath => externalFile != null ? externalFile : path;
-
-  /** Name of the file that will hold any generated Dart code. */
-  String _getOutputFilename(NameMangler mangle) =>
-      mangle(inputPath.filename, '.dart', inputPath.extension == 'html');
+  String get dartCodePath => externalFile != null ? externalFile : inputPath;
 
   /**
    * All custom element definitions in this file. This may contain duplicates.
@@ -267,19 +260,19 @@ class FileInfo extends LibraryInfo {
    *`<link rel='components'>` tag. Maps from the tag name to the component
    * information. This map is sorted by the tag name.
    */
-  final Map<String, ComponentInfo> components =
-      new SplayTreeMap<String, ComponentInfo>();
+  final Map<String, ComponentSummary> components =
+      new SplayTreeMap<String, ComponentSummary>();
 
   /** Files imported with `<link rel="component">` */
-  final List<Path> componentLinks = <Path>[];
+  final List<String> componentLinks = <String>[];
 
   /** Files imported with `<link rel="stylesheet">` */
-  final List<Path> styleSheetHref = <Path>[];
+  final List<String> styleSheetHref = <String>[];
 
   /** Root is associated with the body info. */
   ElementInfo bodyInfo;
 
-  FileInfo(this.path, [this.isEntryPoint = false]);
+  FileInfo(this.inputPath, [this.isEntryPoint = false]);
 
   /**
    * Query for an ElementInfo matching the provided [tag], starting from the
@@ -288,9 +281,10 @@ class FileInfo extends LibraryInfo {
   ElementInfo query(String tag) => new _QueryInfo(tag).visit(bodyInfo);
 }
 
-/** Information about a web component definition. */
-class ComponentInfo extends LibraryInfo {
 
+/** Information about a web component definition declared locally. */
+// TODO(sigmund): use a mixin to pull in ComponentSummary.
+class ComponentInfo extends LibraryInfo implements ComponentSummary {
   /** The file that declares this component. */
   final FileInfo declaringFile;
 
@@ -308,11 +302,10 @@ class ComponentInfo extends LibraryInfo {
    * This will be `null` if the component extends a built-in HTML tag, or
    * if the analyzer has not run yet.
    */
-  ComponentInfo extendsComponent;
+  ComponentSummary extendsComponent;
 
   /** The Dart class containing the component's behavior. */
-  String get constructor => _constructor;
-  String _constructor;
+  String className;
 
   /** The Dart class declaration. */
   ClassDeclaration get classDeclaration => _classDeclaration;
@@ -328,8 +321,8 @@ class ComponentInfo extends LibraryInfo {
   final Node template;
 
   /** File where this component was defined. */
-  Path get inputPath =>
-      externalFile != null ? externalFile : declaringFile.path;
+  String get dartCodePath =>
+      externalFile != null ? externalFile : declaringFile.inputPath;
 
   /**
    * True if [tagName] was defined by more than one component. If this happened
@@ -337,8 +330,8 @@ class ComponentInfo extends LibraryInfo {
    */
   bool hasConflict = false;
 
-  ComponentInfo(this.element, this.declaringFile, this.tagName, this.extendsTag,
-      this.template);
+  ComponentInfo(this.element, this.declaringFile, this.tagName,
+      this.extendsTag, this.template);
 
   /**
    * Gets the HTML tag extended by the base of the component hierarchy.
@@ -348,74 +341,55 @@ class ComponentInfo extends LibraryInfo {
   String get baseExtendsTag =>
       extendsComponent == null ? extendsTag : extendsComponent.baseExtendsTag;
 
+  Span get sourceSpan => element.sourceSpan;
+
   /**
-   * Finds the declaring class, and initializes [constructor] and
+   * Finds the declaring class, and initializes [className] and
    * [classDeclaration]. Also [userCode] is generated if there was no script.
    */
   void findClassDeclaration(Messages messages) {
-    var ctorAttr = element.attributes['constructor'];
-
-    _constructor = ctorAttr != null ? ctorAttr :
+    var constructor = element.attributes['constructor'];
+    className = constructor != null ? constructor :
         toCamelCase(tagName, startUppercase: true);
 
     // If we don't have any code, generate a small class definition, and
     // pretend the user wrote it as inlined code.
     if (userCode == null) {
-      var superclass = extendsComponent != null ? extendsComponent.constructor
+      var superclass = extendsComponent != null ? extendsComponent.className
           : 'autogenerated.WebComponent';
       inlinedCode = new DartCodeInfo(null, null, [],
-          'class $_constructor extends $superclass {\n}', null);
+          'class $className extends $superclass {\n}', null);
     }
 
     var code = userCode.code;
-    _classDeclaration = userCode.findClass(constructor);
+    _classDeclaration = userCode.findClass(className);
     if (_classDeclaration == null) {
       // Check for deprecated x-tags implied constructor.
-      if (tagName.startsWith('x-') && ctorAttr == null) {
-
+      if (tagName.startsWith('x-') && constructor == null) {
         var oldCtor = toCamelCase(tagName.substring(2), startUppercase: true);
         _classDeclaration = userCode.findClass(oldCtor);
         if (_classDeclaration != null) {
           messages.warning('Implied constructor name for x-tags has changed to '
-              '"$_constructor". You should rename your class or add a '
+              '"$className". You should rename your class or add a '
               'constructor="$oldCtor" attribute to the element declaration. '
               'Also custom tags are not required to start with "x-" if their '
               'name has at least one dash.',
-              element.sourceSpan, file: inputPath);
-
-          _constructor = oldCtor;
+              element.sourceSpan, file: dartCodePath);
+          className = oldCtor;
         }
       }
 
       if (_classDeclaration == null) {
         messages.error('please provide a class definition '
-            'for $_constructor:\n $code', element.sourceSpan,
-            file: inputPath);
+            'for $className:\n $code', element.sourceSpan,
+            file: dartCodePath);
         return;
       }
     }
   }
 
-  /**
-   * Name of the file that will be generated for this component. We want to
-   * generate a separate library for each component, unless their code is
-   * already in an external library (e.g. [externalCode] is not null). Multiple
-   * components could be defined inline within the HTML file, so we return a
-   * unique file name for each component.
-   */
-  String _getOutputFilename(NameMangler mangle) {
-    if (externalFile != null) return mangle(externalFile.filename, '.dart');
-    var prefix = declaringFile.path.filename;
-    if (declaringFile.declaredComponents.length == 1
-        && !declaringFile.codeAttached && !declaringFile.isEntryPoint) {
-      return mangle(prefix, '.dart', true);
-    }
-    var componentSegment = tagName.toLowerCase().replaceAll('-', '_');
-    return mangle('${prefix}_$componentSegment', '.dart', true);
-  }
-
   String toString() => '#<ComponentInfo $tagName '
-      '${inlinedCode != null ? "inline" : "from $inputPath"}>';
+      '${inlinedCode != null ? "inline" : "from $dartCodePath"}>';
 }
 
 /** Base tree visitor for the Analyzer infos. */
@@ -495,7 +469,7 @@ class ElementInfo extends NodeInfo<Element> {
    * If this element is a web component instantiation (e.g. `<x-foo>`), this
    * will be set to information about the component, otherwise it will be null.
    */
-  ComponentInfo component;
+  ComponentSummary component;
 
   /** Whether the element contains data bindings. */
   bool hasDataBinding = false;

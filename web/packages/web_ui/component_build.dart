@@ -21,6 +21,8 @@ library build_utils;
 import 'dart:async';
 import 'dart:io';
 import 'package:args/args.dart';
+import 'package:pathos/path.dart' as path;
+
 import 'dwc.dart' as dwc;
 import 'src/utils.dart';
 
@@ -31,7 +33,7 @@ import 'src/utils.dart';
  */
 // TODO(jmesserly): we need a better way to automatically detect input files
 Future<List<dwc.CompilerResult>> build(List<String> arguments,
-    List<String> entryPoints, {String baseDir}) {
+    List<String> entryPoints) {
   bool useColors = stdioType(stdout) == StdioType.TERMINAL;
   return asyncTime('Total time', () {
     var args = _processArgs(arguments);
@@ -58,21 +60,21 @@ Future<List<dwc.CompilerResult>> build(List<String> arguments,
     } else if (fullBuild || changedFiles.any((f) => _isInputFile(f, trackDirs))
         || removedFiles.any((f) => _isInputFile(f, trackDirs))) {
       for (var file in entryPoints) {
-        var path = new Path(file);
-        var outDir = path.directoryPath.append('out');
-        var args = [];
-        if (machineFormat) args.add('--json_format');
-        if (!useColors) args.add('--no-colors');
-        if(baseDir != null) args.addAll(['--basedir', baseDir]);
-        args.addAll(['-o', outDir.toString(), file]);
+        var outDir = _outDir(file);
+        var dwcArgs = [];
+        // Any arguments passed to build.dart after the '--'
+        dwcArgs.addAll(args.rest);
+        if (machineFormat) dwcArgs.add('--json_format');
+        if (!useColors) dwcArgs.add('--no-colors');
+        dwcArgs.addAll(['-o', outDir.toString(), file]);
         // Chain tasks to that we run one at a time.
-        lastTask = lastTask.then((_) => dwc.run(args));
+        lastTask = lastTask.then((_) => dwc.run(dwcArgs));
         tasks.add(lastTask);
 
         if (machineFormat) {
           // Print for the Dart Editor the mapping from the input entry point
           // file and its corresponding output.
-          var out = outDir.append(path.filename);
+          var out = path.join(outDir, path.basename(file));
           print('[{"method":"mapping","params":{"from":"$file","to":"$out"}}]');
         }
       }
@@ -81,40 +83,29 @@ Future<List<dwc.CompilerResult>> build(List<String> arguments,
   }, printTime: true, useColors: useColors);
 }
 
-String _outDir(String file) =>
-  new Path(file).directoryPath.append('out').toString();
+String _outDir(String file) => path.join(path.dirname(file), 'out');
 
 bool _isGeneratedFile(String filePath, List<Directory> outputDirs) {
-  var path = new Path(filePath);
-  var dirPrefix = path.directoryPath.toString();
+  var dirPrefix = path.dirname(filePath);
   for (var dir in outputDirs) {
     if (dirPrefix.startsWith(dir.path)) return true;
   }
-  return path.filename.startsWith('_');
+  return path.basename(filePath).startsWith('_');
 }
 
-bool _isInputFile(String path, List<Directory> outputDirs) {
-  return (path.endsWith(".dart") || path.endsWith(".html"))
-      && !_isGeneratedFile(path, outputDirs);
+bool _isInputFile(String filePath, List<Directory> outputDirs) {
+  var ext = path.extension(filePath);
+  return (ext == '.dart' || ext == '.html') &&
+      !_isGeneratedFile(filePath, outputDirs);
 }
 
 /** Delete all generated files. */
 void _handleCleanCommand(List<Directory> trackDirs) {
   for (var dir in trackDirs) {
-    dir.exists().then((exists) {
-      if (!exists) return;
-      dir.list(recursive: false).listen((f) {
-        if (f is File) {
-          if (_isGeneratedFile(f.path, trackDirs)) {
-            // TODO(jmesserly): we need a cleaner way to do this with dart:io.
-            // The bug is that DirectoryLister returns native paths, so you need
-            // to use Path.fromNative to work around this. Ideally we could just
-            // write: new File(path).delete();
-            new File.fromPath(new Path(f.path)).delete();
-          }
-        }
-      });
-    });
+    if (!dir.existsSync()) continue;
+    for (var f in dir.listSync(recursive: false)) {
+      if (f is File && _isGeneratedFile(f.path, trackDirs)) f.deleteSync();
+    }
   }
 }
 
@@ -129,11 +120,16 @@ ArgResults _processArgs(List<String> arguments) {
     ..addFlag("full", negatable: false, help: "perform a full build")
     ..addFlag("machine", negatable: false,
         help: "produce warnings in a machine parseable format")
-    ..addFlag("help", negatable: false, help: "displays this help and exit");
+    ..addFlag("help", abbr: 'h',
+        negatable: false, help: "displays this help and exit");
   var args = parser.parse(arguments);
   if (args["help"]) {
+    print('A build script that invokes the web-ui compiler (dwc).');
+    print('Usage: dart build.dart [options] [-- [dwc-options]]');
+    print('\nThese are valid options expected by build.dart:');
     print(parser.getUsage());
-    exit(0);
+    print('\nThese are valid options expected by dwc:');
+    dwc.run(['-h']).then((_) => exit(0));
   }
   return args;
 }

@@ -4,10 +4,8 @@
 
 library parser;
 
-import 'dart:io' as io;
 import 'dart:math' as math;
 
-import 'package:pathos/path.dart' as path;
 import 'package:source_maps/span.dart' show File, Span, FileSpan;
 
 import "visitor.dart";
@@ -25,19 +23,21 @@ part 'src/tokenkind.dart';
  * or [List<int>] of bytes and returns a [StyleSheet] AST.  The optional
  * [errors] list will contain each error/warning as a [Message].
  */
-StyleSheet parse(var input, {List errors, List options}) {
+StyleSheet parse(var input, {List errors, List options,
+    Map<String, String> otherFiles}) {
   var source = _inputAsString(input);
 
-  if (errors == null) {
-    errors = [];
-  }
+  if (errors == null) errors = [];
 
   if (options == null) {
     options = ['--no-colors', 'memory'];
   }
   var opt = PreprocessorOptions.parse(options);
   messages = new Messages(options: opt, printHandler: errors.add);
-  return new Parser(new File.text(null, source), source).parse();
+
+  var file = new File.text(null, source);
+
+  return new Parser(file, source, otherFiles: otherFiles).parse();
 }
 
 /**
@@ -45,21 +45,18 @@ StyleSheet parse(var input, {List errors, List options}) {
  * or [List<int>] of bytes and returns a [StyleSheet] AST.  The optional
  * [errors] list will contain each error/warning as a [Message].
  */
-StyleSheet selector(var input, {List errors}) {
+StyleSheet selector(var input, {List errors, Map<String, String> otherFiles}) {
   var source = _inputAsString(input);
 
-  if (errors == null) {
-    errors = [];
-  }
+  if (errors == null) errors = [];
 
   // TODO(terry): Allow options to be passed in too?
   var opt = PreprocessorOptions.parse(['--no-colors', 'memory']);
-  messages = new Messages(options: opt, printHandler: (Object obj) {
-    errors.add(obj);
-  });
+  messages = new Messages(options: opt, printHandler: errors.add);
 
-  var p = new Parser(new File.text(null, source), source);
-  return p.parseSelector();
+  var file = new File.text(null, source);
+
+  return new Parser(file, source, otherFiles: otherFiles).parseSelector();
 }
 
 String _inputAsString(var input) {
@@ -93,23 +90,30 @@ String _inputAsString(var input) {
   return source;
 }
 
-/**
- * A simple recursive descent parser for CSS.
- */
+/** A simple recursive descent parser for CSS. */
 class Parser {
-  String _mainPath;
-
   Tokenizer tokenizer;
 
-  final String _basePath;               // Base path of CSS file.
+  /** Base url of CSS file. */
+  final String _baseUrl;
 
+  /**
+   * File containing the source being parsed, used to report errors with
+   * source-span locations.
+   */
   final File file;
+
+  /** Maps file urls to their contents, if any. */
+  final Map<String, String> _otherFiles;
 
   Token _previousToken;
   Token _peekToken;
 
-  Parser(File file, String text, [int start = 0, this._basePath])
+  Parser(File file, String text, {Map<String, String> otherFiles,
+      int start: 0, String baseUrl})
       : this.file = file,
+        _otherFiles = otherFiles == null ? {} : otherFiles,
+        _baseUrl = baseUrl,
         tokenizer = new Tokenizer(file, text, true, start) {
     _peekToken = tokenizer.next();
   }
@@ -567,27 +571,23 @@ class Parser {
 
       case TokenKind.DIRECTIVE_INCLUDE:
         _next();
-        String filename = processQuotedString(false);
+        String relativeUrl = processQuotedString(false);
+        String url = '$_baseUrl/$relativeUrl';
         // Does CSS file exist?
         // TODO(sigmund,terry): this code seemed to be broken and unreachable
-        // (there was no fileExist or readAll methods defined anywhere in the
-        // original code).
-        if (new io.File(path.join(_basePath, filename)).existsSync()) {
-          var dir = path.dirname(filename);
-          var basePath = path.join(_basePath, dir);
-          // Yes, let's parse this file as well.
-          var fullFN = path.join(basePath, filename);
-          var contents = new io.File(fullFN).readAsStringSync();
-          Parser parser = new Parser(
-              new File.text(fullFN, contents), contents, 0, basePath);
+        if (_otherFiles.containsKey(url)) {
+          var contents = _otherFiles[url];
+          Parser parser = new Parser(new File.text(url, contents), contents,
+              otherFiles: _otherFiles, start: 0, baseUrl: _baseUrl);
           StyleSheet stylesheet = parser.parse();
-          return new IncludeDirective(filename, stylesheet, _makeSpan(start));
+          return new IncludeDirective(
+              relativeUrl, stylesheet, _makeSpan(start));
         }
 
-        _error('file doesn\'t exist $filename', _peekToken.span);
+        _error('file doesn\'t exist $relativeUrl', _peekToken.span);
 
         print("WARNING: @include doesn't work for uitest");
-        return new IncludeDirective(filename, null, _makeSpan(start));
+        return new IncludeDirective(relativeUrl, null, _makeSpan(start));
 
       case TokenKind.DIRECTIVE_STYLET:
         /* Stylet grammar:
@@ -993,7 +993,12 @@ class Parser {
         // TODO(terry): '::' should be token.
         _eat(TokenKind.COLON);
         bool pseudoElement = _maybeEat(TokenKind.COLON);
-        var pseudoName = identifier();
+
+        // TODO(terry): If no identifier specified consider optimizing out the
+        //              : or :: and making this a normal selector.  For now,
+        //              create an empty pseudoName.
+        var pseudoName = _peekIdentifier() ? identifier() :
+            new Identifier("", _makeSpan(_peekToken.start));
 
         // Functional pseudo?
         if (_maybeEat(TokenKind.LPAREN)) {
@@ -1002,6 +1007,14 @@ class Parser {
             var negArg = simpleSelector();
             _eat(TokenKind.RPAREN);
             return new NegationSelector(negArg, _makeSpan(start));
+          } else {
+            // Handle function expression.
+            var span = _makeSpan(start);
+            var expr = processSelectorExpression();
+            _eat(TokenKind.RPAREN);
+            return pseudoElement
+                ? new PseudoElementFunctionSelector(pseudoName, expr, span)
+                : new PseudoClassFunctionSelector(pseudoName, expr, span);
           }
         }
 
@@ -1032,6 +1045,68 @@ class Parser {
    *    NUMBER            {num}
    */
   processSelectorExpression() {
+    int start = _peekToken.start;
+
+    var expression = new SelectorExpression(_makeSpan(start));
+
+    Token termToken;
+    var value;
+
+    // Special parsing for expressions in pseudo functions.  Minus is used as
+    // operator not identifier.
+    tokenizer.selectorExpression = true;
+
+    bool keepParsing = true;
+    while (keepParsing) {
+      switch (_peek()) {
+        case TokenKind.PLUS:
+          start = _peekToken.start;
+          termToken = _next();
+          expression.add(new OperatorPlus(_makeSpan(start)));
+          break;
+        case TokenKind.MINUS:
+          start = _peekToken.start;
+          termToken = _next();
+          expression.add(new OperatorMinus(_makeSpan(start)));
+          break;
+        case TokenKind.INTEGER:
+          termToken = _next();
+          value = int.parse(termToken.text);
+          break;
+        case TokenKind.DOUBLE:
+          termToken = _next();
+          value = double.parse(termToken.text);
+          break;
+        case TokenKind.SINGLE_QUOTE:
+        case TokenKind.DOUBLE_QUOTE:
+          value = processQuotedString(false);
+          value = '"${_escapeString(value)}"';
+          return new LiteralTerm(value, value, _makeSpan(start));
+        case TokenKind.IDENTIFIER:
+          value = identifier();   // Snarf up the ident we'll remap, maybe.
+          break;
+        default:
+          keepParsing = false;
+      }
+
+      if (keepParsing && value != null) {
+        var unitTerm;
+        // Don't process the dimension if MINUS or PLUS is next.
+        if (_peek() != TokenKind.MINUS && _peek() != TokenKind.PLUS) {
+          unitTerm = processDimension(termToken, value, _makeSpan(start));
+        }
+        if (unitTerm == null) {
+          unitTerm = new LiteralTerm(value, value.name, _makeSpan(start));
+        }
+        expression.add(unitTerm);
+
+        value = null;
+      }
+    }
+
+    tokenizer.selectorExpression = false;
+
+    return expression;
   }
 
   //  Attribute grammar:
@@ -1455,7 +1530,6 @@ class Parser {
     }
   }
 
-
   //  Expression grammar:
   //
   //  expression:   term [ operator? term]*
@@ -1562,7 +1636,7 @@ class Parser {
     case TokenKind.SINGLE_QUOTE:
     case TokenKind.DOUBLE_QUOTE:
       value = processQuotedString(false);
-      value = '"${value}"';
+      value = '"${_escapeString(value)}"';
       return new LiteralTerm(value, value, _makeSpan(start));
     case TokenKind.LPAREN:
       _next();
@@ -1626,16 +1700,21 @@ class Parser {
       break;
     }
 
+    return processDimension(t, value, _makeSpan(start));
+  }
+
+  /** Process all dimension units. */
+  processDimension(Token t, var value, Span span) {
     var term;
     var unitType = this._peek();
 
     switch (unitType) {
     case TokenKind.UNIT_EM:
-      term = new EmTerm(value, t.text, _makeSpan(start));
+      term = new EmTerm(value, t.text, span);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_EX:
-      term = new ExTerm(value, t.text, _makeSpan(start));
+      term = new ExTerm(value, t.text, span);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_LENGTH_PX:
@@ -1644,58 +1723,58 @@ class Parser {
     case TokenKind.UNIT_LENGTH_IN:
     case TokenKind.UNIT_LENGTH_PT:
     case TokenKind.UNIT_LENGTH_PC:
-      term = new LengthTerm(value, t.text, _makeSpan(start), unitType);
+      term = new LengthTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_ANGLE_DEG:
     case TokenKind.UNIT_ANGLE_RAD:
     case TokenKind.UNIT_ANGLE_GRAD:
     case TokenKind.UNIT_ANGLE_TURN:
-      term = new AngleTerm(value, t.text, _makeSpan(start), unitType);
+      term = new AngleTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_TIME_MS:
     case TokenKind.UNIT_TIME_S:
-      term = new TimeTerm(value, t.text, _makeSpan(start), unitType);
+      term = new TimeTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_FREQ_HZ:
     case TokenKind.UNIT_FREQ_KHZ:
-      term = new FreqTerm(value, t.text, _makeSpan(start), unitType);
+      term = new FreqTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.PERCENT:
-      term = new PercentageTerm(value, t.text, _makeSpan(start));
+      term = new PercentageTerm(value, t.text, span);
       _next();    // Skip the %
       break;
     case TokenKind.UNIT_FRACTION:
-      term = new FractionTerm(value, t.text, _makeSpan(start));
+      term = new FractionTerm(value, t.text, span);
       _next();     // Skip the unit
       break;
     case TokenKind.UNIT_RESOLUTION_DPI:
     case TokenKind.UNIT_RESOLUTION_DPCM:
     case TokenKind.UNIT_RESOLUTION_DPPX:
-      term = new ResolutionTerm(value, t.text, _makeSpan(start), unitType);
+      term = new ResolutionTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_CH:
-      term = new ChTerm(value, t.text, _makeSpan(start), unitType);
+      term = new ChTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_REM:
-      term = new RemTerm(value, t.text, _makeSpan(start), unitType);
+      term = new RemTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     case TokenKind.UNIT_VIEWPORT_VW:
     case TokenKind.UNIT_VIEWPORT_VH:
     case TokenKind.UNIT_VIEWPORT_VMIN:
     case TokenKind.UNIT_VIEWPORT_VMAX:
-      term = new ViewportTerm(value, t.text, _makeSpan(start), unitType);
+      term = new ViewportTerm(value, t.text, span, unitType);
       _next();    // Skip the unit
       break;
     default:
-      if (value != null) {
-        term = new NumberTerm(value, t.text, _makeSpan(start));
+      if (value != null && t != null) {
+        term = new NumberTerm(value, t.text, span);
       }
       break;
     }
@@ -1986,4 +2065,29 @@ class ExpressionsProcessor {
         lineHeight: fontSize.font.lineHeight,
         family: fontFamily.font.family);
   }
+}
+
+/**
+ * Escapes [text] for use in a CSS string.
+ * [single] specifies single quote `'` vs double quote `"`.
+ */
+String _escapeString(String text, {bool single: false}) {
+  StringBuffer result = null;
+
+  for (int i = 0; i < text.length; i++) {
+    int code = text.codeUnitAt(i);
+    var replace = null;
+    switch (code) {
+      case 34/*'"'*/:  if (!single) replace = r'\"'; break;
+      case 39/*"'"*/:  if (single) replace = r"\'"; break;
+    }
+
+    if (replace != null && result == null) {
+      result = new StringBuffer(text.substring(0, i));
+    }
+
+    if (result != null) result.write(replace != null ? replace : text[i]);
+  }
+
+  return result == null ? text : result.toString();
 }

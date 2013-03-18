@@ -271,6 +271,29 @@ class _TreePrinter extends Visitor {
     output.depth--;
   }
 
+  void visitPseudoClassFunctionSelector(PseudoClassFunctionSelector node) {
+    heading('Pseudo Class Function Selector', node);
+    output.depth++;
+    visitSelectorExpression(node.expression);
+    super.visitPseudoClassFunctionSelector(node);
+    output.depth--;
+  }
+
+  void visitPseudoElementFunctionSelector(PseudoElementFunctionSelector node) {
+    heading('Pseudo Element Function Selector', node);
+    output.depth++;
+    visitSelectorExpression(node.expression);
+    super.visitPseudoElementFunctionSelector(node);
+    output.depth--;
+  }
+
+  void visitSelectorExpression(SelectorExpression node) {
+    heading('Selector Expression', node);
+    output.depth++;
+    output.writeNodeList('expressions', node.expressions);
+    output.depth--;
+  }
+
   void visitNegationSelector(NegationSelector node) {
     super.visitNegationSelector(node);
     output.depth++;
@@ -390,6 +413,14 @@ class _TreePrinter extends Visitor {
 
   void visitOperatorComma(OperatorComma node) {
     heading('OperatorComma', node);
+  }
+
+  void visitOperatorPlus(OperatorPlus node) {
+    heading('OperatorPlus', node);
+  }
+
+  void visitOperatorMinus(OperatorMinus node) {
+    heading('OperatorMinus', node);
   }
 
   void visitExpressions(Expressions node) {

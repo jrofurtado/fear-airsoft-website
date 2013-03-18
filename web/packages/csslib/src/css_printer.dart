@@ -256,10 +256,32 @@ class CssPrinter extends Visitor {
     emit("::${node.name}");
   }
 
+  void visitPseudoClassFunctionSelector(PseudoClassFunctionSelector node) {
+    emit(":${node.name}(");
+    node.expression.visit(this);
+    emit(')');
+  }
+
+  void visitPseudoElementFunctionSelector(PseudoElementFunctionSelector node) {
+    emit("::${node.name}(");
+    node.expression.visit(this);
+    emit(')');
+  }
+
   void visitNegationSelector(NegationSelector node) {
     emit(':not(');
     node.negationArg.visit(this);
     emit(')');
+  }
+
+  void visitSelectorExpression(SelectorExpression node) {
+    var expressions = node._expressions;
+    var expressionsLength = expressions.length;
+    for (var i = 0; i < expressionsLength; i++) {
+      // Add space seperator between terms without an operator.
+      var expression = expressions[i];
+      expression.visit(this);
+    }
   }
 
   void visitLiteralTerm(LiteralTerm node) {
@@ -358,6 +380,14 @@ class CssPrinter extends Visitor {
 
   void visitOperatorComma(OperatorComma node) {
     emit(',');
+  }
+
+  void visitOperatorPlus(OperatorPlus node) {
+    emit('+');
+  }
+
+  void visitOperatorMinus(OperatorMinus node) {
+    emit('-');
   }
 
   void visitExpressions(Expressions node) {

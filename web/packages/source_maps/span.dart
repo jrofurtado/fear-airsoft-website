@@ -233,8 +233,7 @@ class File {
 
   /// Gets the text at the given offsets.
   String getText(int start, [int end]) {
-    if (end == null) end = _decodedChars.length;
-    return codepointsToString(_decodedChars.getRange(start, end - start));
+    return codepointsToString(_decodedChars.sublist(start, end));
   }
 
   /// Create a pretty string representation from a span in the file.
