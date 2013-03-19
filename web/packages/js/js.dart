@@ -515,6 +515,11 @@ final _JS_BOOTSTRAP = r"""
     return deserialize(args[0]) instanceof deserialize(args[1]);
   }
 
+  // Return true if a JavaScript proxy is instance of a given type (instanceof).
+  function proxyDeleteProperty(args) {
+    delete deserialize(args[0])[deserialize(args[1])];
+  }
+
   function proxyConvert(args) {
     return serialize(deserializeDataTree(args));
   }
@@ -581,6 +586,7 @@ final _JS_BOOTSTRAP = r"""
   makeGlobalPort('dart-js-debug', debug);
   makeGlobalPort('dart-js-equals', proxyEquals);
   makeGlobalPort('dart-js-instanceof', proxyInstanceof);
+  makeGlobalPort('dart-js-delete-property', proxyDeleteProperty);
   makeGlobalPort('dart-js-convert', proxyConvert);
   makeGlobalPort('dart-js-enter-scope', enterJavaScriptScope);
   makeGlobalPort('dart-js-exit-scope', exitJavaScriptScope);
@@ -612,6 +618,7 @@ SendPortSync _jsPortCreate = null;
 SendPortSync _jsPortDebug = null;
 SendPortSync _jsPortEquals = null;
 SendPortSync _jsPortInstanceof = null;
+SendPortSync _jsPortDeleteProperty = null;
 SendPortSync _jsPortConvert = null;
 SendPortSync _jsEnterJavaScriptScope = null;
 SendPortSync _jsExitJavaScriptScope = null;
@@ -643,6 +650,7 @@ void _initialize() {
   _jsPortDebug = window.lookupPort('dart-js-debug');
   _jsPortEquals = window.lookupPort('dart-js-equals');
   _jsPortInstanceof = window.lookupPort('dart-js-instanceof');
+  _jsPortDeleteProperty = window.lookupPort('dart-js-delete-property');
   _jsPortConvert = window.lookupPort('dart-js-convert');
   _jsEnterJavaScriptScope = window.lookupPort('dart-js-enter-scope');
   _jsExitJavaScriptScope = window.lookupPort('dart-js-exit-scope');
@@ -711,21 +719,25 @@ void $experimentalExitScope(int depth) {
   _exitScope(depth);
 }
 
-/*
- * Retains the given [proxy] beyond the current scope.
+/**
+ * Retains the given [object] beyond the current scope.
  * Instead, it will need to be explicitly released.
- * The given [proxy] is returned for convenience.
+ * The given [object] is returned for convenience.
  */
-Proxy retain(Proxy proxy) {
-  _jsGlobalize.callSync(_serialize(proxy));
-  return proxy;
+// TODO(aa) : change dynamic to Serializable<Proxy> if http://dartbug.com/9023
+// is fixed.
+// TODO(aa) : change to "<T extends Serializable<Proxy>> T retain(T object)"
+// once generic methods have landed.
+dynamic retain(Serializable<Proxy> object) {
+  _jsGlobalize.callSync(_serialize(object.toJs()));
+  return object;
 }
 
 /**
- * Releases a retained [proxy].
+ * Releases a retained [object].
  */
-void release(Proxy proxy) {
-  _jsInvalidate.callSync(_serialize(proxy));
+void release(Serializable<Proxy> object) {
+  _jsInvalidate.callSync(_serialize(object.toJs()));
 }
 
 /**
@@ -733,6 +745,13 @@ void release(Proxy proxy) {
  */
 bool instanceof(Proxy proxy, type) {
   return _jsPortInstanceof.callSync([proxy, type].map(_serialize).toList());
+}
+
+/**
+ * Delete the [name] property of [proxy].
+ */
+void deleteProperty(Proxy proxy, String name) {
+  _jsPortDeleteProperty.callSync([proxy, name].map(_serialize).toList());
 }
 
 /**
@@ -809,7 +828,7 @@ class Callback {
 /**
  * Proxies to JavaScript objects.
  */
-class Proxy {
+class Proxy implements Serializable<Proxy> {
   SendPortSync _port;
   final _id;
 
@@ -876,6 +895,8 @@ class Proxy {
 
   Proxy._internal(this._port, this._id);
 
+  Proxy toJs() => this;
+
   // TODO(vsm): This is not required in Dartium, but
   // it is in Dart2JS.
   // Resolve whether this is needed.
@@ -897,6 +918,13 @@ class Proxy {
   // Forward member accesses to the backing JavaScript object.
   noSuchMethod(InvocationMirror invocation) {
     String member = invocation.memberName;
+    // If trying to access a JavaScript field/variable that starts with
+    // _ (underscore), Dart treats it a library private and member name
+    // it suffixed with '@internalLibraryIdentifier' which we have to
+    // strip before sending over to the JS side.
+    if (member.indexOf('@') != -1) {
+      member = member.substring(0, member.indexOf('@'));
+    }
     String kind;
     List args = invocation.positionalArguments;
     if (args == null) args = [];
@@ -963,8 +991,8 @@ class FunctionProxy extends Proxy /*implements Function*/ {
 /// Marker class used to indicate it is serializable to js. If a class is a
 /// [Serializable] the "toJs" method will be called and the result will be used
 /// as value.
-abstract class Serializable {
-  dynamic toJs();
+abstract class Serializable<T> {
+  T toJs();
 }
 
 // A table to managed local Dart objects that are proxied in JavaScript.
