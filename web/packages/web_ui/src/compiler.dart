@@ -107,11 +107,11 @@ class Compiler {
     }
     return _parseAndDiscover(_mainPath).then((_) {
       _analyze();
-      _transformDart();
-      _emit();
       // TODO(jmesserly): need to go through our errors, and figure out if some
       // of them should be warnings instead.
-      if (_messages.hasErrors) output.clear();
+      if (_messages.hasErrors) return;
+      _transformDart();
+      _emit();
     });
   }
 
@@ -232,6 +232,14 @@ class Compiler {
     return null;
   }
 
+  /** Generate warning for any CSS file error. */
+  SourceFile _cssWarning(error, String filePath) {
+    _messages.warning('problem processing CSS file:\n $error',
+        null, file: filePath);
+
+    return null;
+  }
+
   void _processDartFile(SourceFile dartFile) {
     if (!_shouldProcessFile(dartFile)) return;
 
@@ -269,7 +277,7 @@ class Compiler {
     return fileSystem.readText(filePath)
         .then((code) =>
             new SourceFile(filePath, type: SourceFile.STYLESHEET)..code = code)
-        .catchError((e) => _readError(e, filePath));
+        .catchError((e) => _cssWarning(e, filePath));
   }
 
   void _processStyleSheetFile(SourceFile cssFile) {

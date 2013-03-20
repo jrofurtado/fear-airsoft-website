@@ -54,18 +54,19 @@ class CssPrinter extends Visitor {
   }
 
   void visitMediaQuery(MediaQuery query) {
-    emit('${query.unary}${query.mediaType}');
+    var unary = query.hasUnary ? ' ${query.unary}' : '';
+    var mediaType = query.hasMediaType ? ' ${query.mediaType}' : '';
+    emit('$unary$mediaType');
     for (var expression in query.expressions) {
       visitMediaExpression(expression);
     }
   }
 
-  void emitMediaQueries(queries, [forceSpace = false]) {
+  void emitMediaQueries(queries) {
     var queriesLen = queries.length;
     for (var i = 0; i < queriesLen; i++) {
-      if (!forceSpace && i == 0) emit(' ');
-      if (i > 0) emit(',');
       var query = queries[i];
+      if (query.hasMediaType && i > 0) emit(',');
       visitMediaQuery(query);
     }
   }
@@ -103,20 +104,19 @@ class CssPrinter extends Visitor {
   }
 
   void visitImportDirective(ImportDirective node) {
-    bool isStartingQuote(String ch) => ('\'"'.indexOf(ch) >= 0);
+    bool isStartingQuote(String ch) => ('\'"'.indexOf(ch[0]) >= 0);
 
-    if (isStartingQuote(node.import)) {
-      emit(' @import "${node.import}"');
+    if (_isTesting) {
+      // Emit assuming url() was parsed; most suite tests use url function.
+      emit(' @import url(${node.import})');
+    } else if (isStartingQuote(node.import)) {
+      emit(' @import ${node.import}');
     } else {
-      if (_isTesting) {
-        // Emit exactly was we parsed.
-        emit(' @import url(${node.import})');
-      } else {
-        // url(...) isn't needed only a URI can follow an @import directive.
-        emit(' @import ${node.import}');
-      }
+      // url(...) isn't needed only a URI can follow an @import directive; emit
+      // url as a string.
+      emit(' @import "${node.import}"');
     }
-    emitMediaQueries(node.mediaQueries, _isTesting);
+    emitMediaQueries(node.mediaQueries);
     emit(';');
   }
 

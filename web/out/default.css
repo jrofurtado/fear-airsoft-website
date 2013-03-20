@@ -516,7 +516,9 @@
 }
 .participantes {
   clear: both;
-  width: 100% text-transform uppercase;
+  width: 100% text-transform;
+}
+uppercase {
   font-weight: bold;
 }
 .participantes div {

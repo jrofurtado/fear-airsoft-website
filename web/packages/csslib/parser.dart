@@ -305,22 +305,27 @@ class Parser {
   List<MediaQuery> processMediaQueryList() {
     var mediaQueries = [];
 
+    bool firstTime = true;
     var mediaQuery;
     do {
-      mediaQuery = processMediaQuery();
+      mediaQuery = processMediaQuery(firstTime == true);
       if (mediaQuery != null) {
         mediaQueries.add(mediaQuery);
-        if (!_maybeEat(TokenKind.COMMA)) {
-          // No more media types exit now.
-          break;
-        }
+        firstTime = false;
+        continue;
       }
-    } while (mediaQuery != null);
+
+      // Any more more media types separated by comma.
+      if (!_maybeEat(TokenKind.COMMA)) break;
+
+      // Yep more media types start again.
+      firstTime = true;
+    } while ((!firstTime && mediaQuery != null) || firstTime);
 
     return mediaQueries;
   }
 
-  MediaQuery processMediaQuery() {
+  MediaQuery processMediaQuery([bool startQuery = true]) {
     // Grammar: [ONLY | NOT]? S* media_type S*
     //          [ AND S* MediaExpr ]* | MediaExpr [ AND S* MediaExpr ]*
 
@@ -330,31 +335,48 @@ class Parser {
     var op = _peekToken.text;
     var opLen = op.length;
     var unaryOp = TokenKind.matchMediaOperator(op, 0, opLen);
-    if (unaryOp == -1 ||
-        unaryOp == TokenKind.MEDIA_OP_NOT ||
-        unaryOp == TokenKind.MEDIA_OP_ONLY) {
-
-      if (_peekIdentifier()) {
-        var type = identifier();           // Media type.
-        var exprs = [];
-
-        if (unaryOp == -1 || unaryOp == TokenKind.MEDIA_OP_AND) {
-          while (true) {
-            op = _peekToken.text;
-            opLen = op.length;
-            op = TokenKind.matchMediaOperator(op, 0, opLen);
-            var andOp = op == TokenKind.MEDIA_OP_AND;
-            if (andOp) _next();
-            var expr = processMediaExpression(andOp);
-            if (expr != null) exprs.add(expr);
-            if (!andOp) break;
-          }
+    if (unaryOp != -1) {
+      if (messages.options.checked) {
+        if (startQuery &&
+            unaryOp != TokenKind.MEDIA_OP_NOT ||
+            unaryOp != TokenKind.MEDIA_OP_ONLY) {
+          _warning("Only the unary operators NOT and ONLY allowed",
+              _makeSpan(start));
         }
-
-        return new MediaQuery(unaryOp, type, exprs, _makeSpan(start));
+        if (!startQuery && unaryOp != TokenKind.MEDIA_OP_AND) {
+          _warning("Only the binary AND operator allowed", _makeSpan(start));
+        }
       }
-    } else if (messages.options.checked) {
-      _warning("Only unary operators NOT and ONLY allowed", _makeSpan(start));
+      _next();
+      start = _peekToken.start;
+    }
+
+    var type;
+    if (startQuery && unaryOp != TokenKind.MEDIA_OP_AND) {
+      // Get the media type.
+      if (_peekIdentifier()) type = identifier();
+    }
+
+    var exprs = [];
+
+    if (unaryOp == -1 || unaryOp == TokenKind.MEDIA_OP_AND) {
+      var andOp = false;
+      while (true) {
+        var expr = processMediaExpression(andOp);
+        if (expr == null) break;
+
+        exprs.add(expr);
+        op = _peekToken.text;
+        opLen = op.length;
+        andOp = TokenKind.matchMediaOperator(op, 0, opLen) ==
+            TokenKind.MEDIA_OP_AND;
+        if (!andOp) break;
+        _next();
+      }
+    }
+
+    if (unaryOp != -1 || type != null || exprs.length > 0) {
+      return new MediaQuery(unaryOp, type, exprs, _makeSpan(start));
     }
   }
 
@@ -1184,9 +1206,11 @@ class Parser {
     if (TokenKind.isIdentifier(_peekToken.kind)) {
       var propertyIdent = identifier();
 
+      var ieFilterProperty = propertyIdent.name.toLowerCase() == 'filter';
+
       _eat(TokenKind.COLON);
 
-      Expressions exprs = processExpr();
+      Expressions exprs = processExpr(ieFilterProperty);
 
       var dartComposite = _styleForDart(propertyIdent, exprs, dartStyles);
       decl = new Declaration(propertyIdent, exprs, dartComposite,
@@ -1537,13 +1561,13 @@ class Parser {
   //  operator:     '/' | ','
   //  term:         (see processTerm)
   //
-  processExpr() {
+  processExpr([bool ieFilter = false]) {
     int start = _peekToken.start;
     Expressions expressions = new Expressions(_makeSpan(start));
 
     bool keepGoing = true;
     var expr;
-    while (keepGoing && (expr = processTerm()) != null) {
+    while (keepGoing && (expr = processTerm(ieFilter)) != null) {
       var op;
 
       int opStart = _peekToken.start;
@@ -1593,7 +1617,7 @@ class Parser {
   //  FREQ:         {num}['hz' | 'khz']
   //  function:     IDENT '(' expr ')'
   //
-  processTerm() {
+  processTerm([bool ieFilter = false]) {
     int start = _peekToken.start;
     Token t;                          // token for term's value
     var value;                        // value of term (numeric values)
@@ -1665,13 +1689,19 @@ class Parser {
     case TokenKind.IDENTIFIER:
       var nameValue = identifier();   // Snarf up the ident we'll remap, maybe.
 
-      if (_maybeEat(TokenKind.LPAREN)) {
+      if (!ieFilter && _maybeEat(TokenKind.LPAREN)) {
         // FUNCTION
         return processFunction(nameValue);
-      } if (_maybeEat(TokenKind.COLON) &&
-          nameValue.name.toLowerCase() == 'progid') {
-        // IE filter:progid:
-        return processIEFilter(start);
+      } if (ieFilter) {
+         if (_maybeEat(TokenKind.COLON) &&
+           nameValue.name.toLowerCase() == 'progid') {
+           // IE filter:progid:
+           return processIEFilter(start);
+         } else {
+           // Handle filter:<name> where name is any filter e.g., alpha, chroma,
+           // Wave, blur, etc.
+           return processIEFilter(start);
+         }
       } else {
         // TODO(terry): Need to have a list of known identifiers today only
         //              'from' is special.
@@ -1819,7 +1849,8 @@ class Parser {
 
     // All characters between quotes is the string.
     int end = _peekToken.end;
-    var stringValue = (_peekToken.span as FileSpan).file.getText(start, end - 1);
+    var stringValue = (_peekToken.span as FileSpan).file.getText(start,
+        end - 1);
 
     if (stopToken != TokenKind.RPAREN) {
       _next();    // Skip the SINGLE_QUOTE or DOUBLE_QUOTE;

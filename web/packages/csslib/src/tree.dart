@@ -354,9 +354,12 @@ class MediaQuery extends TreeNode {
   MediaQuery(this._mediaUnary, this._mediaType, this.expressions, Span span)
       : super(span);
 
+  bool get hasMediaType => _mediaType != null;
   String get mediaType => _mediaType.name;
-  String get unary => _mediaUnary != -1 ?
-      '${TokenKind.idToValue(TokenKind.MEDIA_OPERATORS, _mediaUnary)} ' : '';
+
+  bool get hasUnary => _mediaUnary != -1;
+  String get unary =>
+      TokenKind.idToValue(TokenKind.MEDIA_OPERATORS, _mediaUnary).toUpperCase();
 
   visit(VisitorBase visitor) => visitor.visitMediaQuery(this);
 }
