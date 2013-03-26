@@ -412,9 +412,8 @@ class KeyFrameBlock extends Expression {
   visit(VisitorBase visitor) => visitor.visitKeyFrameBlock(this);
 }
 
-// TODO(terry): TBD
 class FontFaceDirective extends Directive {
-  final List<Declaration> _declarations;
+  final DeclarationGroup _declarations;
 
   FontFaceDirective(this._declarations, Span span) : super(span);
 
@@ -525,6 +524,17 @@ class OperatorPlus extends Expression {
 class OperatorMinus extends Expression {
   OperatorMinus(Span span) : super(span);
   visit(VisitorBase visitor) => visitor.visitOperatorMinus(this);
+}
+
+class UnicodeRangeTerm extends Expression {
+  final String first;
+  final String second;
+
+  UnicodeRangeTerm(this.first, this.second, Span span) : super(span);
+
+  bool get hasSecond => second != null;
+
+  visit(VisitorBase visitor) => visitor.visitUnicodeRangeTerm(this);
 }
 
 class LiteralTerm extends Expression {

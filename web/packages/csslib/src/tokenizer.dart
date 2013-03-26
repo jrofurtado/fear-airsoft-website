@@ -5,11 +5,21 @@
 part of parser;
 
 class Tokenizer extends TokenizerBase {
+  /** U+ prefix for unicode characters. */
+  final UNICODE_U = 'U'.codeUnitAt(0);
+  final UNICODE_LOWER_U = 'u'.codeUnitAt(0);
+  final UNICODE_PLUS = '+'.codeUnitAt(0);
+
+  final QUESTION_MARK = '?'.codeUnitAt(0);
+
+  /** CDATA keyword. */
+  final List CDATA_NAME = 'CDATA'.codeUnits;
+
   Tokenizer(File file, String text, bool skipWhitespace,
       [int index = 0])
       : super(file, text, skipWhitespace, index);
 
-  Token next() {
+  Token next({unicodeRange: false}) {
     // keep track of our starting position
     _startIndex = _index;
 
@@ -91,9 +101,10 @@ class Tokenizer extends TokenizerBase {
         }
         break;
       case TokenChar.MINUS:
-        if (selectorExpression) {
+        if (selectorExpression || unicodeRange) {
           // If parsing in pseudo function expression then minus is an operator
-          // not part of identifier.
+          // not part of identifier e.g., interval value range (e.g. U+400-4ff)
+          // or minus operator in selector expression.
           return _finishToken(TokenKind.MINUS);
         } else if (maybeEatDigit()) {
           return finishNumber();
@@ -146,11 +157,11 @@ class Tokenizer extends TokenizerBase {
               _maybeEatChar(TokenChar.MINUS)) {
             return finishMultiLineComment();
           } else if (_maybeEatChar(TokenChar.LBRACK) &&
-              _maybeEatChar(TokenKind.CDATA_NAME[0]) &&
-              _maybeEatChar(TokenKind.CDATA_NAME[1]) &&
-              _maybeEatChar(TokenKind.CDATA_NAME[2]) &&
-              _maybeEatChar(TokenKind.CDATA_NAME[3]) &&
-              _maybeEatChar(TokenKind.CDATA_NAME[4]) &&
+              _maybeEatChar(CDATA_NAME[0]) &&
+              _maybeEatChar(CDATA_NAME[1]) &&
+              _maybeEatChar(CDATA_NAME[2]) &&
+              _maybeEatChar(CDATA_NAME[3]) &&
+              _maybeEatChar(CDATA_NAME[4]) &&
               _maybeEatChar(TokenChar.LBRACK)) {
             // <![CDATA[
             return next();
@@ -186,10 +197,34 @@ class Tokenizer extends TokenizerBase {
         Token tok = finishIdentifier(ch);
         return (tok == null) ? _finishToken(TokenKind.BANG) : tok;
       default:
-        if (TokenizerHelpers.isIdentifierStart(ch)) {
-          return this.finishIdentifier(ch);
+        if (unicodeRange) {
+          // Three types of unicode ranges:
+          //   - single code point (e.g. U+416)
+          //   - interval value range (e.g. U+400-4ff)
+          //   - range where trailing ‘?’ characters imply ‘any digit value’
+          //   (e.g. U+4??)
+          if (maybeEatHexDigit()) {
+            var t = finishHexNumber();
+            // Any question marks then it's a HEX_RANGE not HEX_NUMBER.
+            if (maybeEatQuestionMark()) finishUnicodeRange();
+            return t;
+          } else if (maybeEatQuestionMark()) {
+            // HEX_RANGE U+N???
+            return finishUnicodeRange();
+          } else {
+            return _errorToken();
+          }
+        } else if ((ch == UNICODE_U || ch == UNICODE_LOWER_U) &&
+            (_peekChar() == UNICODE_PLUS)) {
+          // Unicode range: U+uNumber[-U+uNumber]
+          //   uNumber = 0..10FFFF
+          _nextChar();                                // Skip +
+          _startIndex = _index;                       // Starts at the number
+          return _finishToken(TokenKind.UNICODE_RANGE);
+        } else if (TokenizerHelpers.isIdentifierStart(ch)) {
+          return finishIdentifier(ch);
         } else if (TokenizerHelpers.isDigit(ch)) {
-          return this.finishNumber();
+          return finishNumber();
         } else {
           return _errorToken();
         }
@@ -265,6 +300,11 @@ class Tokenizer extends TokenizerBase {
     return false;
   }
 
+  Token finishHexNumber() {
+    eatHexDigits();
+    return _finishToken(TokenKind.HEX_INTEGER);
+  }
+
   void eatHexDigits() {
     while (_index < _text.length) {
      if (TokenizerHelpers.isHexDigit(_text.codeUnitAt(_index))) {
@@ -282,6 +322,30 @@ class Tokenizer extends TokenizerBase {
       return true;
     }
     return false;
+  }
+
+  bool maybeEatQuestionMark() {
+    if (_index < _text.length &&
+        _text.codeUnitAt(_index) == QUESTION_MARK) {
+      _index += 1;
+      return true;
+    }
+    return false;
+  }
+
+  void eatQuestionMarks() {
+    while (_index < _text.length) {
+     if (_text.codeUnitAt(_index) == QUESTION_MARK) {
+       _index += 1;
+     } else {
+       return;
+     }
+    }
+  }
+
+  Token finishUnicodeRange() {
+    eatQuestionMarks();
+    return _finishToken(TokenKind.HEX_RANGE);
   }
 
   Token finishMultiLineComment() {

@@ -130,6 +130,13 @@ class CssPrinter extends Visitor {
     emit('}');
   }
 
+  void visitFontFaceDirective(FontFaceDirective node) {
+    emit('$_newLine@font-face ');
+    emit('$_sp{$_newLine');
+    node._declarations.visit(this);
+    emit('}');
+  }
+
   void visitKeyFrameBlock(KeyFrameBlock node) {
     emit('$_sp$_sp');
     node._blockSelectors.visit(this);
@@ -281,6 +288,14 @@ class CssPrinter extends Visitor {
       // Add space seperator between terms without an operator.
       var expression = expressions[i];
       expression.visit(this);
+    }
+  }
+
+  void visitUnicodeRangeTerm(UnicodeRangeTerm node) {
+    if (node.hasSecond) {
+      emit("U+${node.first}-${node.second}");
+    } else {
+      emit("U+${node.first}");
     }
   }
 

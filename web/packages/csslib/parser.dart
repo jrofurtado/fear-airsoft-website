@@ -124,7 +124,7 @@ class Parser {
 
     int start = _peekToken.start;
     while (!_maybeEat(TokenKind.END_OF_FILE) && !_peekKind(TokenKind.RBRACE)) {
-      // TODO(terry): Need to handle charset, import, media and page.
+      // TODO(terry): Need to handle charset.
       var directive = processDirective();
       if (directive != null) {
         productions.add(directive);
@@ -138,6 +138,8 @@ class Parser {
         }
       }
     }
+
+    checkEndOfFile();
 
     return new StyleSheet(productions, _makeSpan(start));
   }
@@ -154,12 +156,17 @@ class Parser {
       }
     }
 
+    checkEndOfFile();
+
     return new StyleSheet.selector(productions, _makeSpan(start));
   }
 
   /** Generate an error if [source] has not been completely consumed. */
   void checkEndOfFile() {
-    _eat(TokenKind.END_OF_FILE);
+    if (!(_peekKind(TokenKind.END_OF_FILE) ||
+        _peekKind(TokenKind.INCOMPLETE_COMMENT))) {
+      _error('premature end of file unknown CSS', _peekToken.span);
+    }
   }
 
   /** Guard to break out of parser when an unexpected end of file is found. */
@@ -182,9 +189,9 @@ class Parser {
     return _peekToken.kind;
   }
 
-  Token _next() {
+  Token _next({unicodeRange : false}) {
     _previousToken = _peekToken;
-    _peekToken = tokenizer.next();
+    _peekToken = tokenizer.next(unicodeRange: unicodeRange);
     return _previousToken;
   }
 
@@ -197,18 +204,18 @@ class Parser {
     return TokenKind.isIdentifier(_peekToken.kind);
   }
 
-  bool _maybeEat(int kind) {
+  bool _maybeEat(int kind, {unicodeRange : false}) {
     if (_peekToken.kind == kind) {
       _previousToken = _peekToken;
-      _peekToken = tokenizer.next();
+      _peekToken = tokenizer.next(unicodeRange: unicodeRange);
       return true;
     } else {
       return false;
     }
   }
 
-  void _eat(int kind) {
-    if (!_maybeEat(kind)) {
+  void _eat(int kind, {unicodeRange : false}) {
+    if (!_maybeEat(kind, unicodeRange: unicodeRange)) {
       _errorExpected(TokenKind.kindToString(kind));
     }
   }
@@ -251,39 +258,6 @@ class Parser {
 
   ///////////////////////////////////////////////////////////////////
   // Top level productions
-  ///////////////////////////////////////////////////////////////////
-
-  // Templates are @{selectors} single line nothing else.
-  SelectorGroup parseTemplate() {
-    SelectorGroup selectorGroup = null;
-    if (!isPrematureEndOfFile()) {
-      selectorGroup = templateExpression();
-    }
-
-    return selectorGroup;
-  }
-
-  /*
-   * Expect @{css_expression}
-   */
-  templateExpression() {
-    List<Selector> selectors = [];
-
-    int start = _peekToken.start;
-
-    _eat(TokenKind.AT);
-    _eat(TokenKind.LBRACE);
-
-    selectors.add(processSelector());
-    SelectorGroup group = new SelectorGroup(selectors, _makeSpan(start));
-
-    _eat(TokenKind.RBRACE);
-
-    return group;
-  }
-
-  ///////////////////////////////////////////////////////////////////
-  // Productions
   ///////////////////////////////////////////////////////////////////
 
   /**
@@ -584,12 +558,7 @@ class Parser {
 
       case TokenKind.DIRECTIVE_FONTFACE:
         _next();
-
-        List<Declaration> decls = [];
-
-        // TODO(terry): To Be Implemented
-
-        return new FontFaceDirective(decls, _makeSpan(start));
+        return new FontFaceDirective(processDeclarations(), _makeSpan(start));
 
       case TokenKind.DIRECTIVE_INCLUDE:
         _next();
@@ -1596,6 +1565,8 @@ class Parser {
     return expressions;
   }
 
+  static int MAX_UNICODE = int.parse('0x10FFFF');
+
   //  Term grammar:
   //
   //  term:
@@ -1728,6 +1699,37 @@ class Parser {
         }
       }
       break;
+    case TokenKind.UNICODE_RANGE:
+      var first;
+      var second;
+      var firstNumber;
+      var secondNumber;
+      _eat(TokenKind.UNICODE_RANGE, unicodeRange: true);
+      if (_maybeEat(TokenKind.HEX_INTEGER, unicodeRange: true)) {
+        first = _previousToken.text;
+        firstNumber = int.parse('0x$first');
+        if (firstNumber > MAX_UNICODE) {
+          _error("unicode range must be less than 10FFFF", _makeSpan(start));
+        }
+        if (_maybeEat(TokenKind.MINUS, unicodeRange: true)) {
+          if (_maybeEat(TokenKind.HEX_INTEGER, unicodeRange: true)) {
+            second = _previousToken.text;
+            secondNumber = int.parse('0x$second');
+            if (secondNumber > MAX_UNICODE) {
+              _error("unicode range must be less than 10FFFF",
+                  _makeSpan(start));
+            }
+            if (firstNumber > secondNumber) {
+              _error("unicode first range can not be greater than last",
+                  _makeSpan(start));
+            }
+          }
+        }
+      } else if (_maybeEat(TokenKind.HEX_RANGE, unicodeRange: true)) {
+        first = _previousToken.text;
+      }
+
+      return new UnicodeRangeTerm(first, second, _makeSpan(start));
     }
 
     return processDimension(t, value, _makeSpan(start));

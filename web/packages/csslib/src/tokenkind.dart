@@ -7,8 +7,6 @@ part of parser;
 // TODO(terry): Need to be consistent with tokens either they're ASCII tokens
 //              e.g., ASTERISK or they're CSS e.g., PSEUDO, COMBINATOR_*.
 class TokenKind {
-  static List CDATA_NAME = 'CDATA'.codeUnits;
-
   // Common shared tokens used in TokenizerBase.
   static const int UNUSED = 0;                  // Unused place holder...
   static const int END_OF_FILE = 1;             // EOF
@@ -87,6 +85,10 @@ class TokenKind {
   static const int IMPORTANT = 505;             // !important
   static const int CDATA_START = 506;           // <![CDATA[
   static const int CDATA_END = 507;             // ]]>
+  // U+uNumber[-U+uNumber]
+  // uNumber = 0..10FFFF | ?[?]*
+  static const int UNICODE_RANGE = 508;
+  static const int HEX_RANGE = 509;             // ? in the hex range
   static const int IDENTIFIER = 511;
 
   // Uniquely synthesized tokens for CSS.

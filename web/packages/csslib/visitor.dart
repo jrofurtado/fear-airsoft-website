@@ -50,6 +50,7 @@ abstract class VisitorBase {
   void visitNegationSelector(NegationSelector node);
   void visitSelectorExpression(SelectorExpression node);
 
+  void visitUnicodeRangeTerm(UnicodeRangeTerm node);
   void visitLiteralTerm(LiteralTerm node);
   void visitHexColorTerm(HexColorTerm node);
   void visitNumberTerm(NumberTerm node);
@@ -162,8 +163,7 @@ class Visitor implements VisitorBase {
   }
 
   void visitFontFaceDirective(FontFaceDirective node) {
-    // TODO(terry): To Be Implemented
-    throw UnimplementedError;
+    visitDeclarationGroup(node._declarations);
   }
 
   void visitIncludeDirective(IncludeDirective node) {
@@ -272,6 +272,8 @@ class Visitor implements VisitorBase {
   void visitSelectorExpression(SelectorExpression node) {
     _visitNodeList(node._expressions);
   }
+
+  void visitUnicodeRangeTerm(UnicodeRangeTerm node) { }
 
   void visitLiteralTerm(LiteralTerm node) { }
 

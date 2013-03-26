@@ -30,7 +30,8 @@ abstract class Span implements Comparable {
   /// Whether [text] corresponds to an identifier symbol.
   final bool isIdentifier;
 
-  Span(this.start, this.end, this.isIdentifier) {
+  Span(this.start, this.end, bool isIdentifier)
+      : isIdentifier = isIdentifier != null ? isIdentifier : false {
     _checkRange();
   }
 
@@ -210,7 +211,7 @@ class File {
   }
 
   /// Returns a span in this file with the given offsets.
-  Span span(int start, [int end, bool isIdentifier]) =>
+  Span span(int start, [int end, bool isIdentifier = false]) =>
       new FileSpan(this, start, end, isIdentifier);
 
   /// Returns a location in this file with the given offset.
@@ -307,7 +308,7 @@ class FileSegment extends File {
         _baseColumn = startOffset.column,
         super.text(url, segment);
 
-  Span span(int start, [int end, bool isIdentifier]) =>
+  Span span(int start, [int end, bool isIdentifier = false]) =>
       super.span(start + _baseOffset,
           end == null ? null : end + _baseOffset, isIdentifier);
 

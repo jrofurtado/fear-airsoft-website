@@ -302,6 +302,14 @@ class _TreePrinter extends Visitor {
     output.depth--;
   }
 
+  void visitUnicodeRangeTerm(UnicodeRangeTerm node) {
+    heading('UnicodeRangeTerm', node);
+    output.depth++;
+    output.writeValue('1st value', node.first);
+    output.writeValue('2nd value', node.second);
+    output.depth--;
+  }
+
   void visitLiteralTerm(LiteralTerm node) {
     heading('LiteralTerm', node);
     output.depth++;

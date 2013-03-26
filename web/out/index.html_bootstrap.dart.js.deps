@@ -14,6 +14,7 @@ file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/isol
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_array.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_helper.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_number.dart
+file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_rti.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/js_string.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/json_patch.dart
 file:///home/ubuntu/dart/dart-sdk/lib/_internal/compiler/implementation/lib/math_patch.dart
@@ -86,7 +87,6 @@ file:///home/ubuntu/dart/dart-sdk/lib/indexed_db/dart2js/indexed_db_dart2js.dart
 file:///home/ubuntu/dart/dart-sdk/lib/isolate/base.dart
 file:///home/ubuntu/dart/dart-sdk/lib/isolate/isolate.dart
 file:///home/ubuntu/dart/dart-sdk/lib/isolate/isolate_stream.dart
-file:///home/ubuntu/dart/dart-sdk/lib/isolate/mangler.dart
 file:///home/ubuntu/dart/dart-sdk/lib/json/json.dart
 file:///home/ubuntu/dart/dart-sdk/lib/json/json_base.dart
 file:///home/ubuntu/dart/dart-sdk/lib/math/base.dart
