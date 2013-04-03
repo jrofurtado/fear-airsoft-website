@@ -233,8 +233,8 @@ ChangeUnobserver observe(value, ChangeObserver callback, [String debugName]) {
  * delivered again asynchronously, unless the value is changed again.
  */
 ChangeUnobserver observeChanges(Observable obj, ChangeRecordObserver observer) {
-  if (obj.$_observers == null) obj.$_observers = new LinkedList();
-  var node = obj.$_observers.add(observer);
+  if (obj._observers == null) obj._observers = new LinkedList();
+  var node = obj._observers.add(observer);
   return node.remove;
 }
 
@@ -277,21 +277,23 @@ class Observable {
   // TODO(jmesserly): make these fields private once we have mixins in Dart VM.
 
   /** Observers for this object. Uses a linked-list for fast removal. */
-  LinkedList<ChangeRecordObserver> $_observers;
+  LinkedList<ChangeRecordObserver> _observers;
 
   /** Changes to this object since last batch was delivered. */
-  List<ChangeRecord> $_changes;
+  List<ChangeRecord> _changes;
 
-  final int hashCode = ++Observable.$_nextHashCode;
+  final int hashCode = ++Observable._nextHashCode;
 
   // TODO(jmessery): workaround for VM bug http://dartbug.com/5746
   // We need hashCode to be fast for _ExpressionObserver to work.
-  static int $_nextHashCode = 0;
+  static int _nextHashCode = 0;
 }
 
 // Note: these are not instance methods of Observable, to make it clear that
 // they aren't themselves being observed. It is the same reason that mirrors and
 // EcmaScript's Object.observe are stratified.
+// TODO(jmesserly): this makes it impossible to proxy an Observable. Is that an
+// acceptable restriction?
 
 /**
  * True if [self] has any observers, and should call [notifyChange] for
@@ -301,7 +303,7 @@ class Observable {
  * You should not need it if your type is marked `@observable`.
  */
 bool hasObservers(Observable self) =>
-    self.$_observers != null && self.$_observers.head != null;
+    self._observers != null && self._observers.head != null;
 
 /**
  * True if we are observing reads. This should be checked before calling
@@ -350,11 +352,11 @@ void notifyChange(Observable self, int type, key,
     _changedObjects = [];
     setImmediate(deliverChangesSync);
   }
-  if (self.$_changes == null) {
-    self.$_changes = [];
+  if (self._changes == null) {
+    self._changes = [];
     _changedObjects.add(self);
   }
-  self.$_changes.add(new ChangeRecord(type, key, oldValue, newValue));
+  self._changes.add(new ChangeRecord(type, key, oldValue, newValue));
 }
 
 // Optimizations to avoid extra work if observing const/final data.
@@ -418,10 +420,10 @@ void deliverChangesSync() {
         // observers see, possibly leading to subtle bugs.
         // OTOH, I don't want to add a defensive copy here. Maybe a wrapper that
         // prevents mutation, or a ListBuilder of some sort than can be frozen.
-        var changes = observable.$_changes;
-        observable.$_changes = null;
+        var changes = observable._changes;
+        observable._changes = null;
 
-        for (var n = observable.$_observers.head; n != null; n = n.next) {
+        for (var n = observable._observers.head; n != null; n = n.next) {
           var observer = n.value;
           try {
             observer(changes);
@@ -458,7 +460,7 @@ void _diagnoseCircularLimit(List<Observable> changedObjects,
   var trace = [];
   if (changedObjects != null) {
     for (var observable in changedObjects) {
-      var changes = observable.$_changes;
+      var changes = observable._changes;
       trace.add('$observable $changes');
     }
   }
@@ -527,6 +529,16 @@ class _ExpressionObserver {
     _activeObserver = this;
     try {
       _value = _expression();
+      // TODO(jmesserly): not sure if this belongs here. Iterables are tricky.
+      // Because of their lazy nature it's easy to use them incorrectly in
+      // expression observers. By forcing eager evaluation we avoid
+      // those problems. Another alternative would be to have Observable
+      // iterators that forward messages from the original collection, but that
+      // is difficult implement (and would have too much overhead because of
+      // how observeChanges is stratified).
+      if (_value is Iterable && _value is! Observable) {
+        _value = (_value as Iterable).toList();
+      }
     } catch (e, trace) {
       onObserveUnhandledError(e, trace, _expression, 'from $this');
       _value = null;
