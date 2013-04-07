@@ -388,13 +388,29 @@ class PageDirective extends Directive {
 }
 
 class KeyFrameDirective extends Directive {
+  /*
+   * Either @keyframe or keyframe prefixed with @-webkit-, @-moz-, @-ms-, @-o-.
+   */
+  final int _keyframeName;
   final _name;
   final List<KeyFrameBlock> _blocks;
 
-  KeyFrameDirective(this._name, Span span) : _blocks = [], super(span);
+  KeyFrameDirective(this._keyframeName, this._name, Span span)
+      : _blocks = [], super(span);
 
   add(KeyFrameBlock block) {
     _blocks.add(block);
+  }
+
+  String get keyFrameName {
+    switch (_keyframeName) {
+      case TokenKind.DIRECTIVE_KEYFRAMES:
+      case TokenKind.DIRECTIVE_MS_KEYFRAMES:
+        return '@keyframes';
+      case TokenKind.DIRECTIVE_WEB_KIT_KEYFRAMES: return '@-webkit-keyframes';
+      case TokenKind.DIRECTIVE_MOZ_KEYFRAMES: return '@-moz-keyframes';
+      case TokenKind.DIRECTIVE_O_KEYFRAMES: return '@-o-keyframes';
+    }
   }
 
   String get name => _name;
@@ -470,10 +486,20 @@ class Declaration extends TreeNode {
   var _dart;
   bool _important;
 
-  Declaration(this._property, this._expression, this._dart, Span span)
-      : _important = false, super(span);
+  /**
+   * IE CSS hacks that can only be read by a particular IE version.
+   *   7 implies IE 7 or older property (e.g., *background: blue;)
+   *   Note:  IE 8 or older property (e.g., background: green\9;) is handled
+   *          by IE8Term in declaration expression handling.
+   *   Note:  IE 6 only property with a leading underscore is a valid IDENT
+   *          since an ident can start with underscore (e.g., _background: red;)
+   */
+  final bool isIE7;
 
-  String get property => _property.name;
+  Declaration(this._property, this._expression, this._dart, Span span,
+      {ie7: false}) : _important = false, this.isIE7 = ie7, super(span);
+
+  String get property => isIE7 ? '*${_property.name}' : _property.name;
   Expression get expression => _expression;
 
   bool get hasDartStyle => _dart != null;
@@ -698,6 +724,16 @@ class FunctionTerm extends LiteralTerm {
       : super(value, t, span);
 
   visit(VisitorBase visitor) => visitor.visitFunctionTerm(this);
+}
+
+/**
+ * A "\9" was encountered at the end of the expression and before a semi-colon.
+ * This is an IE trick to ignore a property or value except by IE 8 and older
+ * browsers.
+ */
+class IE8Term extends LiteralTerm {
+  IE8Term(Span span) : super('\\9', '\\9', span);
+  visit(VisitorBase visitor) => visitor.visitIE8Term(this);
 }
 
 class GroupTerm extends Expression {

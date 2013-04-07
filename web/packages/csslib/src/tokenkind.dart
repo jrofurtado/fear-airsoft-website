@@ -45,12 +45,13 @@ class TokenKind {
   static const int LESS = 32;                   // <
   static const int BANG = 33;                   // !
   static const int MINUS = 34;                  // -
+  static const int BACKSLASH = 35;              // \
 
   // WARNING: END_TOKENS must be 1 greater than the last token above (last
   //          character in our list).  Also add to kindToString function and the
   //          constructor for TokenKind.
 
-  static const int END_TOKENS = 35;             // Marker for last token in list
+  static const int END_TOKENS = 36;             // Marker for last token in list
 
   /** [TokenKind] representing integer tokens. */
   static const int INTEGER = 60;
@@ -146,8 +147,12 @@ class TokenKind {
   static const int DIRECTIVE_INCLUDE = 654;
   static const int DIRECTIVE_STYLET = 655;
   static const int DIRECTIVE_KEYFRAMES = 656;
-  static const int DIRECTIVE_FONTFACE = 657;
-  static const int DIRECTIVE_NAMESPACE = 658;
+  static const int DIRECTIVE_WEB_KIT_KEYFRAMES = 657;
+  static const int DIRECTIVE_MOZ_KEYFRAMES = 658;
+  static const int DIRECTIVE_MS_KEYFRAMES = 659;
+  static const int DIRECTIVE_O_KEYFRAMES = 660;
+  static const int DIRECTIVE_FONTFACE = 661;
+  static const int DIRECTIVE_NAMESPACE = 662;
 
   // Media query operators
   static const int MEDIA_OP_ONLY = 665;     // Unary.
@@ -187,7 +192,13 @@ class TokenKind {
     const {'type': TokenKind.DIRECTIVE_PAGE, 'value' : 'page'},
     const {'type': TokenKind.DIRECTIVE_INCLUDE, 'value' : 'include'},
     const {'type': TokenKind.DIRECTIVE_STYLET, 'value' : 'stylet'},
-    const {'type': TokenKind.DIRECTIVE_KEYFRAMES, 'value' : '-webkit-keyframes'},
+    const {'type': TokenKind.DIRECTIVE_KEYFRAMES, 'value' : 'keyframes'},
+    const {'type': TokenKind.DIRECTIVE_WEB_KIT_KEYFRAMES,
+        'value' : '-webkit-keyframes'},
+    const {'type': TokenKind.DIRECTIVE_MOZ_KEYFRAMES,
+          'value' : '-moz-keyframes'},
+    const {'type': TokenKind.DIRECTIVE_MS_KEYFRAMES, 'value' : '-ms-keyframes'},
+    const {'type': TokenKind.DIRECTIVE_O_KEYFRAMES, 'value' : '-o-keyframes'},
     const {'type': TokenKind.DIRECTIVE_FONTFACE, 'value' : 'font-face'},
     const {'type': TokenKind.DIRECTIVE_NAMESPACE, 'value' : 'namespace'},
   ];
@@ -665,7 +676,7 @@ class TokenKind {
       case TokenKind.LESS: return '<';
       case TokenKind.BANG: return '!';
       case TokenKind.MINUS: return '-';
-
+      case TokenKind.BACKSLASH: return '\\';
       default:
         throw "Unknown TOKEN";
     }

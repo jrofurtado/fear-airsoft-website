@@ -516,10 +516,25 @@ class Parser {
         return new PageDirective(ident, pseudoName,
             processMarginsDeclarations(), _makeSpan(start));
 
+      case TokenKind.DIRECTIVE_MS_KEYFRAMES:
+        // TODO(terry): For now only IE 10 (are base level) supports @keyframes,
+        // -moz- has only been optional since Oct 2012 release of Firefox, not
+        // all versions of webkit support @keyframes and opera doesn't yet
+        // support w/o -o- prefix.  Add more warnings for other prefixes when
+        // they become optional.
+        if (messages.options.checked)
+          _warning('@-ms-keyframes should be @keyframes', _makeSpan(start));
+        continue keyframe;
+keyframe:
       case TokenKind.DIRECTIVE_KEYFRAMES:
+      case TokenKind.DIRECTIVE_WEB_KIT_KEYFRAMES:
+      case TokenKind.DIRECTIVE_MOZ_KEYFRAMES:
+      case TokenKind.DIRECTIVE_O_KEYFRAMES:
         /*  Key frames grammar:
          *
-         *  @-webkit-keyframes [IDENT|STRING] '{' keyframes-blocks '}';
+         *  @[browser]? keyframes [IDENT|STRING] '{' keyframes-blocks '}';
+         *
+         *  browser: [-webkit-, -moz-, -ms-, -o-]
          *
          *  keyframes-blocks:
          *    [keyframe-selectors '{' declarations '}']* ;
@@ -536,7 +551,7 @@ class Parser {
 
         _eat(TokenKind.LBRACE);
 
-        KeyFrameDirective kf = new KeyFrameDirective(name, _makeSpan(start));
+        var keyframe = new KeyFrameDirective(tokId, name, _makeSpan(start));
 
         do {
           Expressions selectors = new Expressions(_makeSpan(start));
@@ -549,12 +564,12 @@ class Parser {
             selectors.add(term);
           } while (_maybeEat(TokenKind.COMMA));
 
-          kf.add(new KeyFrameBlock(selectors, processDeclarations(),
+          keyframe.add(new KeyFrameBlock(selectors, processDeclarations(),
               _makeSpan(start)));
 
         } while (!_maybeEat(TokenKind.RBRACE));
 
-        return kf;
+        return keyframe;
 
       case TokenKind.DIRECTIVE_FONTFACE:
         _next();
@@ -1162,14 +1177,25 @@ class Parser {
   //
   //  declaration:  property ':' expr prio?
   //
-  //  property:  IDENT
+  //  property:  IDENT [or IE hacks]
   //  prio:      !important
   //  expr:      (see processExpr)
+  //
+  // Here are the ugly IE hacks we need to support:
+  //   property: expr prio? \9; - IE8 and below property, /9 before semi-colon
+  //   *IDENT                   - IE7 or below
+  //   _IDENT                   - IE6 property (automatically a valid ident)
   //
   processDeclaration(List dartStyles) {
     Declaration decl;
 
     int start = _peekToken.start;
+
+    // IE7 hack of * before property name if so the property is IE7 or below.
+    var ie7 = _peekKind(TokenKind.ASTERISK);
+    if (ie7) {
+      _next();
+    }
 
     // IDENT ':' expr '!important'?
     if (TokenKind.isIdentifier(_peekToken.kind)) {
@@ -1183,7 +1209,7 @@ class Parser {
 
       var dartComposite = _styleForDart(propertyIdent, exprs, dartStyles);
       decl = new Declaration(propertyIdent, exprs, dartComposite,
-          _makeSpan(start));
+          _makeSpan(start), ie7: ie7);
 
       // Handle !important (prio)
       decl.important = _maybeEat(TokenKind.IMPORTANT);
@@ -1548,6 +1574,22 @@ class Parser {
       case TokenKind.COMMA:
         op = new OperatorComma(_makeSpan(opStart));
         break;
+      case TokenKind.BACKSLASH:
+        // Backslash outside of string; detected IE8 or older signaled by \9 at
+        // end of an expression.
+        var ie8Start = _peekToken.start;
+
+        _next();
+        if (_peekKind(TokenKind.INTEGER)) {
+          var numToken = _next();
+          var value = int.parse(numToken.text);
+          if (value == 9) {
+            op = new IE8Term(_makeSpan(ie8Start));
+          } else if (messages.options.checked) {
+            _warning("\$value is not valid in an expression", _makeSpan(start));
+          }
+        }
+        break;
       }
 
       if (expr != null) {
@@ -1558,7 +1600,11 @@ class Parser {
 
       if (op != null) {
         expressions.add(op);
-        _next();
+        if (op is IE8Term) {
+          keepGoing = false;
+        } else {
+          _next();
+        }
       }
     }
 

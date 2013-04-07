@@ -121,7 +121,7 @@ class CssPrinter extends Visitor {
   }
 
   void visitKeyFrameDirective(KeyFrameDirective node) {
-    emit('$_newLine@-webkit-keyframes ');
+    emit('$_newLine${node.keyFrameName} ');
     node._name.visit(this);
     emit('$_sp{$_newLine');
     for (final block in node._blocks) {
@@ -211,7 +211,7 @@ class CssPrinter extends Visitor {
   void visitDeclaration(Declaration node) {
     String importantAsString() => node.important ? '$_sp!important' : '';
 
-    emit("${node._property.name}: ");
+    emit("${node.property}: ");
     node._expression.visit(this);
 
     emit("${importantAsString()}");
@@ -387,6 +387,10 @@ class CssPrinter extends Visitor {
 
   void visitItemTerm(ItemTerm node) {
     emit('[${node.text}]');
+  }
+
+  void visitIE8Term(IE8Term node) {
+    visitLiteralTerm(node);
   }
 
   void visitOperatorSlash(OperatorSlash node) {

@@ -71,6 +71,7 @@ abstract class VisitorBase {
   void visitFunctionTerm(FunctionTerm node);
   void visitGroupTerm(GroupTerm node);
   void visitItemTerm(ItemTerm node);
+  void visitIE8Term(IE8Term node);
   void visitOperatorSlash(OperatorSlash node);
   void visitOperatorComma(OperatorComma node);
   void visitOperatorPlus(OperatorPlus node);
@@ -349,6 +350,8 @@ class Visitor implements VisitorBase {
   void visitItemTerm(ItemTerm node) {
     visitNumberTerm(node);
   }
+
+  void visitIE8Term(IE8Term node) { }
 
   void visitOperatorSlash(OperatorSlash node) { }
 

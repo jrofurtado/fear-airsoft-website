@@ -101,6 +101,7 @@ class _TreePrinter extends Visitor {
   void visitKeyFrameDirective(KeyFrameDirective node) {
     heading('KeyFrameDirective', node);
     output.depth++;
+    output.writeValue('keyframe', node.keyFrameName);
     output.writeValue('name', node._name);
     output.writeNodeList('blocks', node._blocks);
     output.depth--;
@@ -170,6 +171,7 @@ class _TreePrinter extends Visitor {
   void visitDeclaration(Declaration node) {
     heading('Declaration', node);
     output.depth++;
+    if (node.isIE7) output.write('IE7 property');
     output.write('property');
     super.visitDeclaration(node);
     output.writeNode('expression', node._expression);
@@ -413,6 +415,11 @@ class _TreePrinter extends Visitor {
   void visitItemTerm(ItemTerm node) {
     heading('ItemTerm', node);
     super.visitItemTerm(node);
+  }
+
+  void visitIE8Term(IE8Term node) {
+    heading('IE8Term', node);
+    visitLiteralTerm(node);
   }
 
   void visitOperatorSlash(OperatorSlash node) {

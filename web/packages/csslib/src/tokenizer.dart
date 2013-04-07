@@ -196,6 +196,8 @@ class Tokenizer extends TokenizerBase {
       case TokenChar.BANG:
         Token tok = finishIdentifier(ch);
         return (tok == null) ? _finishToken(TokenKind.BANG) : tok;
+      case TokenChar.BACKSLASH:
+        return _finishToken(TokenKind.BACKSLASH);
       default:
         if (unicodeRange) {
           // Three types of unicode ranges:
