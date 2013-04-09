@@ -68,22 +68,80 @@ void emitInitializations(ElementInfo info,
     printer.addLine("$id = ${_emitCreateHtml(info.node, context.statics)};",
         span: info.node.sourceSpan);
   } else if (!info.isRoot) {
-    var parentId = '_root';
-    for (var p = info.parent; p != null; p = p.parent) {
-      if (p.identifier != null) {
-        parentId = p.identifier;
-        break;
-      }
+    var parent = info.parent;
+    while (parent != null && parent.identifier == null) {
+      parent = parent.parent;
     }
-    printer.addLine("$id = $parentId.query('#${info.node.id}');",
+    compilerAssert(parent != null, 'If isRoot is false, we should always have'
+        ' a parent info that is root.');
+
+    // Note: we rely on the assumption that we are essentially indexing into a
+    // static HTML fragment. It has not been modified at the point where we are
+    // accessing a node from it. This allows us to rely on the path.
+    compilerAssert(!parent.childrenCreatedInCode,
+        'Parent should be a static HTML fragment.');
+
+    var path = _computeNodePath(info.node, parent.node);
+    var pathExpr = path.map((p) => '.nodes[$p]').join();
+
+    printer.addLine("$id = ${parent.identifier}$pathExpr;",
         span: info.node.sourceSpan);
   }
 
   printer.add(childrenPrinter);
 
-  if (info.childrenCreatedInCode && !info.hasIterate && !info.hasIfCondition) {
+  if (info.childrenCreatedInCode && !info.hasLoop && !info.hasCondition) {
     _emitAddNodes(printer, context.statics, info.children, '$id.nodes');
   }
+}
+
+/**
+ * Returns the path of the node from the provided root element. For example,
+ * given a tree like:
+ *
+ *     <a><b></b><c><d></d></c></a>
+ *
+ * The path of "d" starting from "a" would be: `[1, 0]`. In other words, we can
+ * get "d" like this:
+ *
+ *     var d = a.nodes[1].nodes[0];
+ *
+ * Note that we rely on the
+ */
+List<int> _computeNodePath(Node node, Node root) {
+  // We need to be extra careful because if you manipulate the DOM, it won't
+  // necessarily parse back into the same structure:
+  // http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm
+  // Since our manipulations are generally just removing things, I think we only
+  // need to deal with text nodes (adjacent and empty).
+
+  var path = [];
+  for (var n = node; n != root; n = n.parent) {
+    // TODO(jmesserly): this is linear, and could end up causing an O(N^2)
+    // compiler behavior in the aggregate if you had a node with lots of
+    // children and they each needed paths computed.
+    // We could avoid the N^2 in the compiler by caching the node's index, but
+    // since we can't directly store it on the node, it seems too complex and
+    // would make the typical case worse.
+
+    int index = 0;
+    var previous = null;
+    for (var child in n.parent.nodes) {
+      if (child == n) break;
+
+      if (child is Text) {
+        // Ignore empty text nodes and text nodes following other text nodes.
+        // These nodes will not be created by the HTML parser.
+        if (child.value == '' || previous is Text) continue;
+      }
+
+      index++;
+      previous = child;
+    }
+
+    path.add(index);
+  }
+  return path.reversed.toList();
 }
 
 /**
@@ -276,21 +334,25 @@ void emitConditional(TemplateInfo info, CodePrinter printer,
 
 /**
  * Emits code for template lists like `<template iterate='item in items'>` or
- * `<td template iterate='item in items'>`.
+ * `<td template repeat='item in items'>`.
  */
 void emitLoop(TemplateInfo info, CodePrinter printer, Context childContext) {
   var id = info.identifier;
   var items = info.loopItems;
   var loopVar = info.loopVariable;
-  printer..addLine('__t.loop($id, () => $items, ($loopVar, __t) {',
+
+  var suffix = '';
+  // TODO(jmesserly): remove this functionality after a grace period.
+  if (!info.isTemplateElement && !info.isRepeat) suffix = 'IterateAttr';
+
+  printer..addLine('__t.loop$suffix($id, () => $items, ($loopVar, __t) {',
                    span: info.node.sourceSpan)
       ..indent += 1
       ..add(childContext.declarations)
       ..add(childContext.printer)
       ..indent -= 1;
   _emitAddNodes(printer, childContext.statics, info.children, '__t');
-  printer..addLine(info.isTemplateElement
-      ? '});' : '}, isTemplateElement: false);');
+  printer.addLine('});');
 }
 
 
@@ -325,10 +387,10 @@ class RecursiveEmitter extends InfoVisitor {
     emitComponentCreation(info, _context.printer);
 
     var childContext = null;
-    if (info.hasIfCondition) {
+    if (info.hasCondition) {
       childContext = new Context(statics: _context.statics, indent: indent + 1);
       emitConditional(info, _context.printer, childContext);
-    } else if (info.hasIterate) {
+    } else if (info.hasLoop) {
       childContext = new Context(statics: _context.statics, indent: indent + 1);
       emitLoop(info, _context.printer, childContext);
     } else {
@@ -585,8 +647,7 @@ void emitImports(DartCodeInfo codeInfo, LibraryInfo info, PathMapper pathMapper,
 
   if (info is ComponentInfo) {
     // Inject an import to the base component.
-    ComponentInfo component = info;
-    var base = info.extendsComponent;
+    var base = (info as ComponentInfo).extendsComponent;
     if (base != null) {
       addUnique("import '${pathMapper.relativeUrl(info, base)}';");
     }

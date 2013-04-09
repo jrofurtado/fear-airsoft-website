@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -9,6 +9,7 @@
 library web_ui.src.info;
 
 import 'dart:collection' show SplayTreeMap, LinkedHashMap;
+import 'dart:uri' show Uri;
 
 import 'package:analyzer_experimental/src/generated/ast.dart';
 import 'package:csslib/parser.dart' as css;
@@ -334,10 +335,7 @@ class ElementInfo extends NodeInfo<Element> {
    * If this element is a web component instantiation (e.g. `<x-foo>`), this
    * will be set to information about the component, otherwise it will be null.
    */
-  ComponentSummary component;
-
-  /** Whether the element contains data bindings. */
-  bool hasDataBinding = false;
+  final ComponentSummary component;
 
   /** Whether any child of this node is created in code. */
   bool childrenCreatedInCode = false;
@@ -346,10 +344,12 @@ class ElementInfo extends NodeInfo<Element> {
   bool isRoot = false;
 
   /**
-   * True if some descendant needs to query starting from this element.
-   * If this is true, we will generate a variable for this node.
+   * True if this element needs to be stored in a variable (or field) because
+   * we'll access a descendant (child, grandchild, etc) needs a variable.
+   * In that case, we'll access the descendant starting from this element using
+   * a path. This will only be set if this element is [createdInCode].
    */
-  bool hasQuery = false;
+  bool descendantHasBinding = false;
 
   // Note: we're using sorted maps so items are enumerated in a consistent order
   // between runs, resulting in less "diff" in the generated code.
@@ -375,10 +375,10 @@ class ElementInfo extends NodeInfo<Element> {
   final Set<String> removeAttributes = new Set<String>();
 
   /** Whether the template element has `iterate="... in ...". */
-  bool get hasIterate => false;
+  bool get hasLoop => false;
 
   /** Whether the template element has an `if="..."` conditional. */
-  bool get hasIfCondition => false;
+  bool get hasCondition => false;
 
   bool get isTemplateElement => false;
 
@@ -386,25 +386,20 @@ class ElementInfo extends NodeInfo<Element> {
    * For a builtin HTML element this returns the [node.tagName], otherwise it
    * returns [component.baseExtendsTag]. This is useful when looking up which
    * DOM property this element supports.
-   *
-   * **Note:** this returns node.tagName right now, until we fix issue #82.
    */
-  String get baseTagName {
-    return node.tagName;
-    // TODO(jmesserly): turn this on when issue #82 is fixed.
-    //return component != null ? component.baseExtendsTag : node.tagName;
-  }
+  String get baseTagName =>
+      component != null ? component.baseExtendsTag : node.tagName;
 
-  ElementInfo(Element node, ElementInfo parent) : super(node, parent);
+  ElementInfo(Element node, ElementInfo parent, [this.component])
+      : super(node, parent);
 
   String toString() => '#<ElementInfo '
       'identifier: $identifier, '
       'childrenCreatedInCode: $childrenCreatedInCode, '
       'component: $component, '
-      'hasIterate: $hasIterate, '
-      'hasIfCondition: $hasIfCondition, '
-      'hasDataBinding: $hasDataBinding, '
-      'hasQuery: $hasQuery, '
+      'descendantHasBinding: $descendantHasBinding, '
+      'hasLoop: $hasLoop, '
+      'hasCondition: $hasCondition, '
       'attributes: $attributes, '
       'events: $events>';
 }
@@ -552,10 +547,20 @@ class TemplateInfo extends ElementInfo {
    */
   final String loopItems;
 
+  /**
+   * If [hasLoop] is true, this indicates if the attribute was "repeat" instead
+   * of "iterate".
+   *
+   * For template elements, the two are equivalent, but for template attributes
+   * repeat causes that node to repeat in place, instead of iterating its
+   * children.
+   */
+  final bool isRepeat;
+
   TemplateInfo(Node node, ElementInfo parent,
-      {this.ifCondition, this.loopVariable, this.loopItems})
+      {this.ifCondition, this.loopVariable, this.loopItems, this.isRepeat})
       : super(node, parent) {
-    childrenCreatedInCode = hasIfCondition || hasIterate;
+    childrenCreatedInCode = hasCondition || hasLoop;
   }
 
   /**
@@ -564,9 +569,9 @@ class TemplateInfo extends ElementInfo {
    */
   bool get isTemplateElement => node.tagName == 'template';
 
-  bool get hasIfCondition => ifCondition != null;
+  bool get hasCondition => ifCondition != null;
 
-  bool get hasIterate => loopVariable != null;
+  bool get hasLoop => loopVariable != null;
 
   String toString() => '#<TemplateInfo ${super.toString()}'
       'ifCondition: $ifCondition, '
@@ -586,7 +591,7 @@ typedef String ActionDefinition(String elemVarName);
 
 /**
  * Find ElementInfo that associated with a particular DOM node.
- * Used by [ElementInfo.query].
+ * Used by `ElementInfo.query(tagName)`.
  */
 class _QueryInfo extends InfoVisitor {
   final String _tagName;
@@ -610,7 +615,7 @@ class _QueryInfo extends InfoVisitor {
   }
 }
 
-/** 
+/**
  * Information extracted about a URL that refers to another file. This is
  * mainly introduced to be able to trace back where URLs come from when
  * reporting errors.
@@ -623,4 +628,29 @@ class UrlInfo {
   final Span sourceSpan;
 
   UrlInfo(this.resolvedPath, this.sourceSpan);
+
+  /** Resolve a path from an [href] found in [filePath]. */
+  static UrlInfo resolve(String packageRoot,
+                         String filePath,
+                         String href,
+                         Span span,
+                         {bool isCss: false}) {
+    if (isCss) {
+      var uri = Uri.parse(href);
+      if (uri.domain != '') return null;
+      if (uri.scheme != '' && uri.scheme != 'package') return null;
+    }
+
+    var hrefTarget;
+    if (href.startsWith('package:')) {
+      hrefTarget = path.join(packageRoot, href.substring(8));
+    } else if (path.isAbsolute(href)) {
+      hrefTarget = href;
+    } else {
+      hrefTarget = path.join(path.dirname(filePath), href);
+    }
+    hrefTarget = path.normalize(hrefTarget);
+
+    return new UrlInfo(hrefTarget, span);
+  }
 }

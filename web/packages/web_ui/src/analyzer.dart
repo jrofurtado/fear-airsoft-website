@@ -1,4 +1,4 @@
-// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -8,7 +8,6 @@
  */
 library analyzer;
 
-import 'dart:uri';
 import 'package:html5lib/dom.dart';
 import 'package:html5lib/dom_parsing.dart';
 import 'package:source_maps/span.dart';
@@ -103,7 +102,8 @@ class _Analyzer extends TreeVisitor {
         || node.attributes.containsKey('template')
         || node.attributes.containsKey('if')
         || node.attributes.containsKey('instantiate')
-        || node.attributes.containsKey('iterate')) {
+        || node.attributes.containsKey('iterate')
+        || node.attributes.containsKey('repeat')) {
       // template tags, conditionals and iteration are handled specially.
       info = _createTemplateInfo(node);
     }
@@ -117,7 +117,7 @@ class _Analyzer extends TreeVisitor {
       // <element> tags are tracked in the file's declared components, so they
       // don't need a parent.
       var parent = node.tagName == 'element' ? null : _parent;
-      info = new ElementInfo(node, parent);
+      info = _createElementInfo(node, parent);
     }
 
     visitElementInfo(info);
@@ -135,8 +135,6 @@ class _Analyzer extends TreeVisitor {
       info.isRoot = true;
       info.identifier = '_root';
     }
-
-    _bindCustomElement(node, info);
 
     var lastInfo = _currentInfo;
     if (node.tagName == 'element') {
@@ -181,27 +179,25 @@ class _Analyzer extends TreeVisitor {
     _parent = savedParent;
 
     if (_needsIdentifier(info)) {
-      _ensureParentHasQuery(info);
+      _ensureParentHasVariable(info);
       if (info.identifier == null) {
         _uniqueIds.moveNext();
-        var id = '__e-${_uniqueIds.current}';
-        info.identifier = toCamelCase(id);
-        // If it's not created in code, we'll query the element by it's id.
-        if (!info.createdInCode && node.id == '') node.attributes['id'] = id;
+        info.identifier = toCamelCase('__e-${_uniqueIds.current}');
       }
     }
   }
 
   /**
    * If this [info] is not created in code, ensure that whichever parent element
-   * is created in code has been marked appropriately, so we get an identifier.
+   * is created in code has been marked appropriately, so the parent is stored
+   * in a variable/field and we can access this element from it.
    */
-  static void _ensureParentHasQuery(ElementInfo info) {
+  static void _ensureParentHasVariable(ElementInfo info) {
     if (info.isRoot || info.createdInCode) return;
 
     for (var p = info.parent; p != null; p = p.parent) {
       if (p.createdInCode) {
-        p.hasQuery = true;
+        p.descendantHasBinding = true;
         return;
       }
     }
@@ -215,9 +211,9 @@ class _Analyzer extends TreeVisitor {
   static bool _needsIdentifier(ElementInfo info) {
     if (info.isRoot) return false;
 
-    return info.hasDataBinding || info.hasIfCondition || info.hasIterate
-       || info.hasQuery || info.component != null || info.values.length > 0 ||
-       info.events.length > 0;
+    return info.childrenCreatedInCode || info.descendantHasBinding ||
+        info.component != null || info.attributes.length > 0 ||
+        info.values.length > 0 || info.events.length > 0;
   }
 
   void _analyzeComponent(ComponentInfo component) {
@@ -234,7 +230,31 @@ class _Analyzer extends TreeVisitor {
     component.findClassDeclaration(_messages);
   }
 
-  void _bindCustomElement(Element node, ElementInfo info) {
+  ElementInfo _createElementInfo(Element node, ElementInfo parent) {
+    var component = _bindCustomElement(node);
+    if (component != null && node.attributes['is'] == null) {
+      // We need to ensure the correct DOM element is created in the tree.
+      // Until we get document.register and the browser's HTML parser can do
+      // the right thing for us, we switch to the is="tag-name" form.
+
+      // TODO(jmesserly): it's a shame we mutate the tree here instead of
+      // html_cleaner, but that would require mutating the node field of info,
+      // and risk references to the original node leaking into other objects,
+      // which seems worse.
+      var newNode = new Element.tag(component.baseExtendsTag);
+      newNode.attributes['is'] = node.tagName;
+      node.attributes.forEach((k, v) {
+        newNode.attributes[k] = v;
+      });
+      newNode.nodes.addAll(node.nodes);
+      node.replaceWith(newNode);
+      node = newNode;
+    }
+
+    return new ElementInfo(node, parent, component);
+  }
+
+  ComponentSummary _bindCustomElement(Element node) {
     // <fancy-button>
     var component = _fileInfo.components[node.tagName];
     if (component == null) {
@@ -253,18 +273,18 @@ class _Analyzer extends TreeVisitor {
             node.sourceSpan);
       }
     }
-
     if (component != null && !component.hasConflict) {
-      info.component = component;
       _currentInfo.usedComponents[component] = true;
+      return component;
     }
+    return null;
   }
 
   TemplateInfo _createTemplateInfo(Element node) {
     if (node.tagName != 'template' &&
         !node.attributes.containsKey('template')) {
       _messages.warning('template attribute is required when using if, '
-          'instantiate, or iterate attributes.',
+          'instantiate, repeat, or iterate attributes.',
           node.sourceSpan);
     }
 
@@ -281,18 +301,28 @@ class _Analyzer extends TreeVisitor {
         }
       }
     }
+
+    // TODO(jmesserly): deprecate iterate.
     var iterate = node.attributes['iterate'];
+    var repeat = node.attributes['repeat'];
+    if (repeat == null) {
+      repeat = iterate;
+    } else if (iterate != null) {
+      _messages.warning('template cannot have both iterate and repeat. '
+          'iterate attribute will be ignored.', node.sourceSpan);
+      iterate = null;
+    }
 
     // Note: we issue warnings instead of errors because the spirit of HTML and
     // Dart is to be forgiving.
-    if (condition != null && iterate != null) {
+    if (condition != null && repeat != null) {
       _messages.warning('template cannot have both iteration and conditional '
           'attributes', node.sourceSpan);
       return null;
     }
 
     if (node.parent != null && node.parent.tagName == 'element' &&
-        (condition != null || iterate != null)) {
+        (condition != null || repeat != null)) {
 
       // TODO(jmesserly): would be cool if we could just refactor this, or offer
       // a quick fix in the Editor.
@@ -302,8 +332,8 @@ class _Analyzer extends TreeVisitor {
       node.attributes.forEach((k, v) { nestedTemplate.attributes[k] = v; });
 
       _messages.warning('the <template> of a custom element does not support '
-          '"if" or "iterate". However, you can create another template node '
-          'that is a child node, for example:\n'
+          '"if", "iterate" or "repeat". However, you can create another '
+          'template node that is a child node, for example:\n'
           '${example.outerHtml}',
           node.parent.sourceSpan);
       return null;
@@ -317,40 +347,57 @@ class _Analyzer extends TreeVisitor {
         return node.nodes.length > 0 ? result : null;
       }
 
-      result.removeAttributes.add('template');
-
-
-      // TODO(jmesserly): if-conditions in attributes require injecting a
-      // placeholder node, and a real node which is a clone. We should
-      // consider a design where we show/hide the node instead (with care
-      // taken not to evaluate hidden bindings). That is more along the lines
-      // of AngularJS, and would have a cleaner DOM. See issue #142.
-      var contentNode = node.clone();
-      // Clear out the original attributes. This is nice to have, but
-      // necessary for ID because of issue #141.
-      node.attributes.clear();
-      contentNode.nodes.addAll(node.nodes);
-
-      // Create a new ElementInfo that is a child of "result" -- the
-      // placeholder node. This will become result.contentInfo.
-      visitElementInfo(new ElementInfo(contentNode, result));
+      _createTemplateAttributePlaceholder(node, result);
       return result;
-    } else if (iterate != null) {
-      var match = new RegExp(r"(.*) in (.*)").firstMatch(iterate);
-      if (match != null) {
-        if (node.nodes.length == 0) return null;
-        var result = new TemplateInfo(node, _parent, loopVariable: match[1],
-            loopItems: match[2]);
-        result.removeAttributes.add('iterate');
-        if (node.tagName != 'template') result.removeAttributes.add('template');
+
+    } else if (repeat != null) {
+      var match = new RegExp(r"(.*) in (.*)").firstMatch(repeat);
+      if (match == null) {
+        _messages.warning('template iterate/repeat must be of the form: '
+            'repeat="variable in list", where "variable" is your variable name '
+            'and "list" is the list of items.',
+            node.sourceSpan);
+        return null;
+      }
+
+      if (node.nodes.length == 0) return null;
+      var result = new TemplateInfo(node, _parent, loopVariable: match[1],
+          loopItems: match[2], isRepeat: iterate == null);
+      result.removeAttributes.add('iterate');
+      result.removeAttributes.add('repeat');
+      if (node.tagName == 'template') {
         return result;
       }
-      _messages.warning('template iterate must be of the form: '
-          'iterate="variable in list", where "variable" is your variable name '
-          'and "list" is the list of items.',
-          node.sourceSpan);
+
+      if (!result.isRepeat) {
+        result.removeAttributes.add('template');
+        // TODO(jmesserly): deprecate this? I think you want "template repeat"
+        // most of the time, but "template iterate" seems useful sometimes.
+        // (Native <template> element parsing would make both obsolete, though.)
+        return result;
+      }
+
+      _createTemplateAttributePlaceholder(node, result);
+      return result;
     }
+
     return null;
+  }
+
+  // TODO(jmesserly): if and repeat in attributes require injecting a
+  // placeholder node, and a real node which is a clone. We should
+  // consider a design where we show/hide the node instead (with care
+  // taken not to evaluate hidden bindings). That is more along the lines
+  // of AngularJS, and would have a cleaner DOM. See issue #142.
+  void _createTemplateAttributePlaceholder(Element node, TemplateInfo result) {
+    result.removeAttributes.add('template');
+    var contentNode = node.clone();
+    node.attributes.clear();
+    contentNode.nodes.addAll(node.nodes);
+
+    // Create a new ElementInfo that is a child of "result" -- the
+    // placeholder node. This will become result.contentInfo.
+    visitElementInfo(_createElementInfo(contentNode, result));
   }
 
   void visitAttribute(ElementInfo info, String name, String value) {
@@ -371,22 +418,12 @@ class _Analyzer extends TreeVisitor {
       attrInfo = _readStyleAttribute(info, value);
     } else if (name == 'class') {
       attrInfo = _readClassAttribute(info, value);
-    } else if (name == 'id') {
-      if (value.contains("{{")) {
-        _messages.warning(
-            'Sorry, bindings in "id" attributes are not yet supported. '
-            'These bindings will be ignored. See '
-            'https://github.com/dart-lang/web-ui/issues/284 for more details.',
-            info.node.sourceSpan);
-        return;
-      }
     } else {
       attrInfo = _readAttribute(info, name, value);
     }
 
     if (attrInfo != null) {
       info.attributes[name] = attrInfo;
-      info.hasDataBinding = true;
     }
   }
 
@@ -403,6 +440,11 @@ class _Analyzer extends TreeVisitor {
           'that will automatically update the UI based on model changes.',
           info.node.sourceSpan);
       return;
+    }
+
+    if (name == 'on-key-down' || name == 'on-key-up' ||
+        name == 'on-key-press') {
+      value = '\$event = new KeyEvent(\$event); $value';
     }
 
     _addEvent(info, toCamelCase(name), (elem) => value);
@@ -461,7 +503,6 @@ class _Analyzer extends TreeVisitor {
       _checkDuplicateAttribute(info, name);
       info.attributes[name] = new AttributeInfo([binding],
           customTwoWayBinding: true);
-      info.hasDataBinding = true;
       return true;
 
     } else {
@@ -474,7 +515,6 @@ class _Analyzer extends TreeVisitor {
 
     info.attributes[name] = new AttributeInfo([binding]);
     _addEvent(info, eventStream, (e) => '${binding.exp} = $e.$name');
-    info.hasDataBinding = true;
     return true;
   }
 
@@ -521,7 +561,6 @@ class _Analyzer extends TreeVisitor {
     info.attributes['checked'] = new AttributeInfo(
         [new BindingInfo("${binding.exp} == '$radioValue'", false)]);
     _addEvent(info, 'onChange', (e) => "${binding.exp} = '$radioValue'");
-    info.hasDataBinding = true;
     return true;
   }
 
@@ -610,7 +649,6 @@ class _Analyzer extends TreeVisitor {
       return;
     }
 
-    _parent.hasDataBinding = true;
     _parent.childrenCreatedInCode = true;
 
     // We split [text] so that each binding has its own text node.
@@ -769,26 +807,14 @@ class _ElementLoader extends TreeVisitor {
       return;
     }
 
-    if (rel == 'stylesheet') {
-      var uri = Uri.parse(href);
-      if (uri.domain != '') return;
-      if (uri.scheme != '' && uri.scheme != 'package') return;
-    }
-
-    var hrefTarget;
-    if (href.startsWith('package:')) {
-      hrefTarget = path.join(_packageRoot, href.substring(8));
-    } else if (path.isAbsolute(href)) {
-      hrefTarget = href;
+    bool isStyleSheet = rel == 'stylesheet';
+    var urlInfo = UrlInfo.resolve(_packageRoot, _fileInfo.inputPath, href,
+        node.sourceSpan, isCss: isStyleSheet);
+    if (urlInfo == null) return;
+    if (isStyleSheet) {
+      _fileInfo.styleSheetHref.add(urlInfo);
     } else {
-      hrefTarget = path.join(path.dirname(_fileInfo.inputPath), href);
-    }
-    hrefTarget = path.normalize(hrefTarget);
-
-    if (rel == 'stylesheet') {
-      _fileInfo.styleSheetHref.add(new UrlInfo(hrefTarget, node.sourceSpan));
-    } else {
-      _fileInfo.componentLinks.add(new UrlInfo(hrefTarget, node.sourceSpan));
+      _fileInfo.componentLinks.add(urlInfo);
     }
   }
 
